@@ -43,7 +43,7 @@ public class GroupByAction extends Action {
 			public Menu getMenu(Control parent) {
 				if (listMenu != null)
 					listMenu.dispose();
-				listMenu = createGroupMenu().createContextMenu(parent);
+				listMenu = createMenuManager().createContextMenu(parent);
 				return listMenu;
 			}
 
@@ -76,14 +76,6 @@ public class GroupByAction extends Action {
 			res += field.toString();
 		}
 		return res;
-	}
-
-	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By",
-				MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
-		populateGroupMenu(groupMenu);
-		// groupMenu.add(new GroupAction("Name", MagicCardField.NAME));
-		return groupMenu;
 	}
 
 	protected void populateGroupMenu(IMenuManager groupMenu) {

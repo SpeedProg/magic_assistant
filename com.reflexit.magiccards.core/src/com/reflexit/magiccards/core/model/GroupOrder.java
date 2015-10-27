@@ -6,7 +6,10 @@ public class GroupOrder {
 	private final ICardField fields[];
 
 	public GroupOrder(ICardField... fields) {
-		this.fields = fields.length == 0 ? null : fields;
+		if (fields != null && fields.length > 0)
+			this.fields = fields;
+		else
+			this.fields = null;
 	}
 
 	public ICardField[] getFields() {
