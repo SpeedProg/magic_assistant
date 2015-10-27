@@ -5,19 +5,18 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.MenuManager;
-
+import org.eclipse.jface.action.IMenuManager;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
-import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.GroupByAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -40,14 +39,18 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By",
-				MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
-		groupMenu.add(createGroupActionNone());
-		groupMenu.add(createGroupAction(MagicCardField.SET));
-		groupMenu.add(createGroupAction(MagicCardField.LOCATION));
-		groupMenu.add(createGroupAction(MagicCardField.OWNERSHIP));
-		return groupMenu;
+	protected void createGroupAction() {
+		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), () -> {
+			reloadData();
+		}) {
+			@Override
+			protected void populateGroupMenu(IMenuManager groupMenu) {
+				groupMenu.add(createGroupActionNone());
+				groupMenu.add(createGroupAction(MagicCardField.SET));
+				groupMenu.add(createGroupAction(MagicCardField.LOCATION));
+				groupMenu.add(createGroupAction(MagicCardField.OWNERSHIP));
+			}
+		};
 	}
 
 	@Override
@@ -78,11 +81,6 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 		if (count != 1)
 			s = "s";
 		return "Total " + count + " card" + s + " in your collections";
-	}
-
-	@Override
-	public void updateGroupBy(ICardField[] field) {
-		super.updateGroupBy(field);
 	}
 
 	public void setCard(IMagicCard card) {

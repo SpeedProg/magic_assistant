@@ -18,7 +18,6 @@ public class SortAction extends Action {
 		this.filter = filter;
 		this.run = run;
 		boolean checked = filter != null && !filter.getSortOrder().isEmpty() && filter.getSortOrder().isTop(sortField);
-		System.err.println(checked + " " + sortField);
 		setChecked(checked);
 	}
 

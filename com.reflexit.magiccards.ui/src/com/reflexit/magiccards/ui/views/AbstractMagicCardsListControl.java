@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,13 +11,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -41,12 +39,10 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -71,6 +67,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
+import com.reflexit.magiccards.ui.actions.GroupByAction;
 import com.reflexit.magiccards.ui.actions.SortByAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
@@ -96,25 +93,6 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
 public abstract class AbstractMagicCardsListControl extends MagicControl
 		implements IMagicCardListControl, ICardEventListener {
 	private static final DataManager DM = DataManager.getInstance();
-
-	public class GroupAction extends Action {
-		ICardField fields[];
-
-		public GroupAction(String name, ICardField fields[], boolean checked) {
-			super(name, IAction.AS_RADIO_BUTTON);
-			this.fields = fields;
-			if (checked) {
-				setChecked(true);
-			}
-		}
-
-		@Override
-		public void run() {
-			if (isChecked())
-				actionGroupBy(fields);
-		}
-	}
-
 	public static final String FIND = "org.eclipse.ui.edit.findReplace";
 	protected final AbstractCardsView abstractCardsView;
 	private MenuManager menuGroup;
@@ -122,8 +100,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	private QuickFilterControl quickFilter;
 	private SearchControl searchControl;
 	private Label statusLine;
-	private Composite topBar;
-	protected Action actionGroupMenu;
+	private Composite topToolBar;
+	protected GroupByAction actionGroupBy;
 	protected Action actionShowFilter;
 	protected Action actionResetFilter;
 	protected Action actionShowFind;
@@ -160,26 +138,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		createTableControl(partControl);
 		createSearchControl(partControl);
 		getSelectionProvider().addSelectionChangedListener(selectionListener);
-	}
-
-	public GroupAction createGroupAction(ICardField field) {
-		return createGroupAction(field.getLabel(), field);
-	}
-
-	public GroupAction createGroupAction(String name, ICardField[] fields) {
-		String val = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
-		String vname = createGroupName(fields);
-		boolean checked = vname.equals(val);
-		return new GroupAction(name, fields, checked);
-	}
-
-	public GroupAction createGroupAction(String name, ICardField field) {
-		return createGroupAction(name, new ICardField[] { field });
-	}
-
-	public GroupAction createGroupActionNone() {
-		String val = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
-		return new GroupAction("None", null, val == null || val.length() == 0);
 	}
 
 	protected String createGroupName(ICardField[] fields) {
@@ -233,7 +191,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	public Action getGroupAction() {
-		return actionGroupMenu;
+		return actionGroupBy;
 	}
 
 	@Override
@@ -330,19 +288,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	public Composite getTopBar() {
-		return topBar;
+		return topToolBar;
 	}
 
 	protected ColumnViewer getViewer() {
 		return this.manager.getViewer();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#hookContextMenu
-	 * (org.eclipse.jface.action.MenuManager)
-	 */
 	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		manager.hookContextMenu(menuMgr);
@@ -365,7 +317,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected void addStoreChangeListener() {
-		new Thread("Offline listeners " + getSite().getPart().getTitle()) {
+		new Thread("Registering listeners " + getSite().getPart().getTitle()) {
 			@Override
 			public void run() {
 				if (WaitUtils.waitForDb()) {
@@ -379,7 +331,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected void removeStoreChangeListener() {
-		DataManager.getInstance().getLibraryCardStore().removeListener(this);
+		DM.getLibraryCardStore().removeListener(this);
+		DM.getMagicDBStore().removeListener(AbstractMagicCardsListControl.this);
 	}
 
 	@Override
@@ -391,6 +344,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	public void refilterData() {
+		MagicLogger.trace("refilter data " + getClass());
 		setNextSelection(null);
 		syncFilter();
 		loadData(new Runnable() {
@@ -408,12 +362,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	public void runFind() {
 		searchControl.setVisible(true);
-		// actionShowFind.setEnabled(false);
 	}
 
-	// public void setFilteredCardStore(IFilteredCardStore<ICard> fstore) {
-	// this.fstore = fstore;
-	// }
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
@@ -472,56 +422,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	/**
-	 * @param indexCost
-	 */
-	protected void actionGroupBy(ICardField[] fields) {
-		getLocalPreferenceStore().setValue(FilterField.GROUP_FIELD.toString(),
-				fields == null ? "" : createGroupName(fields));
-		updateGroupBy(fields);
-		reloadData();
-	}
-
-	/**
-	 * @param indexCmc
-	 */
-	public void updateGroupBy(ICardField[] fields) {
-		if (fstore == null)
-			return;
-		MagicCardFilter filter = getFilter();
-		if (filter == null)
-			return;
-		ICardField[] oldIndex = filter.getGroupFields();
-		if (Arrays.equals(oldIndex, fields))
-			return;
-		if (fields != null) {
-			filter.setSortField(fields[0], true);
-			filter.setGroupFields(fields);
-			manager.setGrouppingEnabled(true);
-		} else {
-			filter.setGroupFields(null);
-			manager.setGrouppingEnabled(false);
-		}
-	}
-
-	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By",
-				MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
-		groupMenu.add(createGroupActionNone());
-		groupMenu.add(createGroupAction("Color", MagicCardField.COST));
-		groupMenu.add(createGroupAction("Cost", MagicCardField.CMC));
-		groupMenu.add(createGroupAction(MagicCardField.TYPE));
-		groupMenu.add(createGroupAction("Core/Block/Set/Rarity", new ICardField[] { MagicCardField.SET_CORE,
-				MagicCardField.SET_BLOCK, MagicCardField.SET, MagicCardField.RARITY }));
-		groupMenu.add(createGroupAction(MagicCardField.SET));
-		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
-		groupMenu.add(createGroupAction(MagicCardField.RARITY));
-		groupMenu.add(createGroupAction(MagicCardField.NAME));
-		groupMenu.setRemoveAllWhenShown(false);
-		// groupMenu.add(new GroupAction("Name", MagicCardField.NAME));
-		return groupMenu;
-	}
-
-	/**
 	 * @param composite
 	 * @return
 	 */
@@ -559,17 +459,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected Composite createTopBar(Composite composite) {
-		topBar = new Composite(composite, SWT.NONE);
-		topBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		GridLayout layout = new GridLayout(3, false);
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		topBar.setLayout(layout);
-		quickFilter = createQuickFilterControl(topBar);
+		topToolBar = new Composite(composite, SWT.NONE);
+		topToolBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		topToolBar.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+		quickFilter = createQuickFilterControl(topToolBar);
 		quickFilter.setLayoutData(new GridData());
-		statusLine = createStatusLine(topBar);
+		statusLine = createStatusLine(topToolBar);
 		statusLine.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		warning = new Label(topBar, SWT.NONE);
+		warning = new Label(topToolBar, SWT.NONE);
 		warning.setImage(MagicUIActivator.getImageDescriptor("icons/clcl16/exclamation.gif").createImage());
 		warning.setToolTipText("There are filtered cards!");
 		warning.addMouseListener(new MouseListener() {
@@ -588,7 +485,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 				actionShowFilter.run();
 			}
 		});
-		return topBar;
+		return topToolBar;
 	}
 
 	@Override
@@ -617,8 +514,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
-		if (actionGroupMenu != null)
-			manager.add(this.actionGroupMenu);
+		if (actionGroupBy != null)
+			manager.add(this.actionGroupBy);
 		if (actionSortBy != null)
 			manager.add(this.actionSortBy);
 		manager.add(this.actionShowPrefs);
@@ -626,7 +523,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		manager.add(this.actionShowFilter);
 		manager.add(this.actionResetFilter);
 		manager.add(new Separator());
-		// drillDownAdapter.addNavigationActions(manager);
 	};
 
 	protected String getViewPreferencePageId() {
@@ -682,7 +578,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			getFilteredStore();
 		}
 		String field = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
-		updateGroupBy(getGroupFieldsByName(field));
+		actionGroupBy.updateGroupBy(getGroupFieldsByName(field));
 		// WaitUtils.scheduleJob("Loading cards " + getName(), () ->
 		// reloadData());
 	}
@@ -727,7 +623,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
 		this.actionSortBy = new SortByAction(getSortColumnCollection(), getFilter(), this::reloadData);
 		createGroupAction();
-		this.menuGroup = createGroupMenu();
+		if (actionGroupBy != null) {
+			this.menuGroup = actionGroupBy.createMenuManager();
+		}
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.actionShowPrefs = new Action("Preferences...") {
 			@Override
@@ -755,46 +653,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		return getManager().getColumnsCollection();
 	}
 
-	public class GroupByToolBarAction extends Action {
-		public GroupByToolBarAction() {
-			super("Group By", IAction.AS_DROP_DOWN_MENU);
-			setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-			setMenuCreator(new IMenuCreator() {
-				private Menu listMenu;
-
-				@Override
-				public void dispose() {
-					if (listMenu != null)
-						listMenu.dispose();
-				}
-
-				@Override
-				public Menu getMenu(Control parent) {
-					if (listMenu != null)
-						listMenu.dispose();
-					listMenu = createGroupMenu().createContextMenu(parent);
-					return listMenu;
-				}
-
-				@Override
-				public Menu getMenu(Menu parent) {
-					return null;
-				}
-			});
-		}
-
-		@Override
-		public void run() { // group button itself
-			String group = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
-			if (group == null || group.length() == 0)
-				actionGroupBy(new ICardField[] { MagicCardField.CMC });
-			else
-				actionGroupBy(null);
-		}
-	}
-
 	protected void createGroupAction() {
-		this.actionGroupMenu = new GroupByToolBarAction();
+		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), () -> {
+			manager.setGrouppingEnabled(getFilter().isGroupped());
+			reloadData();
+		});
 	}
 
 	@Override

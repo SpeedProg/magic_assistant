@@ -3,8 +3,7 @@ package com.reflexit.magiccards.ui.views.collector;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.MenuManager;
-
+import org.eclipse.jface.action.IMenuManager;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
@@ -15,6 +14,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.actions.GroupByAction;
 import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
@@ -35,17 +35,21 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected MenuManager createGroupMenu() {
-		MenuManager groupMenu = new MenuManager("Group By");
-		groupMenu.add(createGroupAction("Set/Lang/Rarity", DEF_GROUP));
-		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET,
-				MagicCardField.RARITY }));
-		groupMenu.add(createGroupAction(MagicCardField.SET));
-		groupMenu.add(createGroupAction("Core/Block/Set/Lang/Rarity", new ICardField[] {
-				MagicCardField.SET_CORE, MagicCardField.SET_BLOCK,
-				MagicCardField.SET, MagicCardField.LANG, MagicCardField.RARITY }));
-		// groupMenu.add(createGroupAction(MagicCardField.ARTIST));
-		return groupMenu;
+	protected void createGroupAction() {
+		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), () -> {
+			reloadData();
+		}) {
+			@Override
+			protected void populateGroupMenu(IMenuManager groupMenu) {
+				groupMenu.add(createGroupAction("Set/Lang/Rarity", DEF_GROUP));
+				groupMenu.add(createGroupAction("Set/Rarity",
+						new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
+				groupMenu.add(createGroupAction(MagicCardField.SET));
+				groupMenu.add(createGroupAction("Core/Block/Set/Lang/Rarity",
+						new ICardField[] { MagicCardField.SET_CORE, MagicCardField.SET_BLOCK, MagicCardField.SET,
+								MagicCardField.LANG, MagicCardField.RARITY }));
+			}
+		};
 	}
 
 	@Override
@@ -104,25 +108,22 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		return DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
 	}
 	/*
-	 * @Override public IFilteredCardStore doGetFilteredStore() {
-	 * MemoryFilteredCardStore<IMagicCard> fstore = new MemoryFilteredCardStore<IMagicCard>();
-	 * return fstore; }
+	 * @Override public IFilteredCardStore doGetFilteredStore() { MemoryFilteredCardStore<IMagicCard> fstore = new
+	 * MemoryFilteredCardStore<IMagicCard>(); return fstore; }
 	 *
-	 * @Override protected void populateStore(IProgressMonitor monitor) {
-	 * super.populateStore(monitor); ((MemoryFilteredCardStore<ICard>) fstore).clear(); ICardStore
-	 * lib = DataManager.getCardHandler().getLibraryFilteredStore().getCardStore(); // ICardStore
-	 * magicDB = DataManager.getCardHandler().getMagicDBStore(); ArrayList<IMagicCard> list = new
-	 * ArrayList<IMagicCard>(lib.size()); // for (Iterator iterator = magicDB.iterator();
-	 * iterator.hasNext();) { // IMagicCard card = (IMagicCard) iterator.next(); // list.add(card);
-	 * // } HashSet<String> editions = new HashSet<String>(); for (Iterator iterator =
-	 * lib.iterator(); iterator.hasNext();) { IMagicCard card = (IMagicCard) iterator.next();
-	 * list.add(card); editions.add(card.getSet()); } ICardStore cardStore =
+	 * @Override protected void populateStore(IProgressMonitor monitor) { super.populateStore(monitor);
+	 * ((MemoryFilteredCardStore<ICard>) fstore).clear(); ICardStore lib =
+	 * DataManager.getCardHandler().getLibraryFilteredStore().getCardStore(); // ICardStore magicDB =
+	 * DataManager.getCardHandler().getMagicDBStore(); ArrayList<IMagicCard> list = new
+	 * ArrayList<IMagicCard>(lib.size()); // for (Iterator iterator = magicDB.iterator(); iterator.hasNext();) { //
+	 * IMagicCard card = (IMagicCard) iterator.next(); // list.add(card); // } HashSet<String> editions = new
+	 * HashSet<String>(); for (Iterator iterator = lib.iterator(); iterator.hasNext();) { IMagicCard card = (IMagicCard)
+	 * iterator.next(); list.add(card); editions.add(card.getSet()); } ICardStore cardStore =
 	 * getFilteredStore().getCardStore(); cardStore.addAll(list); for (Iterator iterator =
-	 * Editions.getInstance().getNames().iterator(); iterator.hasNext();) { String set = (String)
-	 * iterator.next(); Location loc = Location.createLocationFromSet(set); ICardStore<IMagicCard>
-	 * store = ((AbstractMultiStore<IMagicCard>)
-	 * DataManager.getCardHandler().getMagicDBStore()).getStore(loc); if (store == null) continue;
-	 * for (Iterator iterator2 = store.iterator(); iterator2.hasNext();) { IMagicCard card =
+	 * Editions.getInstance().getNames().iterator(); iterator.hasNext();) { String set = (String) iterator.next();
+	 * Location loc = Location.createLocationFromSet(set); ICardStore<IMagicCard> store =
+	 * ((AbstractMultiStore<IMagicCard>) DataManager.getCardHandler().getMagicDBStore()).getStore(loc); if (store ==
+	 * null) continue; for (Iterator iterator2 = store.iterator(); iterator2.hasNext();) { IMagicCard card =
 	 * (IMagicCard) iterator2.next(); if (!cardStore.contains(card)) { cardStore.add(card); } } }
 	 * getFilteredStore().update(); }
 	 */

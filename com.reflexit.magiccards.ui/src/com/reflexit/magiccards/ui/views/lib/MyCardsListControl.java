@@ -1,10 +1,10 @@
 package com.reflexit.magiccards.ui.views.lib;
 
-import org.eclipse.jface.action.MenuManager;
-
+import org.eclipse.jface.action.IMenuManager;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.actions.GroupByAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
@@ -27,10 +27,17 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected MenuManager createGroupMenu() {
-		MenuManager x = super.createGroupMenu();
-		x.add(createGroupAction(MagicCardField.LOCATION));
-		return x;
+	protected void createGroupAction() {
+		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), () -> {
+			manager.setGrouppingEnabled(getFilter().isGroupped());
+			reloadData();
+		}) {
+			@Override
+			protected void populateGroupMenu(IMenuManager groupMenu) {
+				super.populateGroupMenu(groupMenu);
+				groupMenu.add(createGroupAction(MagicCardField.LOCATION));
+			}
+		};
 	}
 
 	@Override
