@@ -918,6 +918,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected void updateStatus() {
+		Display.getDefault();
 		new Job("Status update") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {

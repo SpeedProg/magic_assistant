@@ -2,6 +2,7 @@ package com.reflexit.magicassistant.swtbot.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
@@ -53,7 +54,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 		UIThreadRunnable.syncExec(() -> {
 			dbView.bot().table().widget.redraw();
 		});
-		
+
 		// dbRow.dragAndDrop(deckView.bot().table());
 		new DndUtil(bot.getDisplay()).dragAndDrop(dbRow, deckView);
 		bot.sleep(1000);
@@ -88,10 +89,17 @@ public class CreateDeck extends AbstractSwtBotTest {
 		// drag a drop card in the new deck
 		String name = selectFirstRowInDb().getText(0);
 		// add card using cut & paste
-		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'c'));
-		bot.sleep(500);
-		deckView.setFocus();
-		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'v'));
+		if (Platform.getOS().toLowerCase().contains("mac")) {
+			KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.COMMAND, 'c'));
+			bot.sleep(500);
+			deckView.setFocus();
+			KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.COMMAND, 'v'));
+		} else {
+			KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'c'));
+			bot.sleep(500);
+			deckView.setFocus();
+			KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'v'));
+		}
 		assertEquals(name, selectFirstRowInView(deckView).getText(0));
 	}
 }
