@@ -39,7 +39,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	@Override
 	public void preWindowOpen() {
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-		configurer.setInitialSize(new Point(1440, 900));
+		configurer.setInitialSize(new Point(1600, 900));
 		configurer.setShowCoolBar(false);
 		configurer.setShowStatusLine(true);
 		configurer.setShowProgressIndicator(true);
@@ -68,7 +68,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				CheckForUpdateDbHandler.doCheckForCardUpdates();
 				return Status.OK_STATUS;
 			}
-		}.schedule(10000);
+		}.schedule(1000 * 60 * 1);
 	}
 
 	protected void installSoftwareUpdate() {
@@ -113,6 +113,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				monitor.done();
 				return Status.OK_STATUS;
 			}
-		}.schedule(15000);
+		}.schedule(1000 * 60 * 5);
 	}
 }
