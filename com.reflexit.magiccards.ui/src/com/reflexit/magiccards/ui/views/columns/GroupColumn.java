@@ -207,7 +207,7 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 				if (showCount) {
 					imwidth = Math.max(15 * 5, imwidth);
 					String text = "(" + getCount(element) + ")";
-					event.gc.setClipping(x + imwidth, y, w - 3, h);
+					event.gc.setClipping(x + imwidth, y, w - 3 - imwidth, h);
 					event.gc.drawText(text, x + imwidth + 3, y + 1, true);
 				}
 				return; // skip text

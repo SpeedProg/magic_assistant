@@ -64,7 +64,7 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 		String text = getText(row);
 		if (text != null) {
 			x += leftMargin;
-			event.gc.setClipping(x, y, w - 3, h);
+			event.gc.setClipping(x, y, w - 3 - leftMargin, h);
 			event.gc.drawText(text, x + 3, y + 1, true);
 		}
 	}
