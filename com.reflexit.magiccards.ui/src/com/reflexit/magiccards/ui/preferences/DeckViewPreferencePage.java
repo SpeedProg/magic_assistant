@@ -10,6 +10,7 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public class DeckViewPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+	public static String PPID = DeckViewPreferencePage.class.getName();
 	public DeckViewPreferencePage() {
 		super(GRID);
 		setPreferenceStore(PreferenceInitializer.getDeckStore());

@@ -5,7 +5,6 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IMenuManager;
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -22,7 +21,7 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class CollectorListControl extends AbstractMagicCardsListControl {
-	private static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG,
+	public static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG,
 			MagicCardField.RARITY };
 
 	public CollectorListControl(AbstractCardsView abstractCardsView) {
@@ -61,7 +60,6 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void loadInitial() {
-		getLocalPreferenceStore().setDefault(FilterField.GROUP_FIELD.toString(), createGroupName(DEF_GROUP));
 		super.loadInitial();
 	}
 

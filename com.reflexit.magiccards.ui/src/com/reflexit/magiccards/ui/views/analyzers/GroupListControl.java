@@ -53,6 +53,7 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 		public void updateColumns(String value) {
 			// no update
 		}
+
 	}
 
 	/**
@@ -92,6 +93,10 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 	@Override
 	public IMagicColumnViewer createViewerManager() {
 		return new GroupTreeManager(getPreferencePageId());
+	}
+
+	@Override
+	public void saveColumnLayout() {
 	}
 
 	@Override

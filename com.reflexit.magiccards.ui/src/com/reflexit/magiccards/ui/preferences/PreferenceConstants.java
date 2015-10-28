@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.preferences;
 
 import com.reflexit.magiccards.core.CorePreferenceConstants;
+import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
@@ -33,4 +34,5 @@ public class PreferenceConstants extends CorePreferenceConstants {
 	public static final String CURRENCY = PREFIX + ".currency";
 	public static final String WORK_OFFLINE = PREFIX + ".offline";
 	public static final String LAST_SELECTION = PREFIX + ".cardselection";
+	public static final String GROUP_FIELD = FilterField.GROUP_FIELD.toString();
 }

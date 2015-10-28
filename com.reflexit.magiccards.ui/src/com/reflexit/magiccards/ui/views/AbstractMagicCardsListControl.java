@@ -92,11 +92,12 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl
 		implements IMagicCardListControl, ICardEventListener {
-	private static final DataManager DM = DataManager.getInstance();
-	public static final String FIND = "org.eclipse.ui.edit.findReplace";
+	protected static final DataManager DM = DataManager.getInstance();
+	private static final String FIND = "org.eclipse.ui.edit.findReplace";
 	protected final AbstractCardsView abstractCardsView;
 	private MenuManager menuGroup;
-	private IPersistentPreferenceStore prefStore;
+	protected IPersistentPreferenceStore columnsStore;
+	protected IPersistentPreferenceStore filterStore;
 	private QuickFilterControl quickFilter;
 	private SearchControl searchControl;
 	private Label statusLine;
@@ -126,7 +127,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	 */
 	public AbstractMagicCardsListControl(AbstractCardsView abstractCardsView) {
 		this.abstractCardsView = abstractCardsView;
-		prefStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
+		columnsStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
+		filterStore = PreferenceInitializer.getFilterStore(getPreferencePageId());
 		this.manager = createViewerManager();
 		if (abstractCardsView != null)
 			setSite(abstractCardsView.getViewSite());
@@ -199,17 +201,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		return menuGroup;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public IPersistentPreferenceStore getLocalPreferenceStore() {
-		return this.prefStore;
+		return this.columnsStore;
 	}
 
 	@Override
 	public IPersistentPreferenceStore getFilterPreferenceStore() {
-		return this.prefStore;
+		return this.filterStore;
 	}
 
 	public IMagicColumnViewer getManager() {
@@ -448,6 +447,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.searchControl.createFindBar(composite);
 		this.searchControl.setVisible(false);
 		this.searchControl.setSearchAsYouType(true);
+		// searchControl.getControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_CYAN));
 	}
 
 	protected Control createTableControl(Composite parent) {
@@ -579,6 +579,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}
 		String field = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
 		actionGroupBy.updateGroupBy(getGroupFieldsByName(field));
+		if (getFilter() != null)
+			manager.setGrouppingEnabled(getFilter().isGroupped());
 		// WaitUtils.scheduleJob("Loading cards " + getName(), () ->
 		// reloadData());
 	}
@@ -913,6 +915,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		synchronized (this) {
 			IPersistentPreferenceStore store = getLocalPreferenceStore();
 			store.removePropertyChangeListener(this.preferenceListener);
+			System.err.println("saving layout " + this.getClass() + " " + store + " " + value);
 			try {
 				store.setValue(PreferenceConstants.LOCAL_COLUMNS, value);
 			} finally {

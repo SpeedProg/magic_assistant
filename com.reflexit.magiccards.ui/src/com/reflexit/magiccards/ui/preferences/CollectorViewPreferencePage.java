@@ -11,6 +11,8 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 
 public class CollectorViewPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
+	public static final String PPID = CollectorViewPreferencePage.class.getName();
+
 	public CollectorViewPreferencePage() {
 		super(GRID);
 		setPreferenceStore(PreferenceInitializer.getCollectorStore());

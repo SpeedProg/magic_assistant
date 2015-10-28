@@ -66,7 +66,7 @@ public class GroupByAction extends Action {
 		return new GroupAction("None", null, !filter.isGroupped(), this::actionGroupBy);
 	}
 
-	protected String createGroupName(ICardField[] fields) {
+	public static String createGroupName(ICardField... fields) {
 		String res = "";
 		for (int i = 0; i < fields.length; i++) {
 			ICardField field = fields[i];
@@ -119,7 +119,8 @@ public class GroupByAction extends Action {
 
 	private void actionGroupBy(GroupOrder order) {
 		ICardField[] fields = order.getFields();
-		store.setValue(FilterField.GROUP_FIELD.toString(), fields == null ? "" : createGroupName(fields));
+		String value = fields == null ? "" : createGroupName(fields);
+		store.setValue(FilterField.GROUP_FIELD.toString(), value);
 		updateGroupBy(fields);
 		reload();
 	}

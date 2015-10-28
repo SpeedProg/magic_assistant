@@ -226,7 +226,7 @@ public class MagicDbView extends AbstractCardsView {
 
 	@Override
 	protected String getPreferencePageId() {
-		return MagicDbViewPreferencePage.class.getName();
+		return MagicDbViewPreferencePage.PPID;
 	}
 
 	@Override

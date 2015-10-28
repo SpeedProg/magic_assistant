@@ -45,11 +45,6 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public void createCardsTree(Composite parent) {
-		super.createCardsTree(parent);
-	}
-
-	@Override
 	public void setGlobalControlHandlers(IActionBars bars) {
 		super.setGlobalControlHandlers(bars);
 		actionGroupCopyPaste.setGlobalControlHandlers(bars);
@@ -84,31 +79,10 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public void setFilteredStore(IFilteredCardStore parentfstore) {
-		super.setFilteredStore(parentfstore);
-	}
-
-	public void updateStore() {
-		if (getCardStore() == null || getListControl() == null)
-			return;
-		IFilteredCardStore<ICard> fistore = getFilteredStore();
-		// fistore.clear();
-		fistore.setLocation(getCardStore().getLocation());
-		// fistore.getCardStore().addAll(getCardStore().getCards());
-		// fistore.update();
-	}
-
-	@Override
 	public void activate() {
 		super.activate();
-		updateStore();
 		if (getFilteredStore().getCardStore() != null) {
 			getListControl().loadData(null);
 		}
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
 	}
 }

@@ -42,6 +42,7 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 		this.viewer.setContentProvider(new RootTreeViewContentProvider());
 		this.viewer.setAutoExpandLevel(2);
 		this.viewer.getTree().setHeaderVisible(false);
+		this.viewer.getTree().setLayoutData(null);
 		this.galleryviewer = new LazyGalleryTreeViewer(comp);
 		this.galleryviewer.getControl().setFont(getFont());
 		this.galleryviewer.setContentProvider(new GroupExpandContentProvider());
@@ -55,7 +56,7 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 					galleryviewer.setInput(ssel.toList());
 			}
 		});
-		form.setWeights(new int[] { 30, 70 });
+		form.setWeights(new int[] { 22, 78 });
 		return comp;
 	}
 

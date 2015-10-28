@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -83,7 +84,7 @@ public class SearchControl {
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
-		gridLayout.marginBottom = 5;
+		gridLayout.marginBottom = 0;
 		gridLayout.marginTop = 0;
 		comp.setLayout(gridLayout);
 		this.gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -292,5 +293,9 @@ public class SearchControl {
 			searchText.setForeground(SearchControl.this.parent.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 			searchText.redraw();
 		}
+	}
+
+	public Control getControl() {
+		return comp;
 	}
 }

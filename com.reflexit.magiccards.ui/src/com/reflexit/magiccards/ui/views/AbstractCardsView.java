@@ -382,7 +382,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	public IPersistentPreferenceStore getFilterPreferenceStore() {
 		if (control instanceof IMagicCardListControl)
 			return ((IMagicCardListControl) control).getFilterPreferenceStore();
-		return getLocalPreferenceStore();
+		return null;
 	}
 
 	public static interface IDeckAction {

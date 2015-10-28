@@ -5,7 +5,6 @@ import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.core.model.storage.LocationFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -29,8 +28,7 @@ public class GalleryListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	public IFilteredCardStore<ICard> doGetFilteredStore() {
-		IFilteredCardStore fistore = new LocationFilteredCardStore();
-		return fistore;
+		return abstractCardsView.getFilteredStore();
 	}
 
 	@Override

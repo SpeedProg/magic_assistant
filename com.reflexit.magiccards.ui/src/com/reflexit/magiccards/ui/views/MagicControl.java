@@ -30,6 +30,7 @@ public abstract class MagicControl implements IMagicControl {
 		partControl = new Composite(parent, SWT.NONE);
 		partControl.setLayout(GridLayoutFactory.fillDefaults().create());
 		partControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		// partControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 		createMainControl(partControl);
 		makeActions();
 		loadInitial();

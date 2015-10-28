@@ -10,7 +10,10 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.GroupByAction;
+import com.reflexit.magiccards.ui.views.collector.CollectorListControl;
 
 /**
  * Class used to initialize default preference values.
@@ -20,13 +23,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	private static IPreferenceStore libStore;
 	private static IPreferenceStore mdbStore;
 	private static IPreferenceStore collectorStore;
+	private static final String MY_CARRDS_PP_ID = LibViewPreferencePage.PPID;
+	private static final String DECK_VIEW_PP_ID = DeckViewPreferencePage.PPID;
+	private static final String DB_PP_ID = MagicDbViewPreferencePage.PPID;
+	private static final String COLLECTOR_PP_ID = CollectorViewPreferencePage.PPID;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
-	 * initializeDefaultPreferences()
-	 */
 	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore storeCore = MagicUIActivator.getDefault().getCorePreferenceStore();
@@ -47,32 +48,33 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.OWNED_COPY, false);
 		store.setDefault(PreferenceConstants.CURRENCY, "USD");
 		store.setDefault(PreferenceConstants.WORK_OFFLINE, false);
-		store.setDefault(PreferenceConstants.PRICE_PROVIDER, PriceProviderManager.getInstance()
-				.getDefaultProvider().getName());
+		store.setDefault(PreferenceConstants.PRICE_PROVIDER,
+				PriceProviderManager.getInstance().getDefaultProvider().getName());
 		store.setDefault(PreferenceConstants.LAST_SELECTION, 205961);
-		// local settings
-		getMdbStore()
-				.setDefault(
-						PreferenceConstants.LOCAL_COLUMNS,
-						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,-Rarity,-Color Type,-Color,-Online Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
-		getLibStore()
-				.setDefault(
-						PreferenceConstants.LOCAL_COLUMNS,
-						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
-		getDeckStore()
-				.setDefault(
-						PreferenceConstants.LOCAL_COLUMNS,
-						"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
-		getCollectorStore()
-				.setDefault(
-						PreferenceConstants.LOCAL_COLUMNS,
-						"Group,-Name,Progress,-Progress4,-Card Id,-Cost,-Type,-Power,-Toughness,-Oracle Text,-Text,-Set,-Rarity,-Color Type,-Count,"
-								+ "Collector's Number,Artist,Location,-Color,Ownership,User Price,Online Price,-Rating,-For Trade,"
-								+ "Comment,Special,-Language");
-		getDeckStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, false);
+		// magic store
+		getMdbStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
+				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,-Rarity,-Color Type,-Color,-Online Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
 		getMdbStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
+		getMdbStore().setDefault(PreferenceConstants.GROUP_FIELD, GroupByAction.createGroupName(MagicCardField.SET));
+		// library store
+		getLibStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
+				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
 		getLibStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
-		getCollectorStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, false);
+		getLibStore().setDefault(PreferenceConstants.GROUP_FIELD,
+				GroupByAction.createGroupName(MagicCardField.LOCATION));
+		// deck store
+		getDeckStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
+				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
+		getDeckStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, false);
+		getDeckStore().setDefault(PreferenceConstants.GROUP_FIELD, GroupByAction.createGroupName(MagicCardField.CMC));
+		// collector store
+		getCollectorStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
+				"Group,-Name,Progress,-Progress4,-Card Id,-Cost,-Type,-Power,-Toughness,-Oracle Text,-Text,-Set,-Rarity,-Color Type,-Count,"
+						+ "Collector's Number,Artist,Location,-Color,Ownership,User Price,Online Price,-Rating,-For Trade,"
+						+ "Comment,Special,-Language");
+		getCollectorStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
+		getCollectorStore().setDefault(PreferenceConstants.GROUP_FIELD,
+				GroupByAction.createGroupName(CollectorListControl.DEF_GROUP));
 	}
 
 	public static IPreferenceStore getGlobalStore() {
@@ -86,33 +88,42 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		return store;
 	}
 
+	public static IPersistentPreferenceStore getFilterStore(String id) {
+		if (id == null)
+			id = MagicUIActivator.PLUGIN_ID;
+		id += ".filter";
+		ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, id);
+		return store;
+	}
+
 	public static IEclipsePreferences getPreferences(String id) {
 		if (id == null)
 			id = MagicUIActivator.PLUGIN_ID;
 		return InstanceScope.INSTANCE.getNode(id);
 	}
-	public static IPreferenceStore getDeckStore() {
-		if (deckStore == null)
-			deckStore = getLocalStore(DeckViewPreferencePage.class.getName());
 
+	public static synchronized IPreferenceStore getDeckStore() {
+		if (deckStore == null)
+			deckStore = getLocalStore(DECK_VIEW_PP_ID);
 		return deckStore;
 	}
 
-	public static IPreferenceStore getLibStore() {
-		if (libStore == null)
-			libStore = getLocalStore(LibViewPreferencePage.class.getName());
+	public static synchronized IPreferenceStore getLibStore() {
+		if (libStore == null) {
+			libStore = getLocalStore(MY_CARRDS_PP_ID);
+		}
 		return libStore;
 	}
 
-	public static IPreferenceStore getMdbStore() {
+	public static synchronized IPreferenceStore getMdbStore() {
 		if (mdbStore == null)
-			mdbStore = getLocalStore(MagicDbViewPreferencePage.class.getName());
+			mdbStore = getLocalStore(DB_PP_ID);
 		return mdbStore;
 	}
 
-	public static IPreferenceStore getCollectorStore() {
+	public static synchronized IPreferenceStore getCollectorStore() {
 		if (collectorStore == null)
-			collectorStore = getLocalStore(CollectorViewPreferencePage.class.getName());
+			collectorStore = getLocalStore(COLLECTOR_PP_ID);
 		return collectorStore;
 	}
 
