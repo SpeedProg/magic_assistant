@@ -915,7 +915,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		synchronized (this) {
 			IPersistentPreferenceStore store = getLocalPreferenceStore();
 			store.removePropertyChangeListener(this.preferenceListener);
-			System.err.println("saving layout " + this.getClass() + " " + store + " " + value);
+			// System.err.println("saving layout " + this.getClass() + " " + store + " " + value);
 			try {
 				store.setValue(PreferenceConstants.LOCAL_COLUMNS, value);
 			} finally {
