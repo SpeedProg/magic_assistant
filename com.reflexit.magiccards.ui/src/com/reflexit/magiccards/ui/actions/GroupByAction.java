@@ -1,6 +1,6 @@
 package com.reflexit.magiccards.ui.actions;
 
-import java.util.Arrays;
+import java.util.Collection;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -16,19 +16,21 @@ import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
-import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class GroupByAction extends Action {
 	private Runnable reload;
 	private MagicCardFilter filter;
 	private IPreferenceStore store;
+	private Collection<GroupOrder> groups;
 
-	public GroupByAction(MagicCardFilter filter, IPreferenceStore store, Runnable reload) {
+	public GroupByAction(MagicCardFilter filter, IPreferenceStore store, Collection<GroupOrder> groups,
+			Runnable reload) {
 		super("Group By", IAction.AS_DROP_DOWN_MENU);
 		this.filter = filter;
 		this.reload = reload;
 		this.store = store;
+		this.groups = groups;
 		setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		setMenuCreator(new IMenuCreator() {
 			private Menu listMenu;
@@ -66,29 +68,10 @@ public class GroupByAction extends Action {
 		return new GroupAction("None", null, !filter.isGroupped(), this::actionGroupBy);
 	}
 
-	public static String createGroupName(ICardField... fields) {
-		String res = "";
-		for (int i = 0; i < fields.length; i++) {
-			ICardField field = fields[i];
-			if (i != 0) {
-				res += "/";
-			}
-			res += field.toString();
-		}
-		return res;
-	}
-
 	protected void populateGroupMenu(IMenuManager groupMenu) {
-		groupMenu.add(createGroupActionNone());
-		groupMenu.add(createGroupAction("Color", MagicCardField.COST));
-		groupMenu.add(createGroupAction("Cost", MagicCardField.CMC));
-		groupMenu.add(createGroupAction(MagicCardField.TYPE));
-		groupMenu.add(createGroupAction("Core/Block/Set/Rarity", new ICardField[] { MagicCardField.SET_CORE,
-				MagicCardField.SET_BLOCK, MagicCardField.SET, MagicCardField.RARITY }));
-		groupMenu.add(createGroupAction(MagicCardField.SET));
-		groupMenu.add(createGroupAction("Set/Rarity", new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
-		groupMenu.add(createGroupAction(MagicCardField.RARITY));
-		groupMenu.add(createGroupAction(MagicCardField.NAME));
+		for (GroupOrder groupOrder : groups) {
+			groupMenu.add(createGroupAction(groupOrder));
+		}
 	}
 
 	public MenuManager createMenuManager() {
@@ -104,43 +87,20 @@ public class GroupByAction extends Action {
 		return groupMenu;
 	}
 
-	public GroupAction createGroupAction(ICardField field) {
-		return createGroupAction(field.getLabel(), field);
-	}
-
-	public GroupAction createGroupAction(String name, ICardField[] fields) {
-		boolean checked = Arrays.equals(filter.getGroupFields(), fields);
-		return new GroupAction(name, fields, checked, this::actionGroupBy);
-	}
-
-	public GroupAction createGroupAction(String name, ICardField field) {
-		return createGroupAction(name, new ICardField[] { field });
+	public GroupAction createGroupAction(GroupOrder order) {
+		boolean checked = filter.getGroupOrder().equals(order);
+		return new GroupAction(order.getLabel(), order.getFields(), checked, this::actionGroupBy);
 	}
 
 	private void actionGroupBy(GroupOrder order) {
-		ICardField[] fields = order.getFields();
-		String value = fields == null ? "" : createGroupName(fields);
-		store.setValue(FilterField.GROUP_FIELD.toString(), value);
-		updateGroupBy(fields);
+		store.setValue(FilterField.GROUP_FIELD.toString(), order.getKey());
+		if (filter != null)
+			filter.setGroupOrder(order);
 		reload();
 	}
 
 	private void reload() {
 		if (reload != null)
 			reload.run();
-	}
-
-	public void updateGroupBy(ICardField[] fields) {
-		if (filter == null)
-			return;
-		ICardField[] oldIndex = filter.getGroupFields();
-		if (Arrays.equals(oldIndex, fields))
-			return;
-		if (fields != null) {
-			filter.setSortField(fields[0], true);
-			filter.setGroupFields(fields);
-		} else {
-			filter.setGroupFields(null);
-		}
 	}
 }

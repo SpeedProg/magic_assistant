@@ -10,9 +10,9 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.actions.GroupByAction;
 import com.reflexit.magiccards.ui.views.collector.CollectorListControl;
 
 /**
@@ -55,18 +55,17 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		getMdbStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
 				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,-Rarity,-Color Type,-Color,-Online Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
 		getMdbStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
-		getMdbStore().setDefault(PreferenceConstants.GROUP_FIELD, GroupByAction.createGroupName(MagicCardField.SET));
+		getMdbStore().setDefault(PreferenceConstants.GROUP_FIELD, GroupOrder.createGroupKey(MagicCardField.SET));
 		// library store
 		getLibStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
 				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
 		getLibStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
-		getLibStore().setDefault(PreferenceConstants.GROUP_FIELD,
-				GroupByAction.createGroupName(MagicCardField.LOCATION));
+		getLibStore().setDefault(PreferenceConstants.GROUP_FIELD, GroupOrder.createGroupKey(MagicCardField.LOCATION));
 		// deck store
 		getDeckStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
 				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,-Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");
 		getDeckStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, false);
-		getDeckStore().setDefault(PreferenceConstants.GROUP_FIELD, GroupByAction.createGroupName(MagicCardField.CMC));
+		getDeckStore().setDefault(PreferenceConstants.GROUP_FIELD, GroupOrder.createGroupKey(MagicCardField.CMC));
 		// collector store
 		getCollectorStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
 				"Group,-Name,Progress,-Progress4,-Card Id,-Cost,-Type,-Power,-Toughness,-Oracle Text,-Text,-Set,-Rarity,-Color Type,-Count,"
@@ -74,7 +73,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 						+ "Comment,Special,-Language");
 		getCollectorStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
 		getCollectorStore().setDefault(PreferenceConstants.GROUP_FIELD,
-				GroupByAction.createGroupName(CollectorListControl.DEF_GROUP));
+				GroupOrder.createGroupKey(CollectorListControl.DEF_GROUP));
 	}
 
 	public static IPreferenceStore getGlobalStore() {

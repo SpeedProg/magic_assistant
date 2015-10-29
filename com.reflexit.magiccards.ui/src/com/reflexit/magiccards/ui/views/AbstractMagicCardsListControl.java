@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -52,6 +53,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.FilterField;
+import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -95,7 +97,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	protected static final DataManager DM = DataManager.getInstance();
 	private static final String FIND = "org.eclipse.ui.edit.findReplace";
 	protected final AbstractCardsView abstractCardsView;
-	private MenuManager menuGroup;
 	protected IPersistentPreferenceStore columnsStore;
 	protected IPersistentPreferenceStore filterStore;
 	private QuickFilterControl quickFilter;
@@ -142,29 +143,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		getSelectionProvider().addSelectionChangedListener(selectionListener);
 	}
 
-	protected String createGroupName(ICardField[] fields) {
-		String res = "";
-		for (int i = 0; i < fields.length; i++) {
-			ICardField field = fields[i];
-			if (i != 0) {
-				res += "/";
-			}
-			res += field.toString();
-		}
-		return res;
-	}
-
-	private ICardField[] getGroupFieldsByName(String name) {
-		if (name == null || name.length() == 0)
-			return null;
-		String sfields[] = name.split("/");
-		ICardField[] res = new ICardField[sfields.length];
-		for (int i = 0; i < res.length; i++) {
-			res[i] = MagicCardField.fieldByName(sfields[i]);
-		}
-		return res;
-	}
-
 	public abstract IMagicColumnViewer createViewerManager();
 
 	/*
@@ -194,11 +172,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	public Action getGroupAction() {
 		return actionGroupBy;
-	}
-
-	@Override
-	public MenuManager getGroupMenu() {
-		return menuGroup;
 	}
 
 	@Override
@@ -501,8 +474,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		manager.add(this.actionResetFilter);
 		manager.add(this.actionShowFind);
 		manager.add(this.actionShowPrefs);
-		manager.add(this.actionSortBy.createMenuManager());
-		manager.add(this.getGroupMenu());
+		if (actionSortBy != null)
+			manager.add(this.actionSortBy.createMenuManager());
+		if (actionGroupBy != null)
+			manager.add(this.actionGroupBy.createMenuManager());
 		manager.add(new Separator());
 		manager.addMenuListener(new IMenuListener() {
 			@Override
@@ -577,10 +552,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		if (fstore == null) {
 			getFilteredStore();
 		}
-		String field = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
-		actionGroupBy.updateGroupBy(getGroupFieldsByName(field));
-		if (getFilter() != null)
-			manager.setGrouppingEnabled(getFilter().isGroupped());
 		// WaitUtils.scheduleJob("Loading cards " + getName(), () ->
 		// reloadData());
 	}
@@ -625,9 +596,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
 		this.actionSortBy = new SortByAction(getSortColumnCollection(), getFilter(), this::reloadData);
 		createGroupAction();
-		if (actionGroupBy != null) {
-			this.menuGroup = actionGroupBy.createMenuManager();
-		}
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.actionShowPrefs = new Action("Preferences...") {
 			@Override
@@ -655,9 +623,23 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		return getManager().getColumnsCollection();
 	}
 
+	protected Collection<GroupOrder> getGroups() {
+		ArrayList<GroupOrder> res = new ArrayList<>();
+		res.add(new GroupOrder());
+		res.add(new GroupOrder("Cost (COLOR)", MagicCardField.COST));
+		res.add(new GroupOrder("Cost (CMC)", MagicCardField.CMC));
+		res.add(new GroupOrder(MagicCardField.TYPE));
+		res.add(new GroupOrder("Core/Block/Set/Rarity", //
+				MagicCardField.SET_CORE, MagicCardField.SET_BLOCK, MagicCardField.SET, MagicCardField.RARITY));
+		res.add(new GroupOrder(MagicCardField.SET));
+		res.add(new GroupOrder(MagicCardField.SET, MagicCardField.RARITY));
+		res.add(new GroupOrder(MagicCardField.RARITY));
+		res.add(new GroupOrder(MagicCardField.NAME));
+		return res;
+	}
+
 	protected void createGroupAction() {
-		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), () -> {
-			manager.setGrouppingEnabled(getFilter().isGroupped());
+		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), getGroups(), () -> {
 			reloadData();
 		});
 	}
@@ -780,10 +762,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		HashMap<String, String> map = storeToMap(store);
 		filter.update(map);
 		filter.setOnlyLastSet(store.getBoolean(EditionsFilterPreferencePage.LAST_SET));
+		String fields = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
+		GroupOrder groupOrder = new GroupOrder(fields);
+		filter.setGroupOrder(groupOrder);
 	}
 
 	protected void updateStatus() {
-		Display.getDefault();
 		new Job("Status update") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -823,6 +807,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			MagicLogger.trace("updateViewer " + object);
 			if (manager.getControl() == null || manager.getControl().isDisposed())
 				return;
+			if (getFilter() != null)
+				manager.setGrouppingEnabled(getFilter().isGroupped());
 			ISelection selection = getSelection();
 			getSelectionProvider().setSelection(new StructuredSelection());
 			MagicLogger.trace("updateViewer manager update");
@@ -915,7 +901,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		synchronized (this) {
 			IPersistentPreferenceStore store = getLocalPreferenceStore();
 			store.removePropertyChangeListener(this.preferenceListener);
-			// System.err.println("saving layout " + this.getClass() + " " + store + " " + value);
+			System.err.println("saving layout " + this.getClass() + " " + getName() + " " + value);
 			try {
 				store.setValue(PreferenceConstants.LOCAL_COLUMNS, value);
 			} finally {

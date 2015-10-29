@@ -36,7 +36,7 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 
 		@Override
 		protected ColumnCollection doGetColumnCollection(String prefPageId) {
-			return new MagicColumnCollection(prefPageId) {
+			return new MagicColumnCollection(null) {
 				@Override
 				protected void createColumns(List<AbstractColumn> columns) {
 					createCustomColumns(columns);

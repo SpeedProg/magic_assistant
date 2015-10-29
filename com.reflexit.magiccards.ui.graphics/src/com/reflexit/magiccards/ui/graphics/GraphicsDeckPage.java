@@ -46,7 +46,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 			}
 		};
 		hookDragAndDrop();
-		fstore.getFilter().setGroupField(MagicCardField.CMC);
+		fstore.getFilter().setGroupFields(MagicCardField.CMC);
 		return getArea();
 	}
 

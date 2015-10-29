@@ -264,6 +264,8 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	protected void saveColumnLayout() {
+		if (!getViewSite().getPage().isPartVisible(getViewSite().getPart()))
+			return;
 		String id = getPreferencePageId();
 		if (id != null && control instanceof AbstractMagicCardsListControl) {
 			((AbstractMagicCardsListControl) control).saveColumnLayout();

@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.IMenuManager;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
@@ -16,7 +16,6 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.actions.GroupByAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -39,18 +38,13 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected void createGroupAction() {
-		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), () -> {
-			reloadData();
-		}) {
-			@Override
-			protected void populateGroupMenu(IMenuManager groupMenu) {
-				groupMenu.add(createGroupActionNone());
-				groupMenu.add(createGroupAction(MagicCardField.SET));
-				groupMenu.add(createGroupAction(MagicCardField.LOCATION));
-				groupMenu.add(createGroupAction(MagicCardField.OWNERSHIP));
-			}
-		};
+	protected Collection<GroupOrder> getGroups() {
+		ArrayList<GroupOrder> res = new ArrayList<>();
+		res.add(new GroupOrder());
+		res.add(new GroupOrder(MagicCardField.SET));
+		res.add(new GroupOrder(MagicCardField.LOCATION));
+		res.add(new GroupOrder(MagicCardField.OWNERSHIP));
+		return res;
 	}
 
 	@Override

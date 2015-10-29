@@ -89,7 +89,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 	public void testGetCardGrpups() {
 		add3cards();
 		this.filter.setSortField(MagicCardField.COST, true);
-		this.filter.setGroupField(MagicCardField.COST);
+		this.filter.setGroupFields(MagicCardField.COST);
 		this.deck.update();
 		Object[] cardGroups = this.deck.getCardGroupRoot().getChildren();
 		assertEquals(3, cardGroups.length);
@@ -188,7 +188,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		assertEquals(a3, cards[2]);
 		assertEquals(a0, cards[3]);
 		assertEquals(a4, cards[4]);
-		this.filter.setGroupField(MagicCardField.COST);
+		this.filter.setGroupFields(MagicCardField.COST);
 		this.deck.update();
 		Object[] cardGroups = this.deck.getElements();
 		assertEquals(4, cardGroups.length);
@@ -241,7 +241,7 @@ public class AbstractFilteredCardStoreTest extends TestCase {
 		card4 = spy(card4);
 		doReturn("aaa").when(card4).getEnglishName();
 		this.deck.getCardStore().add(card4);
-		this.filter.setGroupField(MagicCardField.NAME);
+		this.filter.setGroupFields(MagicCardField.NAME);
 		this.deck.update();
 		Object[] cardGroups = this.deck.getCardGroupRoot().getChildren();
 		assertEquals(1, cardGroups.length);

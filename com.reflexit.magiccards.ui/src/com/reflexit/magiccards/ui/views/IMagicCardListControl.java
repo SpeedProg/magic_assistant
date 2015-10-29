@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 
@@ -25,6 +24,4 @@ public interface IMagicCardListControl extends IMagicControl {
 
 	@Override
 	public abstract void setStatus(String string);
-
-	public abstract IMenuManager getGroupMenu();
 }

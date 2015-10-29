@@ -1,10 +1,12 @@
 package com.reflexit.magiccards.ui.views.collector;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.IMenuManager;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -13,7 +15,6 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.actions.GroupByAction;
 import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
@@ -34,21 +35,14 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected void createGroupAction() {
-		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), () -> {
-			reloadData();
-		}) {
-			@Override
-			protected void populateGroupMenu(IMenuManager groupMenu) {
-				groupMenu.add(createGroupAction("Set/Lang/Rarity", DEF_GROUP));
-				groupMenu.add(createGroupAction("Set/Rarity",
-						new ICardField[] { MagicCardField.SET, MagicCardField.RARITY }));
-				groupMenu.add(createGroupAction(MagicCardField.SET));
-				groupMenu.add(createGroupAction("Core/Block/Set/Lang/Rarity",
-						new ICardField[] { MagicCardField.SET_CORE, MagicCardField.SET_BLOCK, MagicCardField.SET,
-								MagicCardField.LANG, MagicCardField.RARITY }));
-			}
-		};
+	protected Collection<GroupOrder> getGroups() {
+		ArrayList<GroupOrder> res = new ArrayList<>();
+		res.add(new GroupOrder(DEF_GROUP));
+		res.add(new GroupOrder(MagicCardField.SET, MagicCardField.RARITY));
+		res.add(new GroupOrder(MagicCardField.SET));
+		res.add(new GroupOrder("Core/Block/Set/Lang/Rarity", MagicCardField.SET_CORE, MagicCardField.SET_BLOCK,
+				MagicCardField.SET, MagicCardField.LANG, MagicCardField.RARITY));
+		return res;
 	}
 
 	@Override

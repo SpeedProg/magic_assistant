@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.core.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,7 +22,7 @@ import com.reflexit.magiccards.core.model.utils.SearchStringTokenizer.TokenType;
 public class MagicCardFilter implements Cloneable {
 	private Expr root = Expr.TRUE;
 	private SortOrder sortOrder = new SortOrder();
-	private ICardField groupFields[];
+	private GroupOrder groupOrder = new GroupOrder();
 	private boolean onlyLastSet = false;
 	private boolean nameGroupping = true;
 
@@ -31,8 +30,7 @@ public class MagicCardFilter implements Cloneable {
 	public Object clone() {
 		try {
 			MagicCardFilter ret = (MagicCardFilter) super.clone();
-			if (groupFields != null)
-				ret.groupFields = Arrays.copyOf(groupFields, groupFields.length);
+			ret.groupOrder = (GroupOrder) this.groupOrder.clone();
 			SortOrder x = new SortOrder();
 			x.setFrom(this.sortOrder);
 			ret.sortOrder = x;
@@ -74,44 +72,30 @@ public class MagicCardFilter implements Cloneable {
 	}
 
 	public void setFilter(Expr root) {
-		if (root == null) root = Expr.TRUE;
+		if (root == null)
+			root = Expr.TRUE;
 		this.root = root;
 	}
 
 	public void update(HashMap<String, String> map) {
 		Expr expr = Expr.TRUE;
 		expr = expr.and(createColorGroup(map));
-		expr = expr
-				.and(createOrGroup(map, CardTypes.getInstance()))
-				.and(createOrGroup(map, Editions.getInstance()))
-				.and(createOrGroup(map, Locations.getInstance()))
-				.and(createOrGroup(map, Rarity.getInstance()))
-				.and(FilterField.LANG.valueExpr(map))
-				.and(FilterField.TYPE_LINE.valueExpr(map))
-				.and(FilterField.NAME_LINE.valueExpr(map))
-				.and(FilterField.POWER.valueExpr(map))
-				.and(FilterField.TOUGHNESS.valueExpr(map))
-				.and(FilterField.CCC.valueExpr(map))
-				.and(FilterField.COUNT.valueExpr(map))
-				.and(FilterField.PRICE.valueExpr(map))
-				.and(FilterField.DBPRICE.valueExpr(map))
-				.and(FilterField.COMMENT.valueExpr(map))
-				.and(FilterField.OWNERSHIP.valueExpr(map))
-				.and(FilterField.COMMUNITYRATING.valueExpr(map))
-				.and(FilterField.COLLNUM.valueExpr(map))
-				.and(FilterField.ARTIST.valueExpr(map))
-				.and(FilterField.SPECIAL.valueExpr(map))
-				.and(FilterField.FORTRADECOUNT.valueExpr(map))
+		expr = expr.and(createOrGroup(map, CardTypes.getInstance())).and(createOrGroup(map, Editions.getInstance()))
+				.and(createOrGroup(map, Locations.getInstance())).and(createOrGroup(map, Rarity.getInstance()))
+				.and(FilterField.LANG.valueExpr(map)).and(FilterField.TYPE_LINE.valueExpr(map))
+				.and(FilterField.NAME_LINE.valueExpr(map)).and(FilterField.POWER.valueExpr(map))
+				.and(FilterField.TOUGHNESS.valueExpr(map)).and(FilterField.CCC.valueExpr(map))
+				.and(FilterField.COUNT.valueExpr(map)).and(FilterField.PRICE.valueExpr(map))
+				.and(FilterField.DBPRICE.valueExpr(map)).and(FilterField.COMMENT.valueExpr(map))
+				.and(FilterField.OWNERSHIP.valueExpr(map)).and(FilterField.COMMUNITYRATING.valueExpr(map))
+				.and(FilterField.COLLNUM.valueExpr(map)).and(FilterField.ARTIST.valueExpr(map))
+				.and(FilterField.SPECIAL.valueExpr(map)).and(FilterField.FORTRADECOUNT.valueExpr(map))
 				.and(FilterField.FORMAT.valueExpr(map));
 		// text fields
-		Expr text = FilterField.TEXT_LINE.valueExpr(map)
-				.or(FilterField.TEXT_LINE_2.valueExpr(map))
+		Expr text = FilterField.TEXT_LINE.valueExpr(map).or(FilterField.TEXT_LINE_2.valueExpr(map))
 				.or(FilterField.TEXT_LINE_3.valueExpr(map));
-		Expr textNot =
-				FilterField.TEXT_NOT_1.valueExpr(map)
-						.and(FilterField.TEXT_NOT_2.valueExpr(map))
-						.and(FilterField.TEXT_NOT_3.valueExpr(map))
-						.not();
+		Expr textNot = FilterField.TEXT_NOT_1.valueExpr(map).and(FilterField.TEXT_NOT_2.valueExpr(map))
+				.and(FilterField.TEXT_NOT_3.valueExpr(map)).not();
 		this.root = expr.and(text).and(textNot);
 	}
 
@@ -147,8 +131,8 @@ public class MagicCardFilter implements Cloneable {
 		return createGroup(map, sp, orOp, notOp, ff);
 	}
 
-	private Expr createGroup(HashMap<String, String> map, ISearchableProperty sp, boolean orOp,
-			boolean notOp, FilterField ff) {
+	private Expr createGroup(HashMap<String, String> map, ISearchableProperty sp, boolean orOp, boolean notOp,
+			FilterField ff) {
 		Expr nres = Expr.EMPTY;
 		Expr res = Expr.EMPTY;
 		for (Iterator<String> iterator = sp.getIds().iterator(); iterator.hasNext();) {
@@ -185,27 +169,16 @@ public class MagicCardFilter implements Cloneable {
 	}
 
 	public ICardField getGroupField() {
-		if (groupFields != null)
-			return groupFields[0];
-		return null;
+		return groupOrder.getTop();
 	}
 
-	public ICardField[] getGroupFields() {
-		return this.groupFields;
+
+	public GroupOrder getGroupOrder() {
+		return groupOrder;
 	}
 
 	public boolean isGroupped() {
-		return groupFields != null;
-	}
-
-	public void setGroupField(ICardField groupField) {
-		setGroupField(0, groupField);
-	}
-
-	public void setGroupField(int index, ICardField groupField) {
-		if (groupFields == null)
-			groupFields = new ICardField[10];
-		this.groupFields[index] = groupField;
+		return groupOrder.isGroupped();
 	}
 
 	public boolean isFiltered(Object o) {
@@ -228,17 +201,14 @@ public class MagicCardFilter implements Cloneable {
 	}
 
 	public void setGroupFields(ICardField... fields) {
-		if (fields == null)
-			groupFields = null;
-		else
-			groupFields = Arrays.copyOf(fields, fields.length);
+		groupOrder = new GroupOrder(fields);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(groupFields);
+		result = prime * result + groupOrder.hashCode();
 		result = prime * result + (onlyLastSet ? 1231 : 1237);
 		result = prime * result + root.hashCode();
 		result = prime * result + ((sortOrder == null) ? 0 : sortOrder.hashCode());
@@ -247,25 +217,33 @@ public class MagicCardFilter implements Cloneable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof MagicCardFilter)) return false;
+		if (this == obj)
+			return true;
+		if (!(obj instanceof MagicCardFilter))
+			return false;
 		MagicCardFilter other = (MagicCardFilter) obj;
-		if (onlyLastSet != other.onlyLastSet) return false;
-		if (!Arrays.equals(groupFields, other.groupFields)) return false;
-		if (!sortOrder.equals(other.sortOrder)) return false;
-		if (!root.equals(other.root)) return false;
+		if (onlyLastSet != other.onlyLastSet)
+			return false;
+		if (!groupOrder.equals(other.groupOrder))
+			return false;
+		if (!sortOrder.equals(other.sortOrder))
+			return false;
+		if (!root.equals(other.root))
+			return false;
 		return true;
 	}
 
 	public boolean equalsGroups(MagicCardFilter other) {
-		if (this == other) return true;
-		if (Arrays.equals(groupFields, other.groupFields)) return true;
+		if (this == other)
+			return true;
+		if (groupOrder.equals(other.groupOrder))
+			return true;
 		return false;
 	}
 
 	public ICard[] filterCards(Iterable<? extends ICard> childrenList) {
-		//String key = "filter cards";
-		//MagicLogger.traceStart(key);
+		// String key = "filter cards";
+		// MagicLogger.traceStart(key);
 		Collection<ICard> filteredList = new ArrayList<ICard>();
 		for (ICard elem : childrenList) {
 			if (elem instanceof ICardGroup) {
@@ -278,14 +256,13 @@ public class MagicCardFilter implements Cloneable {
 		}
 		if (isOnlyLastSet())
 			filteredList = removeSetDuplicates(filteredList);
-		//MagicLogger.traceEnd(key);
+		// MagicLogger.traceEnd(key);
 		return filteredList.toArray(new ICard[filteredList.size()]);
 	}
 
 	public Collection removeSetDuplicates(Collection filteredList) {
 		LinkedHashMap<String, IMagicCard> unique = new LinkedHashMap<String, IMagicCard>();
-		for (Iterator<IMagicCard> iterator = filteredList.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<IMagicCard> iterator = filteredList.iterator(); iterator.hasNext();) {
 			IMagicCard elem = iterator.next();
 			if (elem instanceof MagicCard) {
 				MagicCard card = (MagicCard) elem;
@@ -295,8 +272,7 @@ public class MagicCardFilter implements Cloneable {
 				} else {
 					Edition oldE = old.getEdition();
 					Edition newE = card.getEdition();
-					if (oldE.getReleaseDate() != null
-							&& newE.getReleaseDate() != null) {
+					if (oldE.getReleaseDate() != null && newE.getReleaseDate() != null) {
 						if (oldE.getReleaseDate().before(newE.getReleaseDate())) {
 							unique.put(card.getName(), card);
 						}
@@ -319,5 +295,11 @@ public class MagicCardFilter implements Cloneable {
 
 	public boolean isNameGroupping() {
 		return nameGroupping;
+	}
+
+	public void setGroupOrder(GroupOrder groupOrder) {
+		if (this.groupOrder.equals(groupOrder))
+			return;
+		this.groupOrder = (GroupOrder) groupOrder.clone();
 	}
 }

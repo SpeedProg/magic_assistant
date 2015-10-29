@@ -244,7 +244,7 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	 * @return
 	 */
 	private ICardGroup findGroupIndex(IMagicCard elem, MagicCardFilter filter) {
-		ICardField[] groupFields = filter.getGroupFields();
+		ICardField[] groupFields = filter.getGroupOrder().getFields();
 		CardGroup parent = rootGroup;
 		for (int i = 0; i < groupFields.length; i++) {
 			ICardField field = groupFields[i];
