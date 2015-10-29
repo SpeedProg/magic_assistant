@@ -77,7 +77,7 @@ public class CountConfirmationDialog extends Dialog {
 			panels[i++] = comp;
 		}
 		confirmer = createConfirmer(cardArea);
-		animation.setFormLayout(cardArea);
+		animation.setAnimationLayoutOn(cardArea);
 		Composite sideButtons = new Composite(area, SWT.NONE);
 		createSideButtons(sideButtons);
 		return area;

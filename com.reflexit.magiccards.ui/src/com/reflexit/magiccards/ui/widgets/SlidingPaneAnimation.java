@@ -1,10 +1,13 @@
 package com.reflexit.magiccards.ui.widgets;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.animation.AnimationRunner;
 import org.eclipse.nebula.animation.effects.IEffect;
 import org.eclipse.nebula.animation.effects.MoveControlEffect;
 import org.eclipse.nebula.animation.movement.ExpoOut;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -16,6 +19,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class SlidingPaneAnimation {
@@ -33,10 +37,9 @@ public class SlidingPaneAnimation {
 		Display display = new Display();
 		final Shell shell = new Shell(display, SWT.CLOSE | SWT.RESIZE | SWT.DOUBLE_BUFFERED);
 		shell.setSize(600, 600);
-		final Composite composite1 = new Composite(shell, SWT.NONE);
+
 		final Composite composite2 = new Composite(shell, SWT.PUSH);
-		setFormLayout(shell); // after childrent creates, set their layout
-								// properties
+
 		// contents
 		composite2.setLayout(new GridLayout());
 		composite2.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
@@ -48,6 +51,11 @@ public class SlidingPaneAnimation {
 				popControl(composite2, 1, 0);
 			}
 		});
+		// Button show = new Button(composite1, SWT.PUSH);
+		// final Control composite1 = show;
+		final Composite composite1 = new Composite(shell, SWT.NONE);
+		Label show = new Label(composite1, SWT.PUSH);
+		// Control composite1 = show;
 		Button fw = new Button(composite2, SWT.PUSH);
 		fw.setText("Forward");
 		fw.addSelectionListener(new SelectionAdapter() {
@@ -58,14 +66,23 @@ public class SlidingPaneAnimation {
 		});
 		composite1.setLayout(new GridLayout());
 		composite1.setBackground(display.getSystemColor(SWT.COLOR_RED));
-		Button show = new Button(composite1, SWT.PUSH);
+		// Button show = new Button(composite1, SWT.PUSH);
 		show.setText("Show");
-		show.addSelectionListener(new SelectionAdapter() {
+		show.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true).create());
+		show.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void mouseUp(MouseEvent e) {
 				pushControl(composite2, 0, 1);
 			}
 		});
+		// show.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// pushControl(composite2, 0, 1);
+		// }
+		// });
+		setAnimationLayoutOn(shell); // after childrent creates, set their layout
+		// properties
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -83,7 +100,7 @@ public class SlidingPaneAnimation {
 		return data1;
 	}
 
-	public void setFormLayout(Composite parent) {
+	public void setAnimationLayoutOn(Composite parent) {
 		parent.setLayout(new FormLayout());
 		Control[] children = parent.getChildren();
 		for (Control control : children) {
@@ -99,6 +116,7 @@ public class SlidingPaneAnimation {
 	public void pushControl(final Control comp) {
 		runner.cancel();
 		comp.moveAbove(null); // show control
+		comp.setFocus();
 		comp.getParent().layout(true, true);
 	}
 
@@ -118,6 +136,7 @@ public class SlidingPaneAnimation {
 					return;
 				runner.endEffect();
 				comp.moveAbove(null); // show control
+				comp.setFocus();
 				// comp.getParent().layout(true, true);
 			}
 		};

@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -150,9 +151,15 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		Label label = new Label(stats, SWT.NONE);
 		label.setText(string);
 		label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE));
-		DynamicCombo text = new DynamicCombo(stats, SWT.READ_ONLY, values);
+		final DynamicCombo text = new DynamicCombo(stats, SWT.READ_ONLY, values);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gd);
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				text.activateCombo();
+			}
+		});
 		if (tip != null) {
 			label.setToolTipText(tip);
 			text.setToolTipText(tip);
