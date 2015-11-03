@@ -9,30 +9,26 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
 import static org.eclipse.swtbot.swt.finder.SWTBotAssert.assertMatchesRegex;
-
-import org.eclipse.jface.preference.IPreferenceStore;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class GroupByCost extends AbstractSwtBotTest {
 	@Override
 	@Before
 	public void setUp() {
-		IPreferenceStore mdbStore = PreferenceInitializer.getMdbStore();
-		PreferenceInitializer.setToDefault(mdbStore);
-		mdbStore.setValue(Editions.getInstance().getPrefConstantByName("Alara Reborn"), true);
-		IPreferenceStore deckStore = PreferenceInitializer.getDeckStore();
-		PreferenceInitializer.setToDefault(deckStore);
 		bot.resetWorkbench();
+		super.setUp();
+		editionsFilter("Alara Reborn");
+		bot.sleep(1000);
 		SWTBotView dbView = bot.viewById(MagicDbView.ID);
 		dbView.setFocus();
 		((MagicDbView) dbView.getViewReference().getView(false)).reloadData();
 		bot.sleep(2000);
 	}
+
+
 
 	/**
 	 * Main test method.
@@ -44,7 +40,7 @@ public class GroupByCost extends AbstractSwtBotTest {
 		SWTBotToolbarDropDownButton groupBy = dbView.toolbarDropDownButton("Group By");
 		groupBy.click();
 		bot.sleep(10);
-		final SWTBotMenu menuItem = groupBy.menuItem("Cost");
+		final SWTBotMenu menuItem = groupBy.menuItem("Cost (CMC)");
 		clickMenuItem(menuItem);
 		dbView.show();
 		bot.sleep(1000);
