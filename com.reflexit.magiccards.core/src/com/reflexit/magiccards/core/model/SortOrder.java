@@ -37,14 +37,14 @@ public class SortOrder implements Comparator {
 		return this;
 	}
 
-	public void setFrom(SortOrder other) {
+	public synchronized void setFrom(SortOrder other) {
 		curSize = other.curSize;
 		for (int i = MIN; i < MAX; i++) {
 			order[i] = other.order[i];
 		}
 	}
 
-	public void setSortField(ICardField sortField, boolean accending) {
+	public synchronized void setSortField(ICardField sortField, boolean accending) {
 		MagicCardComparator elem = new MagicCardComparator(sortField, accending);
 		for (int i = MIN; i < curSize; i++) {
 			if (elem.equals(order[i])) {
@@ -58,18 +58,18 @@ public class SortOrder implements Comparator {
 		add(elem);
 	}
 
-	public MagicCardComparator getComparator(ICardField sortField) {
+	public synchronized MagicCardComparator getComparator(ICardField sortField) {
 		int size = curSize;
 		for (int i = MIN; i < size; i++) {
 			MagicCardComparator elem = order[i];
-			if (sortField.equals(elem.getField())) {
+			if (elem != null && sortField.equals(elem.getField())) {
 				return elem;
 			}
 		}
 		return null;
 	}
 
-	public int getPriority(ICardField sortField) {
+	public synchronized int getPosition(ICardField sortField) {
 		int size = curSize;
 		for (int i = MIN; i < size; i++) {
 			MagicCardComparator elem = order[i];
@@ -100,31 +100,33 @@ public class SortOrder implements Comparator {
 		return elem.getField().equals(sortField);
 	}
 
-	public int size() {
+	public synchronized int size() {
 		return curSize;
 	}
 
-	public MagicCardComparator peek() {
+	public synchronized MagicCardComparator peek() {
 		return order[curSize - 1];
 	}
 
-	private boolean add(MagicCardComparator e) {
+	private synchronized boolean add(MagicCardComparator e) {
 		order[curSize] = e;
 		curSize++;
 		return true;
 	}
 
-	public boolean isEmpty() {
+	public synchronized boolean isEmpty() {
 		return curSize <= MIN;
 	}
 
-	public void clear() {
+	public synchronized void clear() {
 		for (; curSize > MIN; curSize--) {
 			order[curSize - 1] = null;
 		}
 	}
 
-	private MagicCardComparator remove(int index) {
+	private synchronized MagicCardComparator remove(int index) {
+		if (index < MIN)
+			return null;
 		MagicCardComparator c = order[index];
 		for (; index < curSize - 1; index++) {
 			order[index] = order[index + 1];
@@ -136,15 +138,11 @@ public class SortOrder implements Comparator {
 
 	@Override
 	public String toString() {
-		String res = "";
-		for (int index = curSize - 1; index >= 0; index--) {
-			res += order[index] + " ";
-		}
-		return res;
+		return getStringValue();
 	}
 
 	@Override
-	public int hashCode() {
+	public synchronized int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + curSize;
@@ -153,7 +151,7 @@ public class SortOrder implements Comparator {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public synchronized boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -168,5 +166,33 @@ public class SortOrder implements Comparator {
 		if (isAccending() != other.isAccending())
 			return false;
 		return true;
+	}
+
+	public synchronized String getStringValue() {
+		String res = "";
+		for (int index = curSize - 1; index >= MIN; index--) {
+			res += order[index] + "/";
+		}
+		return res;
+	}
+
+	public static SortOrder valueOf(String value) {
+		SortOrder res = new SortOrder();
+		if (value == null || value.trim().isEmpty())
+			return res;
+		String elems[] = value.split("/");
+		for (int i = elems.length - 1; i >= 0; i--) {
+			String string = elems[i].trim();
+			if (string.isEmpty())
+				continue;
+			if (string.endsWith("^")) {
+				res.setSortField(MagicCardField.valueOf(string.substring(0, string.length() - 1)), true);
+			} else if (string.endsWith("v")) {
+				res.setSortField(MagicCardField.valueOf(string.substring(0, string.length() - 1)), false);
+			} else {
+				res.setSortField(MagicCardField.valueOf(string), true);
+			}
+		}
+		return res;
 	}
 }

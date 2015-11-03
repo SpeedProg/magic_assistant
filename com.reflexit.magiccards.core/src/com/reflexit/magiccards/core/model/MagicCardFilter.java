@@ -168,6 +168,10 @@ public class MagicCardFilter implements Cloneable {
 		return this.sortOrder;
 	}
 
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
 	public ICardField getGroupField() {
 		return groupOrder.getTop();
 	}

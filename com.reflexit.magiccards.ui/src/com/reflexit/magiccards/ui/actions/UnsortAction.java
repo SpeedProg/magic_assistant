@@ -1,27 +1,22 @@
 package com.reflexit.magiccards.ui.actions;
 
-import org.eclipse.jface.action.Action;
+import java.util.function.Consumer;
 
-import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.SortOrder;
 
-public class UnsortAction extends Action {
-	private MagicCardFilter filter;
-	private Runnable run;
-
-	public UnsortAction(String text, MagicCardFilter filter, Runnable update) {
-		super(text, Action.AS_RADIO_BUTTON);
-		this.filter = filter;
-		this.run = update;
-		boolean checked = filter != null && filter.getSortOrder().isEmpty();
+public class UnsortAction extends SortAction {
+	public UnsortAction(String text, SortOrder order, Consumer<SortOrder> update) {
+		super(text, null, order, update);
+		boolean checked = order.isEmpty();
 		setChecked(checked);
 	}
 
 	@Override
 	public void run() {
 		if (isChecked()) {
-			filter.setNoSort();
-			if (run != null)
-				run.run();
+			getSortOrder().clear();
+			if (getCallback() != null)
+				getCallback().accept(getSortOrder());
 		}
 	}
 

@@ -7,7 +7,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TableColumn;
 
 public class LazyTableViewerManager extends TableViewerManager {
 	static class MyTableViewer extends TableViewer {
@@ -57,21 +56,16 @@ public class LazyTableViewerManager extends TableViewerManager {
 
 	@Override
 	public void setSortColumn(int index, int direction) {
-		boolean sort = index >= 0;
-		if (sort) {
-			int sortDirection;
+		int sortDirection = getSortDirection();
+		if (index >= 0) {
 			if (direction == -1)
 				sortDirection = SWT.DOWN;
 			else if (direction == 0)
 				sortDirection = SWT.NONE;
 			else
 				sortDirection = SWT.UP;
-			this.viewer.getTable().setSortDirection(sortDirection);
-			TableColumn column = viewer.getTable().getColumn(index);
-			this.viewer.getTable().setSortColumn(column);
-		} else {
-			this.viewer.getTable().setSortColumn(null);
 		}
+		setControlSortColumn(index, sortDirection);
 	}
 
 	@Override

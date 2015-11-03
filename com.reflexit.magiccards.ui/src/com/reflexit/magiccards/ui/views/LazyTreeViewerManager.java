@@ -72,4 +72,18 @@ public class LazyTreeViewerManager extends TreeViewerManager {
 		// System.err.println("set input2 tree time: " +
 		// (System.currentTimeMillis() - time) + " ms");
 	}
+
+	@Override
+	public void setSortColumn(int index, int direction) {
+		int sortDirection = getSortDirection();
+		if (index >= 0) {
+			if (direction == -1)
+				sortDirection = SWT.DOWN;
+			else if (direction == 0)
+				sortDirection = SWT.NONE;
+			else
+				sortDirection = SWT.UP;
+		}
+		setControlSortColumn(index, sortDirection);
+	}
 }

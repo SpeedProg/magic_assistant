@@ -56,6 +56,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,Set,-Rarity,-Color Type,-Color,-Online Price,-Artist,-Rating,-Collector's Number,-Language,-Text");
 		getMdbStore().setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
 		getMdbStore().setDefault(PreferenceConstants.GROUP_FIELD, GroupOrder.createGroupKey(MagicCardField.SET));
+		getMdbStore().setDefault(PreferenceConstants.SORT_ORDER, MagicCardField.NAME.name());
 		// library store
 		getLibStore().setDefault(PreferenceConstants.LOCAL_COLUMNS,
 				"Name,-Card Id,Cost,Type,Power,Toughness,-Oracle Text,-Set,-Rarity,-Color Type,Count,Location,-Color,-Ownership,-Comment,-User Price,-Online Price,-Artist,-Rating,-For Trade,-Special,-Collector's Number,-Language,-Text");

@@ -6,15 +6,14 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 
 import com.reflexit.magiccards.core.model.GroupOrder;
-import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public class GroupAction extends Action {
 	private GroupOrder groups;
 	private Consumer<GroupOrder> consumer;
 
-	public GroupAction(String name, ICardField fields[], boolean checked, Consumer<GroupOrder> run) {
-		super(name, IAction.AS_RADIO_BUTTON);
-		this.groups = new GroupOrder(fields);
+	public GroupAction(GroupOrder order, boolean checked, Consumer<GroupOrder> run) {
+		super(order.getLabel(), IAction.AS_RADIO_BUTTON);
+		this.groups = order;
 		if (checked) {
 			setChecked(true);
 		}

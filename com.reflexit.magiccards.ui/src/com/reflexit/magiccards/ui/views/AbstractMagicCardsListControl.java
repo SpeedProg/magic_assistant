@@ -70,7 +70,9 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.actions.GroupByAction;
+import com.reflexit.magiccards.ui.actions.SortAction;
 import com.reflexit.magiccards.ui.actions.SortByAction;
+import com.reflexit.magiccards.ui.actions.UnsortAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -594,7 +596,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.actionResetFilter.setText("Reset Filter");
 		this.actionResetFilter.setToolTipText("Resets the filter to default values");
 		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
-		this.actionSortBy = new SortByAction(getSortColumnCollection(), getFilter(), this::reloadData);
+		this.actionSortBy = new SortByAction(getSortColumnCollection(), getFilter(), getLocalPreferenceStore(),
+				this::reloadData);
 		createGroupAction();
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.actionShowPrefs = new Action("Preferences...") {
@@ -762,9 +765,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		HashMap<String, String> map = storeToMap(store);
 		filter.update(map);
 		filter.setOnlyLastSet(store.getBoolean(EditionsFilterPreferencePage.LAST_SET));
-		String fields = getLocalPreferenceStore().getString(FilterField.GROUP_FIELD.toString());
+		String fields = getLocalPreferenceStore().getString(PreferenceConstants.GROUP_FIELD);
 		GroupOrder groupOrder = new GroupOrder(fields);
 		filter.setGroupOrder(groupOrder);
+		filter.setSortOrder(SortOrder.valueOf(getLocalPreferenceStore().getString(PreferenceConstants.SORT_ORDER)));
 	}
 
 	protected void updateStatus() {
@@ -848,18 +852,14 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			if (sortField == null && man instanceof GroupColumn)
 				sortField = getFilter().getGroupField();
 			if (sortField == null)
-				sortField = MagicCardField.NAME;
-			boolean acc = true;
-			SortOrder sortOrder = getFilter().getSortOrder();
-			if (sortOrder.isTop(sortField)) {
-				boolean oldAcc = sortOrder.isAccending(sortField);
-				acc = !oldAcc;
-			}
-			getFilter().setSortField(sortField, acc);
-			manager.setSortColumn(index, acc ? 1 : -1);
+				return;
+			new SortAction(sortField.getLabel(), sortField, getFilter().getSortOrder(), (o) -> {
+				manager.setSortColumn(index, o.isAccending() ? -1 : 1);
+			}).force();
 		} else {
-			manager.setSortColumn(-1, 0);
-			getFilter().setNoSort();
+			new UnsortAction(FIND, getFilter().getSortOrder(), (o) -> {
+				manager.setSortColumn(-1, 0);
+			}).force();
 		}
 	}
 

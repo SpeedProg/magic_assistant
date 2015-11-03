@@ -173,6 +173,6 @@ public class MagicCardComparator implements Comparator {
 
 	@Override
 	public String toString() {
-		return field + (accending ? "^" : "v");
+		return field.name() + (accending ? "^" : "v");
 	}
 }

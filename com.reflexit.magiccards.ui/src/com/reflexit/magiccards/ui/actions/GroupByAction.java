@@ -12,11 +12,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
-import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 
 public class GroupByAction extends Action {
 	private Runnable reload;
@@ -65,7 +65,7 @@ public class GroupByAction extends Action {
 	}
 
 	public GroupAction createGroupActionNone() {
-		return new GroupAction("None", null, !filter.isGroupped(), this::actionGroupBy);
+		return new GroupAction(new GroupOrder(), !filter.isGroupped(), this::actionGroupBy);
 	}
 
 	protected void populateGroupMenu(IMenuManager groupMenu) {
@@ -89,11 +89,11 @@ public class GroupByAction extends Action {
 
 	public GroupAction createGroupAction(GroupOrder order) {
 		boolean checked = filter.getGroupOrder().equals(order);
-		return new GroupAction(order.getLabel(), order.getFields(), checked, this::actionGroupBy);
+		return new GroupAction(order, checked, this::actionGroupBy);
 	}
 
 	private void actionGroupBy(GroupOrder order) {
-		store.setValue(FilterField.GROUP_FIELD.toString(), order.getKey());
+		store.setValue(PreferenceConstants.GROUP_FIELD, order.getKey());
 		if (filter != null)
 			filter.setGroupOrder(order);
 		reload();
