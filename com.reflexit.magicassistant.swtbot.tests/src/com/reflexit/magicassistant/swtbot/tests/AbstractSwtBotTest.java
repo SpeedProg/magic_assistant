@@ -20,6 +20,9 @@ import org.junit.BeforeClass;
 
 import com.reflexit.magicassistant.swtbot.utils.SWTAutomationUtils;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
@@ -36,13 +39,21 @@ public abstract class AbstractSwtBotTest {
 	public void setUp() {
 		IPreferenceStore mdbStore = PreferenceInitializer.getMdbStore();
 		PreferenceInitializer.setToDefault(mdbStore);
+		PreferenceInitializer.setToDefault(PreferenceInitializer.getFilterStore(MagicDbViewPreferencePage.PPID));
+		mdbStore.setValue(PreferenceConstants.GROUP_FIELD, "");
 		IPreferenceStore deckStore = PreferenceInitializer.getDeckStore();
 		PreferenceInitializer.setToDefault(deckStore);
-		//		try {
-		//			bot.resetWorkbench();
-		//		} catch (Exception e) {
-		//			// ignore
-		//		}
+		deckStore.setValue(PreferenceConstants.GROUP_FIELD, "");
+		// try {
+		// bot.resetWorkbench();
+		// } catch (Exception e) {
+		// // ignore
+		// }
+	}
+
+	protected void editionsFilter(String setName) {
+		IPreferenceStore mdbStore = PreferenceInitializer.getFilterStore(MagicDbViewPreferencePage.PPID);
+		mdbStore.setValue(Editions.getInstance().getPrefConstantByName(setName), true);
 	}
 
 	public void clickViewToolBarItemByTooltip(String viewName, String tooltip) {

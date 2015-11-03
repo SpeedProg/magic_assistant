@@ -32,6 +32,18 @@ public class CreateDeck extends AbstractSwtBotTest {
 	}
 
 	@Override
+	@Before
+	public void setUp() {
+		bot.resetWorkbench();
+		super.setUp();
+		editionsFilter("Alara Reborn");
+		SWTBotView dbView = bot.viewById(MagicDbView.ID);
+		dbView.setFocus();
+		((MagicDbView) dbView.getViewReference().getView(false)).reloadData();
+		bot.sleep(1000);
+	}
+
+	@Override
 	public SWTBotView createDeck(String deckName) {
 		deckView = super.createDeck(deckName);
 		return deckView;
