@@ -58,6 +58,10 @@ public class SortByAction extends ImageAction {
 		});
 	}
 
+	public void setFilter(MagicCardFilter filter) {
+		this.filter = filter;
+	}
+
 	public void populateSortMenu(IMenuManager menuSort) {
 		menuSort.removeAll();
 		MagicCardFilter filter = getFilter();
@@ -74,7 +78,8 @@ public class SortByAction extends ImageAction {
 	}
 
 	public void sortBy(SortOrder order) {
-		store.setValue(PreferenceConstants.SORT_ORDER, order.getStringValue());
+		if (store != null)
+			store.setValue(PreferenceConstants.SORT_ORDER, order.getStringValue());
 		if (reload != null)
 			reload.run();
 	}
@@ -92,6 +97,7 @@ public class SortByAction extends ImageAction {
 	}
 
 	public MenuManager createMenuManager() {
+
 		MenuManager menuSortLocal = new MenuManager("Sort By");
 		menuSortLocal.setRemoveAllWhenShown(true);
 		menuSortLocal.addMenuListener(new IMenuListener() {

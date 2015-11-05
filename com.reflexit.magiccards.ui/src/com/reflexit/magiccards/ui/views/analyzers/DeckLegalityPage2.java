@@ -61,6 +61,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils.CardStats;
 import com.reflexit.magiccards.core.sync.ParseGathererLegality;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -218,14 +219,10 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		this.load = new ImageAction("Check Legality Online",
 				"icons/clcl16/software_update.png",
 				() -> performUpdate());
-		refresh = new ImageAction("Refresh",
-				"icons/clcl16/refresh.gif",
-				() -> activate());
+		refresh = new RefreshAction(this::reloadData);
 	}
 
-	@Override
-	public void activate() {
-		super.activate();
+	public void reloadData() {
 		setFStore();
 		deckLegalities = LegalityMap.calculateDeckLegality(fstore.getCardStore());
 		IStorageInfo storageInfo = getStorageInfo();
@@ -243,6 +240,12 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		tree.setInput(root);
 		tree.refresh(true);
 		getListControl().updateViewer();
+	}
+
+	@Override
+	public void activate() {
+		super.activate();
+		reloadData();
 	}
 
 	private void updateInfo() {
@@ -294,7 +297,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		if (storageInfo != null) {
 			storageInfo.setProperty("format", f);
 		}
-		activate();
+		reloadData();
 	}
 
 	protected ICardField[] getGroupFields() {
@@ -410,7 +413,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 					getControl().getDisplay().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							activate();
+							reloadData();
 						}
 					});
 					monitor.done();

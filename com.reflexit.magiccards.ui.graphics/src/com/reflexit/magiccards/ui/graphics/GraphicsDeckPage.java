@@ -5,7 +5,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Point;
@@ -17,7 +16,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.LocationFilteredCardStore;
-import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -35,16 +34,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 		status = createStatusLine(getArea());
 		panel = new DesktopCanvas(getArea());
 		panel.setLayoutData(new GridData(GridData.FILL_BOTH));
-		this.refresh = new Action("Refresh", SWT.NONE) {
-			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
-			}
-
-			@Override
-			public void run() {
-				activate();
-			}
-		};
+		this.refresh = new RefreshAction(this::activate);
 		hookDragAndDrop();
 		fstore.getFilter().setGroupFields(MagicCardField.CMC);
 		return getArea();

@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -465,28 +464,24 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	@Override
 	public void fillContextMenu(IMenuManager manager) {
+		manager.add(this.actionShowPrefs);
+		manager.add(this.actionShowFind);
 		manager.add(this.actionShowFilter);
 		manager.add(this.actionResetFilter);
-		manager.add(this.actionShowPrefs);
+		manager.add(new Separator());
 	}
 
 	@Override
 	public void fillLocalPullDown(IMenuManager manager) {
-		manager.add(this.actionShowFilter);
-		manager.add(this.actionResetFilter);
-		manager.add(this.actionShowFind);
-		manager.add(this.actionShowPrefs);
 		if (actionSortBy != null)
 			manager.add(this.actionSortBy.createMenuManager());
 		if (actionGroupBy != null)
 			manager.add(this.actionGroupBy.createMenuManager());
+		manager.add(this.actionShowPrefs);
+		manager.add(this.actionShowFind);
+		manager.add(this.actionShowFilter);
+		manager.add(this.actionResetFilter);
 		manager.add(new Separator());
-		manager.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				viewMenuIsAboutToShow(manager);
-			}
-		});
 	}
 
 	@Override
@@ -612,7 +607,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 				}
 			}
 		};
-		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/table.gif"));
+		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/gear.png"));
 		this.actionShowFind = new Action("Find...") {
 			@Override
 			public void run() {
@@ -629,8 +624,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	protected Collection<GroupOrder> getGroups() {
 		ArrayList<GroupOrder> res = new ArrayList<>();
 		res.add(new GroupOrder());
-		res.add(new GroupOrder("Cost (COLOR)", MagicCardField.COST));
-		res.add(new GroupOrder("Cost (CMC)", MagicCardField.CMC));
+		res.add(new GroupOrder("Color", MagicCardField.COST));
+		res.add(new GroupOrder("Cost", MagicCardField.CMC));
 		res.add(new GroupOrder(MagicCardField.TYPE));
 		res.add(new GroupOrder("Core/Block/Set/Rarity", //
 				MagicCardField.SET_CORE, MagicCardField.SET_BLOCK, MagicCardField.SET, MagicCardField.RARITY));
@@ -840,11 +835,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		getSelectionProvider().setSelection(selection);
 		// MagicLogger.traceEnd("restoreSelection");
 	}
-
-	protected void viewMenuIsAboutToShow(IMenuManager manager) {
-		actionShowFind.setEnabled(!searchControl.isVisible());
-	}
-
 	protected void updateSortColumn(final int index) {
 		if (index >= 0) {
 			AbstractColumn man = (AbstractColumn) getViewer().getLabelProvider(index);

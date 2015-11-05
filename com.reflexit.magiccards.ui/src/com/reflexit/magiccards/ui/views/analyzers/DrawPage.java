@@ -31,6 +31,7 @@ import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
+import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -370,7 +371,7 @@ public class DrawPage extends AbstractDeckListPage {
 			playdeck.tap(getCardSelection());
 			fullReload();
 		});
-		this.refresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", () -> fullReload());
+		this.refresh = new RefreshAction(this::fullReload);
 		this.spinner = new SpinnerContributionItem("spinner");
 	}
 

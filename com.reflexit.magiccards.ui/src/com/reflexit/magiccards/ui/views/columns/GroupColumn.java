@@ -60,7 +60,7 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 						return setColumn.getActualImage(element);
 					}
 				}
-				if (fieldIndex == MagicCardField.COST) {
+				if (fieldIndex == MagicCardField.COST || fieldIndex == MagicCardField.COLOR) {
 					if (cannotPaintImage) {
 						return null;
 					} else {

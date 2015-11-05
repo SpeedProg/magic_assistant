@@ -5,16 +5,14 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,7 +31,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.dialogs.PreferencesUtil;
@@ -48,7 +45,6 @@ import com.reflexit.magiccards.core.exports.ImportExportFactory;
 import com.reflexit.magiccards.core.exports.ReportType;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
-import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -57,12 +53,13 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.RefreshAction;
+import com.reflexit.magiccards.ui.actions.SortByAction;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
 import com.reflexit.magiccards.ui.views.IMagicControl;
-import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.widgets.ImageAction;
 
@@ -81,10 +78,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	private boolean includeSideboard = true;
 	private boolean includeHeader = true;
 	private Action actionShowPrefs;
-	private MenuManager menuSort;
-	private Action actionUnsort;
 	private MagicCardFilter filter;
-	private Action actionSort;
+	private SortByAction actionSort;
 	private ImageAction actionRefresh;
 
 	class ComboContributionItem extends ControlContribution {
@@ -100,6 +95,11 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		}
 
 		@Override
+		public boolean isSeparator() {
+			return false;
+		}
+
+		@Override
 		protected Control createControl(Composite parent) {
 			control = new Combo(parent, SWT.READ_ONLY);
 			control.addSelectionListener(new SelectionAdapter() {
@@ -112,12 +112,17 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			for (final ReportType rt : types) {
 				control.add(rt.getLabel());
 			}
+			System.err.println(reportType.getLabel());
 			control.setText(reportType.getLabel());
 			return control;
 		}
 
 		public Combo getControl() {
 			return control;
+		}
+
+		private ExportDeckPage getOuterType() {
+			return ExportDeckPage.this;
 		}
 	}
 
@@ -193,17 +198,19 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	@Override
 	public void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
-		manager.add(actionRefresh);
+		// manager.add(actionRefresh);
 	}
 
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(this.sideboard);
-		// manager.add(this.header);
-		manager.add(this.actionShowPrefs);
 		manager.add(this.typeSelector);
 		manager.add(this.save);
 		manager.add(actionSort);
+		manager.add(this.actionShowPrefs);
+		manager.add(this.sideboard);
+		// manager.add(this.header);
+		manager.add(new Separator());
+		manager.add(actionRefresh);
 		super.fillLocalToolBar(manager);
 	}
 
@@ -215,8 +222,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			}
 		};
 		this.typeSelector = new ComboContributionItem("xxx");
-		this.sideboard = new ImageAction("Include Sideboard", "icons/obj16/sideboard16.png",
-				IAction.AS_CHECK_BOX) {
+		this.sideboard = new ImageAction("Include Sideboard", "icons/obj16/sideboard16.png", IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				triggerSideboard(!isInludeSideboard());
@@ -230,98 +236,20 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			}
 		};
 		this.header.setChecked(isInludeHeader());
-		this.actionShowPrefs = new ImageAction("Preferences...", "icons/clcl16/table.gif",
-				IAction.AS_PUSH_BUTTON) {
+		this.actionShowPrefs = new ImageAction("Preferences...", "icons/clcl16/gear.png", IAction.AS_PUSH_BUTTON) {
 			@Override
 			public void run() {
 				String id = DeckViewPreferencePage.class.getName();
 				if (id != null) {
-					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getArea().getShell(),
-							id, new String[] { id }, null);
+					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getArea().getShell(), id,
+							new String[] { id }, null);
 					dialog.open();
 					reloadData();
 				}
 			}
 		};
-		this.actionUnsort = new Action("Unsort") {
-			@Override
-			public void run() {
-				filter.setNoSort();
-				reloadData();
-			}
-
-			@Override
-			public String getToolTipText() {
-				return "Remove current sorting order";
-			}
-		};
-		this.menuSort = new MenuManager("Sort By");
-		populateSortMenu(menuSort);
-		this.actionSort = new ImageAction("Sort By", "icons/clcl16/sort.gif", IAction.AS_DROP_DOWN_MENU) {
-			{
-				setMenuCreator(new IMenuCreator() {
-					private Menu listMenu;
-
-					@Override
-					public void dispose() {
-						if (listMenu != null)
-							listMenu.dispose();
-					}
-
-					@Override
-					public Menu getMenu(Control parent) {
-						if (listMenu != null)
-							listMenu.dispose();
-						MenuManager menuSortLocal = new MenuManager("Sort By");
-						populateSortMenu(menuSortLocal);
-						listMenu = menuSortLocal.createContextMenu(parent);
-						return listMenu;
-					}
-
-					@Override
-					public Menu getMenu(Menu parent) {
-						return null;
-					}
-				});
-			}
-
-			@Override
-			public void run() {
-				MagicCardComparator peek = filter.getSortOrder().peek();
-				peek.reverse();
-				reloadData();
-			}
-		};
-		actionRefresh = new ImageAction("Refresh",
-				"icons/clcl16/refresh.gif",
-				() -> activate());
-	}
-
-	public void populateSortMenu(MenuManager menuSort) {
-		menuSort.add(actionUnsort);
-		MagicColumnCollection magicColumnCollection = new MagicColumnCollection(null);
-		Collection<AbstractColumn> columns = magicColumnCollection.getColumns();
-		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
-			final AbstractColumn man = iterator.next();
-			String name = man.getColumnFullName();
-			ICardField sortField = man.getSortField();
-			Action ac = new Action(name, IAction.AS_RADIO_BUTTON) {
-				@Override
-				public void run() {
-					if (isChecked()) {
-						filter.setSortField(sortField, !filter.getSortOrder().isAccending(sortField));
-						reloadData();
-					}
-				}
-			};
-			if (filter != null && filter.getSortOrder().isTop(sortField)) {
-				ac.setChecked(true);
-				String sortLabel = filter.getSortOrder().isAccending() ? "ACC" : "DEC";
-				ac.setText(name + " (" + sortLabel + ")");
-			} else
-				ac.setChecked(false);
-			menuSort.add(ac);
-		}
+		this.actionSort = new SortByAction(new MagicColumnCollection(null), filter, null, this::reloadData);
+		this.actionRefresh = new RefreshAction(this::activate);
 	}
 
 	protected boolean isInludeSideboard() {
@@ -353,23 +281,6 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		return selProvider;
 	}
 
-	@Override
-	public void activate() {
-		setFStore();
-		textResult = null;
-		setTopControl();
-		super.activate();
-		try {
-			textResult = getText();
-			setText(textResult);
-		} catch (InvocationTargetException e) {
-			setText("Error: " + e.getCause());
-		} catch (InterruptedException e) {
-			setText("Cancelled");
-		}
-		getArea().layout();
-	}
-
 	protected void setText(String textResult) {
 		this.textArea.setText(textResult);
 		if (textBrowser != null)
@@ -382,6 +293,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		if (fstore == null) {
 			fstore = new MemoryFilteredCardStore<IMagicCard>();
 			filter = this.fstore.getFilter();
+			actionSort.setFilter(filter);
 		}
 		filter.getSortOrder().setFrom(parentfstore.getFilter().getSortOrder());
 	}
@@ -458,14 +370,13 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		if (path.getFileExtension() == null || path.segmentCount() < 2) {
 			messageString = NLS.bind("File {0} already exists, overwrite?", pathString);
 		} else {
-			messageString = NLS.bind("File {0} already exists in directory {1}, owerwrite?",
-					path.lastSegment(), path.removeLastSegments(1)
-							.toOSString());
+			messageString = NLS.bind("File {0} already exists in directory {1}, owerwrite?", path.lastSegment(),
+					path.removeLastSegments(1).toOSString());
 		}
 		final MessageDialog dialog = new MessageDialog(getArea().getShell(), "Question", null, messageString,
 				MessageDialog.QUESTION,
-				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
-						IDialogConstants.CANCEL_LABEL }, 0);
+				new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL },
+				0);
 		String[] response = new String[] { YES, NO, CANCEL };
 		// run in syncExec because callback is from an operation,
 		// which is probably not running in the UI thread.
@@ -544,17 +455,36 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 
 	@Override
 	public void updateViewer() {
-		// TODO Auto-generated method stub
+		textResult = null;
+		setTopControl();
+		try {
+			textResult = getText();
+			setText(textResult);
+		} catch (InvocationTargetException e) {
+			setText("Error: " + e.getCause());
+		} catch (InterruptedException e) {
+			setText("Cancelled");
+		}
+		getArea().layout();
+	}
+
+	@Override
+	public void activate() {
+		setFStore();
+		setTopControl();
+		super.activate();
+		updateViewer();
 	}
 
 	@Override
 	public void reloadData() {
-		activate();
+		setFStore();
+		updateViewer();
 	}
 
 	@Override
 	public void refresh() {
-		activate();
+		reloadData();
 	}
 
 	@Override

@@ -11,9 +11,9 @@ import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.actions.CopyPasteActionGroup;
+import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
-import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public class GalleryDeckPage extends AbstractDeckListPage {
 	protected IAction actionRefresh;
@@ -33,7 +33,7 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 
 	protected void makeActions() {
 		actionGroupCopyPaste = new CopyPasteActionGroup(getSelectionProvider());
-		actionRefresh = new ImageAction("Refresh", "icons/clcl16/refresh.gif", this::activate);
+		actionRefresh = new RefreshAction(this::reloadData);
 	}
 
 	private MagicCardFilter getFilter() {
@@ -52,7 +52,7 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 
 	@Override
 	public void fillLocalPullDown(IMenuManager mm) {
-		mm.add(actionRefresh);
+		// mm.add(actionRefresh);
 		super.fillLocalPullDown(mm);
 	}
 
@@ -70,7 +70,9 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	}
 
 	public void reloadData() {
-		activate();
+		if (getFilteredStore().getCardStore() != null) {
+			getListControl().loadData(null);
+		}
 	}
 
 	@Override
@@ -81,8 +83,6 @@ public class GalleryDeckPage extends AbstractDeckListPage {
 	@Override
 	public void activate() {
 		super.activate();
-		if (getFilteredStore().getCardStore() != null) {
-			getListControl().loadData(null);
-		}
+		reloadData();
 	}
 }
