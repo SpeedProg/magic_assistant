@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-397517|Forest| |Basic Land - Forest| | |G|Tempest Remastered|Land|Douglas Shuler|269|G|
-397654|Island| |Basic Land - Island| | |U|Tempest Remastered|Land|Randy Gallegos|257|U|
-397597|Mountain| |Basic Land - Mountain| | |R|Tempest Remastered|Land|Mark Poole|265|R|
-397433|Plains| |Basic Land - Plains| | |W|Tempest Remastered|Land|Terese Nielsen|253|W|
-397467|Swamp| |Basic Land - Swamp| | |B|Tempest Remastered|Land|Brom|261|B|
+397517|Forest||Basic Land - Forest|||G|Tempest Remastered|Land|Douglas Shuler|269|G|
+397654|Island||Basic Land - Island|||U|Tempest Remastered|Land|Randy Gallegos|257|U|
+397597|Mountain||Basic Land - Mountain|||R|Tempest Remastered|Land|Mark Poole|265|R|
+397433|Plains||Basic Land - Plains|||W|Tempest Remastered|Land|Terese Nielsen|253|W|
+397467|Swamp||Basic Land - Swamp|||B|Tempest Remastered|Land|Brom|261|B|
 397564|Acidic Sliver|{B}{R}|Creature - Sliver|2|2|All Slivers have "{2}, Sacrifice this permanent: This permanent deals 2 damage to target creature or player."|Tempest Remastered|Uncommon|Jeff Miracola|206|All Slivers have "{2}, Sacrifice this permanent: This permanent deals 2 damage to target creature or player."|
 397641|Aftershock|{2}{R}{R}|Sorcery|||Destroy target artifact, creature, or land. Aftershock deals 3 damage to you.|Tempest Remastered|Common|Hannibal King|124|Destroy target artifact, creature, or land. Aftershock deals 3 damage to you.|
 397389|Aluren|{2}{G}{G}|Enchantment|||Any player may play creature cards with converted mana cost 3 or less without paying their mana cost and as though they had flash.|Tempest Remastered|Rare|April Lee|165|Any player may play creature cards with converted mana cost 3 or less without paying their mana cost and as though they had flash.|

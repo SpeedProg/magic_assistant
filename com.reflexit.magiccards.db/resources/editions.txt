@@ -120,15 +120,15 @@ Modern Masters|MMA||June 2013|Online|||
 Magic 2014 Core Set|M14||July 2013|Core||Modern|Magic 2014
 Duel Decks: Heroes vs. Monsters|DDL||September 2013|Starter|Duel Decks||
 From the Vault: Twenty|V13||September 2013|Reprint|From the Vault||
-Theros|THS||September 2013|Expansion|Theros Block|Standard|
+Theros|THS||September 2013|Expansion|Theros Block|Modern|
 Commander 2013 Edition|C13||November 2013|Expansion|Commander||Commander 2013
-Born of the Gods|BNG||February 2014|Expansion|Theros Block|Standard|
+Born of the Gods|BNG||February 2014|Expansion|Theros Block|Modern|
 Duel Decks: Jace vs. Vraska|DDM||March 2014|Starter|Duel Decks||
-Journey into Nyx|JOU||April 2014|Expansion|Theros Block|Standard|
+Journey into Nyx|JOU||April 2014|Expansion|Theros Block|Modern|
 Modern Event Deck 2014|MD1||May 2014|Starter|||
 Magic: The Gathering—Conspiracy|CNS||June 2014|Expansion|Conspiracy||Conspiracy,Magic: The Gathering - Conspiracy
 Vintage Masters|VMA||June 2014|Online|||
-Magic 2015 Core Set|M15||July 2014|Core||Standard|Magic 2015
+Magic 2015 Core Set|M15||July 2014|Core||Modern|Magic 2015
 Duel Decks: Speed vs. Cunning|DDN||September 2014|Starter|Duel Decks||
 From the Vault: Annihilation (2014)|V14||September 2014|Reprint|From the Vault||
 Khans of Tarkir|KTK||September 2014|Expansion|Khans of Tarkir|Standard|
@@ -145,3 +145,7 @@ Modern Masters 2015 Edition|MM2||May 2015|Online|||Modern Masters 2015
 Tempest Remastered|TPR||May 2015|Online|||
 From the Vault: Angels|V15||July 2015|Reprint|From the Vault||
 Magic Origins|ORI||July 2015|Core||Standard|Magic Origins
+Battle for Zendikar|BFZ||November 2015|Expansion||Standard|
+Commander 2015|C15||September 2015|Expansion|||
+Duel Decks: Zendikar vs. Eldrazi|DDP||November 2015|Starter|||
+Zendikar Expeditions|EXP||November 2015|Expansion|||
