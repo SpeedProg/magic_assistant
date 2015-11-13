@@ -593,7 +593,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
 		this.actionSortBy = new SortByAction(getSortColumnCollection(), getFilter(), getLocalPreferenceStore(),
 				this::reloadData);
-		createGroupAction();
+		this.actionGroupBy = new GroupByAction(getGroups(), getFilter(), getLocalPreferenceStore(), this::reloadData);
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.actionShowPrefs = new Action("Preferences...") {
 			@Override
@@ -634,12 +634,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		res.add(new GroupOrder(MagicCardField.RARITY));
 		res.add(new GroupOrder(MagicCardField.NAME));
 		return res;
-	}
-
-	protected void createGroupAction() {
-		this.actionGroupBy = new GroupByAction(getFilter(), getLocalPreferenceStore(), getGroups(), () -> {
-			reloadData();
-		});
 	}
 
 	@Override
@@ -835,6 +829,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		getSelectionProvider().setSelection(selection);
 		// MagicLogger.traceEnd("restoreSelection");
 	}
+
 	protected void updateSortColumn(final int index) {
 		if (index >= 0) {
 			AbstractColumn man = (AbstractColumn) getViewer().getLabelProvider(index);
@@ -843,11 +838,13 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 				sortField = getFilter().getGroupField();
 			if (sortField == null)
 				return;
-			new SortAction(sortField.getLabel(), sortField, getFilter().getSortOrder(), (o) -> {
-				manager.setSortColumn(index, o.isAccending() ? -1 : 1);
-			}).force();
+			final ICardField so = sortField;
+			new SortAction(sortField.getLabel(), sortField, getFilter().getSortOrder(), getFilter().getGroupOrder(),
+					(o) -> {
+						manager.setSortColumn(index, o.isAccending(so) ? -1 : 1);
+					}).force();
 		} else {
-			new UnsortAction(FIND, getFilter().getSortOrder(), (o) -> {
+			new UnsortAction(getFilter().getSortOrder(), getFilter().getGroupOrder(), (o) -> {
 				manager.setSortColumn(-1, 0);
 			}).force();
 		}
@@ -888,8 +885,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		final String value = manager.getColumnLayoutProperty();
 		if (value == null || value.isEmpty())
 			return;
+		IPersistentPreferenceStore store = getLocalPreferenceStore();
+		if (value.equals(store.getString(PreferenceConstants.LOCAL_COLUMNS)))
+			return;
 		synchronized (this) {
-			IPersistentPreferenceStore store = getLocalPreferenceStore();
 			store.removePropertyChangeListener(this.preferenceListener);
 			System.err.println("saving layout " + this.getClass() + " " + getName() + " " + value);
 			try {

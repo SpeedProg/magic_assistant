@@ -7,7 +7,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 
 @SuppressWarnings("serial")
 public class SortOrder implements Comparator {
-	private static final int MAX = 7;
+	private static final int MAX = 9;
 	private static final int MIN = 2;
 	private final MagicCardComparator order[] = new MagicCardComparator[MAX];
 	private int curSize;

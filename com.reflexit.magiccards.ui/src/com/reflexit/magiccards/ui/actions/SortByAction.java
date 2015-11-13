@@ -67,13 +67,13 @@ public class SortByAction extends ImageAction {
 		MagicCardFilter filter = getFilter();
 		if (filter == null)
 			return;
-		menuSort.add(new UnsortAction("Unsort", filter.getSortOrder(), this::sortBy));
+		menuSort.add(new UnsortAction(filter.getSortOrder(), filter.getGroupOrder(), this::sortBy));
 		Collection<AbstractColumn> columns = sortColumns.getColumns();
 		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
 			final AbstractColumn man = iterator.next();
 			String name = man.getColumnFullName();
 			ICardField sortField = man.getSortField();
-			menuSort.add(new SortAction(name, sortField, filter.getSortOrder(), this::sortBy));
+			menuSort.add(new SortAction(name, sortField, filter.getSortOrder(), filter.getGroupOrder(), this::sortBy));
 		}
 	}
 
@@ -97,7 +97,6 @@ public class SortByAction extends ImageAction {
 	}
 
 	public MenuManager createMenuManager() {
-
 		MenuManager menuSortLocal = new MenuManager("Sort By");
 		menuSortLocal.setRemoveAllWhenShown(true);
 		menuSortLocal.addMenuListener(new IMenuListener() {

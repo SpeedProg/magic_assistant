@@ -24,7 +24,7 @@ public class GroupByAction extends Action {
 	private IPreferenceStore store;
 	private Collection<GroupOrder> groups;
 
-	public GroupByAction(MagicCardFilter filter, IPreferenceStore store, Collection<GroupOrder> groups,
+	public GroupByAction(Collection<GroupOrder> groups, MagicCardFilter filter, IPreferenceStore store,
 			Runnable reload) {
 		super("Group By", IAction.AS_DROP_DOWN_MENU);
 		this.filter = filter;
@@ -54,6 +54,10 @@ public class GroupByAction extends Action {
 				return null;
 			}
 		});
+	}
+
+	public void setFilter(MagicCardFilter filter) {
+		this.filter = filter;
 	}
 
 	@Override
@@ -94,8 +98,11 @@ public class GroupByAction extends Action {
 
 	private void actionGroupBy(GroupOrder order) {
 		store.setValue(PreferenceConstants.GROUP_FIELD, order.getKey());
-		if (filter != null)
+		if (filter != null) {
 			filter.setGroupOrder(order);
+			order.sortByGroupOrder(filter.getSortOrder());
+			store.setValue(PreferenceConstants.SORT_ORDER, filter.getSortOrder().getStringValue());
+		}
 		reload();
 	}
 

@@ -32,6 +32,11 @@ public class GroupOrder implements Cloneable {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return key;
+	}
+
 	public String getLabel() {
 		return label;
 	}
@@ -117,7 +122,23 @@ public class GroupOrder implements Cloneable {
 		return fields[0];
 	}
 
+	public int getPosition(ICardField field1) {
+		for (int i = 0; i < fields.length; i++) {
+			ICardField field = fields[i];
+			if (field == field1)
+				return i;
+		}
+		return -1;
+	}
+
 	public boolean isGroupped() {
 		return fields.length > 0;
+	}
+
+	public void sortByGroupOrder(SortOrder order) {
+		for (int i = fields.length - 1; i >= 0; i--) {
+			ICardField field = fields[i];
+			order.setSortField(field, order.isAccending(field));
+		}
 	}
 }

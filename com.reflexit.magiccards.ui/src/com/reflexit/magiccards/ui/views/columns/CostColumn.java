@@ -46,12 +46,12 @@ public class CostColumn extends AbstractImageColumn {
 
 	protected String getFullCost(IMagicCard element, boolean withColors) {
 		String cmc = String.valueOf(element.get(MagicCardField.CMC));
+		String cost = element.getCost();
+		if (cost == null)
+			cost = "";
+		if (cost.equals("*"))
+			return cost;
 		if (withColors) {
-			String cost = element.getCost();
-			if (cost == null)
-				cost = "";
-			if (cost.equals("*"))
-				return cost;
 			return cost + " = " + cmc;
 		}
 		return cmc;

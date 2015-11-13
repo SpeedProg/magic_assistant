@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import org.eclipse.jface.action.Action;
 
+import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.SortOrder;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 
@@ -12,18 +13,20 @@ public class SortAction extends Action {
 	private String name;
 	private SortOrder sortOrder;
 	private Consumer<SortOrder> callback;
+	private GroupOrder groupOrder;
 
-	public SortAction(String name, ICardField sortField, SortOrder porder, Consumer<SortOrder> run) {
-		super(name, Action.AS_RADIO_BUTTON);
+	public SortAction(String name, ICardField sortField, SortOrder porder, GroupOrder primary,
+			Consumer<SortOrder> run) {
+		super(name, Action.AS_PUSH_BUTTON);
 		this.sortField = sortField;
 		this.name = name;
 		this.sortOrder = porder == null ? new SortOrder() : porder;
 		this.callback = run;
-		boolean checked = !sortOrder.isEmpty() && sortOrder.isTop(sortField);
-		setChecked(checked);
+		this.groupOrder = primary;
+		update();
 	}
 
-	public SortOrder getSortOrder() {
+	public final SortOrder getSortOrder() {
 		return sortOrder;
 	}
 
@@ -31,47 +34,40 @@ public class SortAction extends Action {
 		return callback;
 	}
 
-	public ICardField getSortField() {
+	public final ICardField getSortField() {
 		return sortField;
 	}
 
 	@Override
 	public void run() {
-		if (isChecked()) {
-			// MagicCardComparator peek = filter.getSortOrder().peek();
-			// if (peek.getField() == sortField) {
-			// peek.reverse();
-			// } else {
-			boolean newOrder = !getSortOrder().isAccending(getSortField());
-			getSortOrder().setSortField(getSortField(), newOrder);
-			// }
-			if (getCallback() != null)
-				getCallback().accept(getSortOrder());
+		if (sortField == null)
+			sortOrder.clear();
+		else {
+			boolean newOrder = !sortOrder.isAccending(sortField);
+			sortOrder.setSortField(sortField, newOrder);
 		}
+		if (groupOrder != null)
+			groupOrder.sortByGroupOrder(sortOrder);
+		if (getCallback() != null)
+			getCallback().accept(sortOrder);
 	}
 
-	@Override
-	public void setChecked(boolean checked) {
-		super.setChecked(checked);
-		if (getSortField() == null)
+	public void update() {
+		ICardField sf = getSortField();
+		if (sf == null)
 			return;
-		boolean acc = getSortOrder().isAccending(getSortField());
-		int pos = getSortOrder().getPosition(getSortField());
-		if (checked) {
-			pos = 1;
-			String sortLabel = " (" + pos + " " + (acc ? "ACC" : "DEC") + ")";
-			setText(name + sortLabel);
-		} else {
-			if (pos > 0) {
-				String sortLabel = " (" + pos + " " + (acc ? "ACC" : "DEC") + ")";
-				setText(name + sortLabel);
-			} else
-				setText(name);
-		}
+		boolean acc = getSortOrder().isAccending(sf);
+		int pos = getSortOrder().getPosition(sf);
+		int gpos = groupOrder == null ? -1 : groupOrder.getPosition(sf);
+		String g = gpos == -1 ? (pos >= 0 ? pos + "" : "") : (gpos + 1) + "";
+		if (!g.isEmpty()) {
+			String sortLabel = (acc ? "ACC" : "DEC");
+			setText(name + " (#" + g + " " + (gpos >= 0 ? " Group " : "") + sortLabel + ")");
+		} else
+			setText(name);
 	}
 
 	public void force() {
-		setChecked(true);
 		run();
 	}
 }
