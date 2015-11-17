@@ -66,7 +66,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	protected Action loadExtras;
 	protected IMagicControl control;
 	private Composite partControl;
-	private Action actionRefresh;
+	protected Action actionRefresh;
 	protected Action actionCopy;
 	protected Action actionPaste;
 	protected Action buyCards;

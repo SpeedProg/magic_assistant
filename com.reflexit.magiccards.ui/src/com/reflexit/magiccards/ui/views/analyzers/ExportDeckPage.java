@@ -112,17 +112,13 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			for (final ReportType rt : types) {
 				control.add(rt.getLabel());
 			}
-			System.err.println(reportType.getLabel());
 			control.setText(reportType.getLabel());
+			control.setSize(200, 16);
 			return control;
 		}
 
 		public Combo getControl() {
 			return control;
-		}
-
-		private ExportDeckPage getOuterType() {
-			return ExportDeckPage.this;
 		}
 	}
 

@@ -15,7 +15,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -464,11 +463,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	@Override
 	public void fillContextMenu(IMenuManager manager) {
+		// manager.add(this.actionShowFind);
+		// manager.add(this.actionShowFilter);
+		// manager.add(this.actionResetFilter);
 		manager.add(this.actionShowPrefs);
-		manager.add(this.actionShowFind);
-		manager.add(this.actionShowFilter);
-		manager.add(this.actionResetFilter);
-		manager.add(new Separator());
 	}
 
 	@Override
@@ -477,11 +475,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			manager.add(this.actionSortBy.createMenuManager());
 		if (actionGroupBy != null)
 			manager.add(this.actionGroupBy.createMenuManager());
-		manager.add(this.actionShowPrefs);
 		manager.add(this.actionShowFind);
 		manager.add(this.actionShowFilter);
 		manager.add(this.actionResetFilter);
-		manager.add(new Separator());
+		manager.add(this.actionShowPrefs);
 	}
 
 	@Override
@@ -490,11 +487,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			manager.add(this.actionGroupBy);
 		if (actionSortBy != null)
 			manager.add(this.actionSortBy);
-		manager.add(this.actionShowPrefs);
 		manager.add(this.actionShowFind);
 		manager.add(this.actionShowFilter);
 		manager.add(this.actionResetFilter);
-		manager.add(new Separator());
+		manager.add(this.actionShowPrefs);
 	};
 
 	protected String getViewPreferencePageId() {

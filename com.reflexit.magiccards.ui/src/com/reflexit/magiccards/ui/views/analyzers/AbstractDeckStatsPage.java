@@ -17,12 +17,12 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
+import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
-import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	protected ChartCanvas canvas;
@@ -45,9 +45,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		createCardsTree(sashForm);
 		sashForm.setWeights(new int[] { 60, 40 });
-		actionRefresh = new ImageAction("Refresh",
-				"icons/clcl16/refresh.gif",
-				() -> activate());
+		actionRefresh = new RefreshAction(this::activate);
 		return area;
 	}
 
@@ -59,9 +57,15 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public void fillLocalPullDown(IMenuManager mm) {
-		mm.add(actionRefresh);
-		super.fillLocalPullDown(mm);
+	public void fillLocalPullDown(IMenuManager manager) {
+		manager.add(actionRefresh);
+		super.fillLocalPullDown(manager);
+	}
+
+	@Override
+	public void fillLocalToolBar(IToolBarManager manager) {
+		super.fillLocalToolBar(manager);
+		manager.add(actionRefresh);
 	}
 
 	@Override

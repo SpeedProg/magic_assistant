@@ -13,6 +13,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -373,8 +374,10 @@ public class DeckView extends AbstractMyCardsView {
 
 	@Override
 	protected void fillLocalToolBar(IToolBarManager manager) {
-		super.fillLocalToolBar(manager);
 		manager.add(this.sideboard);
+		manager.add(new Separator());
+		super.fillLocalToolBar(manager);
+		manager.add(this.actionRefresh);
 	}
 
 	/*

@@ -248,6 +248,8 @@ public class DrawPage extends AbstractDeckListPage {
 		manager.add(new Separator());
 		manager.add(newturn);
 		manager.add(reset);
+		manager.add(new Separator());
+		manager.add(refresh);
 		super.fillLocalToolBar(manager);
 	}
 
