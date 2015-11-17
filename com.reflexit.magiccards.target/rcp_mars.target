@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="rcp_mars" sequenceNumber="70">
+<?pde version="3.8"?><target name="rcp_mars" sequenceNumber="71">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.hamcrest.core.source" version="1.3.0.v201303031735"/>
-<unit id="org.eclipse.swtbot.generator.feature.feature.group" version="2.3.0.201506081302"/>
-<unit id="org.hamcrest.library.source" version="1.3.0.v201305281000"/>
-<unit id="org.eclipse.swtbot.forms.feature.group" version="2.3.0.201506081302"/>
-<unit id="org.eclipse.swtbot.feature.group" version="2.3.0.201506081302"/>
-<unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="2.3.0.201506081302"/>
-<unit id="org.apache.log4j.source" version="1.2.15.v201012070815"/>
-<unit id="org.hamcrest.core" version="1.3.0.v201303031735"/>
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.3.0.201506081302"/>
-<unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
-<unit id="org.hamcrest.library" version="1.3.0.v201305281000"/>
-<unit id="org.eclipse.swtbot.ide.feature.group" version="2.3.0.201506081302"/>
+<unit id="org.hamcrest.core.source" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.generator.feature.feature.group" version="0.0.0"/>
+<unit id="org.hamcrest.library.source" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.forms.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="0.0.0"/>
+<unit id="org.apache.log4j.source" version="0.0.0"/>
+<unit id="org.hamcrest.core" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
+<unit id="org.apache.log4j" version="0.0.0"/>
+<unit id="org.hamcrest.library" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.ide.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.platform.ide" version="4.5.1.M20150904-0015"/>
-<unit id="org.eclipse.sdk.ide" version="4.5.1.M20150904-0015"/>
-<unit id="org.eclipse.pde.api.tools.ee.feature.feature.group" version="1.0.1.v20140424-1723"/>
-<unit id="org.eclipse.platform.sdk" version="4.5.1.M20150904-0015"/>
-<unit id="org.eclipse.rcp.source.feature.group" version="4.5.1.v20150904-0015"/>
-<unit id="org.eclipse.pde.feature.group" version="3.11.1.v20150904-0345"/>
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.11.1.v20150831-1342"/>
-<unit id="org.eclipse.rcp.feature.group" version="4.5.1.v20150904-0015"/>
-<unit id="org.eclipse.pde.source.feature.group" version="3.11.1.v20150904-0345"/>
-<unit id="org.eclipse.jdt.source.feature.group" version="3.11.1.v20150904-0015"/>
-<unit id="org.eclipse.releng.tools.feature.group" version="3.6.0.v20150527-0145"/>
+<unit id="org.eclipse.platform.ide" version="0.0.0"/>
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.pde.api.tools.ee.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
+<unit id="org.eclipse.rcp.source.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.pde.source.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.jdt.source.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.releng.tools.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.5"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="3.10.1.v20150810-1719"/>
-<unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.0.0.v20150810-1719"/>
-<unit id="org.eclipse.birt.feature.group" version="4.5.0.v201506092134"/>
-<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="4.5.0.v201506092134"/>
-<unit id="org.eclipse.ecf.core.feature.feature.group" version="1.1.0.v20150810-1719"/>
-<unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="3.10.1.v20150810-1719"/>
-<unit id="org.eclipse.ecf.core.feature.group" version="3.10.1.v20150810-1719"/>
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.11.1.v20150806-0404"/>
+<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/mars"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="1.0.0.201509301423"/>
+<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
 </location>
 </locations>
