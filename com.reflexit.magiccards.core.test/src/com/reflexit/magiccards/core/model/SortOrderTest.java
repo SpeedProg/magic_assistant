@@ -158,13 +158,15 @@ public class SortOrderTest extends TestCase {
 	public void testFieldSpecGone() {
 		order.setSortField(MagicCardField.NAME, true);
 		order.setSortField(MagicCardField.SPECIAL, true);
+		order.setSortField(MagicCardField.TOUGHNESS, true);
+		order.setSortField(MagicCardField.POWER, true);
 		order.setSortField(MagicCardField.CMC, true);
 		order.setSortField(MagicCardField.COST, true);
 		order.setSortField(MagicCardField.TYPE, true);
 		order.setSortField(MagicCardField.TEXT, true);
 		order.setSortField(MagicCardField.ARTIST, true);
 		assertEquals(MagicCardField.ARTIST, order.peek().getField());
-		assertEquals(7, order.size());
+		assertEquals(9, order.size());
 		cloneAndSet(MagicCardField.SPECIAL, "a", "b", "c");
 		setFieldMass(MagicCardField.NAME, "c", "b", "a");
 		contractTest(cards[2], cards[1], cards[0]);

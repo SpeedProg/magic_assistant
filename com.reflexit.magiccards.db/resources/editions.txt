@@ -46,7 +46,7 @@ Judgment|JUD|JU|May 2002|Expansion|Odyssey||
 Onslaught|ONS|ON|October 2002|Expansion|Onslaught||
 Legions|LGN||February 2003|Expansion|Onslaught||
 Eighth Edition|8ED|8E|July 2003|Core||Modern|8th Edition
-Scourge|SCG|SC|May 2003|Expansion|Onslaught||
+Scourge|SCG|SC|May 2003|Expansion|Onslaught||EDITIONS_SIZE
 Mirrodin|MRD|MR|October 2003|Expansion|Mirrodin|Modern|
 Champions of Kamigawa|CHK|COK|October 2004|Expansion|Kamigawa|Modern|
 Darksteel|DST|DS|February 2004|Expansion|Mirrodin|Modern|
@@ -145,7 +145,7 @@ Modern Masters 2015 Edition|MM2||May 2015|Online|||Modern Masters 2015
 Tempest Remastered|TPR||May 2015|Online|||
 From the Vault: Angels|V15||July 2015|Reprint|From the Vault||
 Magic Origins|ORI||July 2015|Core||Standard|Magic Origins
-Battle for Zendikar|BFZ||November 2015|Expansion||Standard|
+Battle for Zendikar|BFZ||November 2015|Expansion|Battle for Zendikar|Standard|
 Commander 2015|C15||September 2015|Expansion|||
-Duel Decks: Zendikar vs. Eldrazi|DDP||November 2015|Starter|||
+Duel Decks: Zendikar vs. Eldrazi|DDP||November 2015|Starter|Duel Decks||
 Zendikar Expeditions|EXP||November 2015|Expansion|||

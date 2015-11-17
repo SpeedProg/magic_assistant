@@ -23,13 +23,14 @@ public class SortOrder implements Comparator {
 	public int compare(Object o1, Object o2) {
 		if (o1 == o2)
 			return 0; // this is only case it is 0
-		int dir = isAccending() ? 1 : -1;
+
 		for (int i = curSize - 1; i >= 0; i--) {
 			MagicCardComparator elem = order[i];
 			int d = elem.compare(o1, o2);
 			if (d != 0)
 				return d; // no "dir" since comparator has it already
 		}
+		int dir = isAccending() ? 1 : -1;
 		return dir * (System.identityHashCode(o1) - System.identityHashCode(o2));
 	}
 

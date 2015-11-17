@@ -200,7 +200,8 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("Seb McKinnon", card.getArtist());
 		assertEquals("Magic Game Day Cards", card.getSet());
 		assertEquals("My Text", card.getText());
-		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=373564&type=card", card
+		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=405319&type=card",
+				card
 				.getBase().getImageUrl());
 	}
 
