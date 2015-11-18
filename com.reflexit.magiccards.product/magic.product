@@ -5,7 +5,7 @@
 
    <aboutInfo>
       <text>
-			Specified in branding plugin.xml
+         Specified in branding plugin.xml
       </text>
    </aboutInfo>
 
@@ -67,6 +67,8 @@
          </text>
    </license>
 
+   <plugins>
+   </plugins>
 
    <features>
       <feature id="com.reflexit.magiccards.feature.rcp" version="1.5.0.qualifier"/>
