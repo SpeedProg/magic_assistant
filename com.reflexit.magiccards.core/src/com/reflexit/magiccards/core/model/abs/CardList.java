@@ -26,13 +26,16 @@ public class CardList<T extends ICard> implements ICardList<T> {
 
 	@SuppressWarnings("unchecked")
 	public CardList(Iterable<? extends T> iterable) {
-		if (iterable instanceof ArrayList) {
-			this.list = (ArrayList<T>) ((ArrayList<T>) iterable).clone();
-		} else if (iterable == null) {
+		if (iterable == null) {
 			this.list = Collections.emptyList();
-		} else {
-			this.list = copyList(iterable);
-		}
+		} else
+			synchronized (iterable) {
+				if (iterable instanceof ArrayList) {
+					this.list = (ArrayList<T>) ((ArrayList<T>) iterable).clone();
+				} else {
+					this.list = copyList(iterable);
+				}
+			}
 	}
 
 	@SuppressWarnings("unchecked")

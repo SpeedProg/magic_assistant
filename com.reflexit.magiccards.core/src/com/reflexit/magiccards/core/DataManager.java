@@ -564,7 +564,8 @@ public class DataManager {
 		getMagicDBStore().initialize();
 		getDBPriceStore().initialize();
 		getDBPriceStore().reloadPrices(); // XXX
-		getCardHandler().getLibraryFilteredStore().update();
+		getCardHandler().getLibraryCardStore().initialize();
+		reconcile();
 		MagicLogger.traceEnd("syncDb");
 	}
 

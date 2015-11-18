@@ -105,9 +105,11 @@ public class LibraryCardStore extends CollectionMultiFileCardStore {
 						CardElement elem = (CardElement) event.getData();
 						if (elem instanceof CardCollection) {
 							ICardStore<IMagicCard> store = getStore(elem.getLocation());
-							DataManager.getInstance().remove(null, store);
-							getMultiStore().removeLocation(elem.getLocation());
-							DataManager.getInstance().reconcile(store);
+							if (store != null) {
+								DataManager.getInstance().remove(null, store);
+								getMultiStore().removeLocation(elem.getLocation());
+								DataManager.getInstance().reconcile(store);
+							}
 						}
 						break;
 					}

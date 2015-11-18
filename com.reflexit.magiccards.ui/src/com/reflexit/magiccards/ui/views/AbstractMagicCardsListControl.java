@@ -88,8 +88,8 @@ import com.reflexit.magiccards.ui.views.search.TableSearch;
 import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
 
 /**
- * Magic card list control - MagicControl that represents list of cards (tree or table), and comes with actions and
- * preferences to manipulate this list
+ * Magic card list control - MagicControl that represents list of cards (tree or
+ * table), and comes with actions and preferences to manipulate this list
  *
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl
@@ -160,12 +160,19 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
 	 */
 	@Override
 	public synchronized IFilteredCardStore getFilteredStore() {
 		if (fstore == null) {
 			fstore = doGetFilteredStore();
+			if (fstore != null) {
+				if (actionGroupBy != null)
+					actionSortBy.setFilter(fstore.getFilter());
+				if (actionGroupBy != null)
+					actionGroupBy.setFilter(fstore.getFilter());
+			}
 		}
 		return fstore;
 	}
@@ -191,7 +198,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
+	 * @see
+	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
 	 */
 	@Override
 	public ISelection getSelection() {
@@ -587,9 +595,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.actionResetFilter.setText("Reset Filter");
 		this.actionResetFilter.setToolTipText("Resets the filter to default values");
 		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
-		this.actionSortBy = new SortByAction(getSortColumnCollection(), getFilter(), getLocalPreferenceStore(),
+		this.actionSortBy = new SortByAction(getSortColumnCollection(), null, getLocalPreferenceStore(),
 				this::reloadData);
-		this.actionGroupBy = new GroupByAction(getGroups(), getFilter(), getLocalPreferenceStore(), this::reloadData);
+		this.actionGroupBy = new GroupByAction(getGroups(), null, getLocalPreferenceStore(), this::reloadData);
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.actionShowPrefs = new Action("Preferences...") {
 			@Override
@@ -639,7 +647,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		String property = event.getProperty();
 		Object newValue = event.getNewValue();
 		if (property.equals(PreferenceConstants.LOCAL_COLUMNS)) {
-			// System.err.println(getFilteredStore().getLocation() + " proprty change event: " + event.getProperty()
+			// System.err.println(getFilteredStore().getLocation() + " proprty
+			// change event: " + event.getProperty()
 			// + "\n " + event.getOldValue() + "\n " + event.getNewValue());
 			// new Exception().printStackTrace();
 			WaitUtils.syncExec(() -> {
@@ -703,7 +712,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected void runResetFilter() {
-		getSelectionProvider().setSelection(new StructuredSelection()); // remove selection
+		getSelectionProvider().setSelection(new StructuredSelection()); // remove
+																		// selection
 		PreferenceInitializer.setToDefault(getFilterPreferenceStore());
 		syncQuickFilter();
 		refilterData();
