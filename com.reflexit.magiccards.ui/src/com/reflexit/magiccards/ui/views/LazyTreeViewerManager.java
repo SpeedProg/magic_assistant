@@ -5,8 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.reflexit.magiccards.core.MagicLogger;
-
 public class LazyTreeViewerManager extends TreeViewerManager {
 	public LazyTreeViewerManager(String id) {
 		super(id);
@@ -49,8 +47,8 @@ public class LazyTreeViewerManager extends TreeViewerManager {
 			// (System.currentTimeMillis() - time) + " ms");
 			int size = getContentProvider().getSize(input);
 			// System.err.println("size=" + size);
-			MagicLogger.traceStart("treeSet");
-			MagicLogger.trace("size " + size);
+			// MagicLogger.traceStart("treeSet");
+			// MagicLogger.trace("size " + size);
 			this.viewer.getTree().setItemCount(size);
 			try {
 				this.viewer.refresh(true);
@@ -58,10 +56,10 @@ public class LazyTreeViewerManager extends TreeViewerManager {
 				this.viewer.setInput(input);
 			}
 			if (size == 1) {
-				MagicLogger.trace("expand");
+				// MagicLogger.trace("expand");
 				viewer.expandToLevel(2);
 			}
-			MagicLogger.traceEnd("treeSet");
+			// MagicLogger.traceEnd("treeSet");
 		}
 		// } else {
 		// this.viewer.setSelection(new StructuredSelection());

@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model.events;
 
-import java.util.Collection;
 import java.util.Set;
 
 import com.reflexit.magiccards.core.model.abs.CardList;
@@ -16,7 +15,7 @@ public class CardEventUpdate extends CardEvent {
 		super(source, UPDATE, new CardList<ICard>(data), mask);
 	}
 
-	public CardEventUpdate(Object source, Collection<? extends ICard> data, Set<? extends ICardField> mask) {
+	public CardEventUpdate(Object source, Iterable<? extends ICard> data, Set<? extends ICardField> mask) {
 		super(source, UPDATE, new CardList<ICard>(data), mask);
 	}
 

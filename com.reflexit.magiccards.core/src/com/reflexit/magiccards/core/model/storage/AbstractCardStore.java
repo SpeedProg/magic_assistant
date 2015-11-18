@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.abs.CardList;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -237,17 +238,18 @@ public abstract class AbstractCardStore<T extends ICard> extends EventManager im
 	}
 
 	@Override
-	public void updateList(Collection<T> cards, Set<? extends ICardField> mask) {
+	public void updateList(Iterable<T> cards, Set<? extends ICardField> mask) {
 		initialize();
+		CardList<T> list = new CardList<>(cards);
 		if (cards != null) {
-			for (T card : cards) {
+			for (T card : list) {
 				synchronized (this) {
 					doUpdate(card, mask);
 				}
 			}
 		}
 		if (isListenerAttached())
-			fireEvent(new CardEventUpdate(this, cards, mask));
+			fireEvent(new CardEventUpdate(this, list, mask));
 		return;
 	}
 

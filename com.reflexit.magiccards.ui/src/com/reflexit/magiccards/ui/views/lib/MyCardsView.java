@@ -8,17 +8,16 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.Locations;
-import com.reflexit.magiccards.core.model.events.CardEvent;
-import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 
-public class MyCardsView extends AbstractMyCardsView implements ICardEventListener {
+public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
 
 	/**
@@ -116,15 +115,4 @@ public class MyCardsView extends AbstractMyCardsView implements ICardEventListen
 		// ((GallerySelectionView) showView).setDetails(getSelection());
 
 	}
-
-	@Override
-	public void handleEvent(final CardEvent event) {
-		super.handleEvent(event);
-		int type = event.getType();
-		if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER
-				|| type == CardEvent.RENAME_CONTAINER) {
-			reloadData();
-		}
-	}
-
 }

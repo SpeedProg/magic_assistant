@@ -309,11 +309,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		super.init(site);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#dispose()
-	 */
 	@Override
 	public void dispose() {
 		DM.getLibraryCardStore().removeListener(this);
@@ -321,19 +316,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		super.dispose();
 	}
 
-	@Override
-	public void handleEvent(final CardEvent event) {
-		int type = event.getType();
-		if (type == CardEvent.UPDATE) {
-			// handled by card control
-		} else if (type == CardEvent.ADD_CONTAINER || type == CardEvent.REMOVE_CONTAINER) {
-			// nothing
-		} else if (type == CardEvent.ADD) {
-			// handled by card control
-		} else if (type == CardEvent.RENAME_CONTAINER) {
-			reloadData();
-		}
-	}
 
 	protected void editSelected() {
 		final IStructuredSelection selection = (IStructuredSelection) getSelectionProvider().getSelection();
@@ -344,4 +326,10 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		if (!cards.isEmpty())
 			new EditMagicCardPhysicalDialog(getViewSite().getShell(), cards).open();
 	}
+
+	@Override
+	public void handleEvent(CardEvent event) {
+		// do nothing
+	}
+
 }

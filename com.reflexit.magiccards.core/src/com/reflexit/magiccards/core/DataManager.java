@@ -82,7 +82,8 @@ public class DataManager {
 	}
 
 	public ModelRoot getModelRoot() {
-		if (root != null) return root;
+		if (root != null)
+			return root;
 		synchronized (this) {
 			if (root == null)
 				root = ModelRoot.getInstance(FileUtils.getMagicCardsDir());
@@ -121,8 +122,7 @@ public class DataManager {
 		return rootDir;
 	}
 
-	boolean copyCards(Collection<IMagicCard> cards, ICardStore<IMagicCard> store,
-			Location to) {
+	boolean copyCards(Collection<IMagicCard> cards, ICardStore<IMagicCard> store, Location to) {
 		if (store == null)
 			throw new NullPointerException();
 		boolean virtual = store.isVirtual();
@@ -130,8 +130,8 @@ public class DataManager {
 		boolean ownCopyAllowed = owncopy;
 		for (Iterator<IMagicCard> iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = iterator.next();
-			if (ownCopyAllowed == false && card instanceof MagicCardPhysical
-					&& virtual == false && ((MagicCardPhysical) card).isOwn()) {
+			if (ownCopyAllowed == false && card instanceof MagicCardPhysical && virtual == false
+					&& ((MagicCardPhysical) card).isOwn()) {
 				throw new MagicException(
 						"Cannot copy own cards into non-virtual deck, use move instead - or override this protection in preferences");
 			}
@@ -153,17 +153,14 @@ public class DataManager {
 	 * @return
 	 */
 	public Collection<IMagicCard> resolve(Collection<IMagicCard> input) {
-		return resolve(input, new ArrayList<IMagicCard>(),
-				getMagicDBStore());
+		return resolve(input, new ArrayList<IMagicCard>(), getMagicDBStore());
 	}
 
-	private Collection<IMagicCard> resolve(Collection<IMagicCard> input,
-			Collection<IMagicCard> output, ICardStore db) {
+	private Collection<IMagicCard> resolve(Collection<IMagicCard> input, Collection<IMagicCard> output, ICardStore db) {
 		for (Iterator iterator = input.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof CardGroup) {
-				resolve(((CardGroup) card).getChildren(),
-						output, db);
+				resolve(((CardGroup) card).getChildren(), output, db);
 			} else {
 				// Need to repair references to MagicCard instances
 				IMagicCard cardRes = resolve(card, db);
@@ -174,12 +171,10 @@ public class DataManager {
 		return output;
 	}
 
-	private Collection<IMagicCard> resolve(ICard[] input,
-			Collection<IMagicCard> output, ICardStore db) {
+	private Collection<IMagicCard> resolve(ICard[] input, Collection<IMagicCard> output, ICardStore db) {
 		for (ICard card : input) {
 			if (card instanceof CardGroup) {
-				resolve(((CardGroup) card).getChildren(),
-						output, db);
+				resolve(((CardGroup) card).getChildren(), output, db);
 			} else {
 				// Need to repair references to MagicCard instances
 				IMagicCard cardRes = resolve((IMagicCard) card, db);
@@ -209,8 +204,7 @@ public class DataManager {
 		return moveCards(cards1, sto, sto.getLocation());
 	}
 
-	boolean moveCards(Collection cards, ICardStore<IMagicCard> store,
-			Location to) {
+	boolean moveCards(Collection cards, ICardStore<IMagicCard> store, Location to) {
 		if (store == null)
 			throw new NullPointerException();
 		boolean virtual = store.isVirtual();
@@ -221,8 +215,7 @@ public class DataManager {
 			if (card instanceof MagicCardPhysical) {
 				if (((IMagicCardPhysical) card).isOwn()) {
 					if (virtual)
-						throw new MagicException(
-								"Cannot move own cards to virtual collection. Use copy instead.");
+						throw new MagicException("Cannot move own cards to virtual collection. Use copy instead.");
 					phi.setOwn(true);
 				} else {
 					phi.setOwn(false);
@@ -313,8 +306,13 @@ public class DataManager {
 	}
 
 	public void remove(Collection list, ICardStore store) {
-		store.removeAll(list);
-		reconcile(list);
+		if (list == null) {
+			store.removeAll();
+			reconcile();/// XXX
+		} else {
+			store.removeAll(list);
+			reconcile(list);
+		}
 	}
 
 	public void remove(MagicCardPhysical mcp) {
@@ -354,8 +352,7 @@ public class DataManager {
 		if (cardStore == null)
 			throw new IllegalArgumentException("Cannot find store for " + cardStore);
 		int left = card.getCount() - right;
-		MagicCardPhysical card2 = new MagicCardPhysical(card,
-				card.getLocation());
+		MagicCardPhysical card2 = new MagicCardPhysical(card, card.getLocation());
 		card.setCount(left);
 		card2.setCount(right);
 		Set<MagicCardField> fieldSet = Collections.singleton(MagicCardField.COUNT);
@@ -385,13 +382,17 @@ public class DataManager {
 		reconcile(mc);
 	}
 
+	public void update(ICardStore<IMagicCard> cardStore, Set<? extends ICardField> fieldSet) {
+		cardStore.updateList(null, fieldSet);
+		reconcile(cardStore);
+	}
 	public void update(IMagicCard card, Set<? extends ICardField> fieldSet) {
 		if (card instanceof MagicCard) {
 			updateMC((MagicCard) card, fieldSet);
 		} else if (card instanceof MagicCardPhysical) {
 			updateMCP((MagicCardPhysical) card, fieldSet);
 		} else {
-			//ignore
+			// ignore
 		}
 	}
 
@@ -405,8 +406,7 @@ public class DataManager {
 				Location loc = ((ILocatable) card).getLocation();
 				ICardStore<IMagicCard> store = getCardStore(loc);
 				if (store == null)
-					throw new IllegalArgumentException("Cannot find store for "
-							+ loc);
+					throw new IllegalArgumentException("Cannot find store for " + loc);
 				store.updateList(list, fieldSet);
 			} else {
 				getMagicDBStore().updateList(list, fieldSet);
@@ -415,13 +415,13 @@ public class DataManager {
 		}
 	}
 
-	public Collection<MagicCardPhysical> materialize(
-			Collection<? extends IMagicCard> cards, ICardStore<IMagicCard> from) {
+	public Collection<MagicCardPhysical> materialize(Collection<? extends IMagicCard> cards,
+			ICardStore<IMagicCard> from) {
 		return materialize(cards, Collections.singleton(from));
 	}
 
-	public Collection<MagicCardPhysical> materialize(
-			Collection<? extends IMagicCard> cards, Collection<ICardStore<IMagicCard>> stores) {
+	public Collection<MagicCardPhysical> materialize(Collection<? extends IMagicCard> cards,
+			Collection<ICardStore<IMagicCard>> stores) {
 		ArrayList<MagicCardPhysical> in = new ArrayList<MagicCardPhysical>();
 		DataManager.expandGroups(in, cards, new Predicate<Object>() {
 			@Override
@@ -438,8 +438,7 @@ public class DataManager {
 		return res;
 	}
 
-	public ArrayList<MagicCardPhysical> materialize(MagicCardPhysical card,
-			Collection<ICardStore<IMagicCard>> stores,
+	public ArrayList<MagicCardPhysical> materialize(MagicCardPhysical card, Collection<ICardStore<IMagicCard>> stores,
 			ArrayList<MagicCardPhysical> res) {
 		if (card.isOwn()) {
 			res.add(new MagicCardPhysical(card, null));
@@ -506,16 +505,14 @@ public class DataManager {
 			}
 		}
 		Collection<IMagicCard> list2 = new MagicCardList(list).getMagicBaseList();
-		getMagicDBStore().updateList(list2,
-				Collections.singleton(MagicCardField.OWN_COUNT));
+		getMagicDBStore().updateList(list2, Collections.singleton(MagicCardField.OWN_COUNT));
 	}
 
 	private void reconcile(MagicCardPhysical mcp) {
 		reconcile(mcp, getMagicDBStore(), getLibraryCardStore(), true);
 	}
 
-	private void reconcile(MagicCardPhysical mcp, ICardStore db,
-			ICardStore library, boolean update) {
+	private void reconcile(MagicCardPhysical mcp, ICardStore db, ICardStore library, boolean update) {
 		// System.err.println("reconcile " + mcp + " " +
 		// System.identityHashCode(mcp));
 		int id = mcp.getCardId();
@@ -530,7 +527,8 @@ public class DataManager {
 		CardGroup realcards = new CardGroup(MagicCardField.ID, mcp.getName());
 		realcards.addAll(library.getCards(id));
 		links.put(id, realcards);
-		if (update) update(mcp.getBase(), Collections.singleton(MagicCardField.OWN_COUNT));
+		if (update)
+			update(mcp.getBase(), Collections.singleton(MagicCardField.OWN_COUNT));
 	}
 
 	public CardGroup getRealCards(MagicCard mc) {

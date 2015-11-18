@@ -75,7 +75,7 @@ public class XmlCardHolder implements ICardHandler {
 
 	@Override
 	public ICardStore getLibraryCardStore() {
-		return getLibraryFilteredStore().getCardStore();
+		return LibraryCardStore.getInstance();
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import java.util.Collection;
 import java.util.Set;
 
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -20,5 +19,5 @@ public interface ICardEventManager<T> {
 	 */
 	public void update(T card, Set<? extends ICardField> mask);
 
-	public void updateList(Collection<T> cards, Set<? extends ICardField> mask);
+	public void updateList(Iterable<T> cards, Set<? extends ICardField> mask);
 }

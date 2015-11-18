@@ -787,26 +787,23 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	 */
 	@Override
 	public void updateViewer() {
-		final String key = "updateViewer";
-		MagicLogger.traceStart(key);
+		IFilteredCardStore filteredStore = getFilteredStore();
+		Location location = filteredStore.getLocation();
+		Object object = location == null ? getClass() : location;
+		final String key = "updateViewer " + object;
 		try {
-			IFilteredCardStore filteredStore = getFilteredStore();
-			Location location = filteredStore.getLocation();
-			Object object = location == null ? getClass() : location;
-			MagicLogger.trace("updateViewer " + object);
+			MagicLogger.traceStart(key);
 			if (manager.getControl() == null || manager.getControl().isDisposed())
 				return;
 			if (getFilter() != null)
 				manager.setGrouppingEnabled(getFilter().isGroupped());
 			ISelection selection = getSelection();
 			getSelectionProvider().setSelection(new StructuredSelection());
-			MagicLogger.trace("updateViewer manager update");
 			manager.updateViewer(filteredStore);
 			if (!selection.isEmpty())
 				restoreSelection(selection);
 			updateStatus();
 		} catch (Exception e) {
-			MagicLogger.log("Exception during update operation");
 			MagicLogger.log(e);
 		} finally {
 			MagicLogger.traceEnd(key);

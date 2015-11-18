@@ -427,12 +427,8 @@ public class DeckView extends AbstractMyCardsView {
 					if (deck.getLocation().equals(srcLocation) || deck == event.getSource()) {
 						updatePartName();
 						if (!secondaryId.equals(deck.getLocation().getBaseFileName())) {
-							openCollection(deck, getSelection());// reopen newly
-																	// named
-																	// deck, to
-																	// change
-																	// secondary
-																	// id
+							// reopen newly named deck, to change secondary id
+							openCollection(deck, getSelection());
 							close();
 							return;
 						}

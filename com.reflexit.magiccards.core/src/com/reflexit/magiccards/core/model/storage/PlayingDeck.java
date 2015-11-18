@@ -161,10 +161,17 @@ public class PlayingDeck extends AbstractFilteredCardStore<MagicCardGame> {
 
 	private void addAndNumber(Collection<MagicCardGame> list) {
 		int count = store.size();
-		for (MagicCardGame mg : list) {
-			mg.setDrawId(count);
-			count++;
-			store.add(mg);
+		IStorage<MagicCardGame> storage = store.getStorage();
+		boolean before = storage.isAutoCommit();
+		storage.setAutoCommit(false);
+		try {
+			for (MagicCardGame mg : list) {
+				mg.setDrawId(count);
+				count++;
+				store.add(mg);
+			}
+		} finally {
+			storage.setAutoCommit(before);
 		}
 	}
 

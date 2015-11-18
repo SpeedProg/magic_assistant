@@ -87,13 +87,13 @@ public class CardCollection extends CardElement {
 		try {
 			IFilteredCardStore<IMagicCard> fi = DataManager.getInstance().getCardHandler()
 					.getCardCollectionFilteredStore(getId());
-			open(fi.getCardStore());
+			associate(fi.getCardStore());
 		} finally {
 			opening = false;
 		}
 	}
 
-	public synchronized void open(ICardStore<IMagicCard> store) {
+	public synchronized void associate(ICardStore<IMagicCard> store) {
 		if (store == null)
 			return;
 		this.store = store;

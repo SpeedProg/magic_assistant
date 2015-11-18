@@ -12,6 +12,7 @@ package com.reflexit.magiccards.ui.dnd;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
@@ -75,9 +76,19 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 
 	private Location determineLocation() {
 		Object input = getViewer().getInput();
-		ILocatable target = (ILocatable) input;
-		Location targetLocation = target.getLocation();
-		return targetLocation;
+		if (!(input instanceof ILocatable)) {
+			if (input instanceof Iterable) {
+				Iterator iterator = ((Iterable) input).iterator();
+				if (iterator.hasNext())
+					input = iterator.next();
+			}
+		}
+		if (input instanceof ILocatable) {
+			ILocatable target = (ILocatable) input;
+			Location targetLocation = target.getLocation();
+			return targetLocation;
+		}
+		return null;
 	}
 
 	@Override
