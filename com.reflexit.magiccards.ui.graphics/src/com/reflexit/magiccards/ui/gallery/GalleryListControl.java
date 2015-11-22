@@ -7,7 +7,7 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
-import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.IMagicViewer;
 
 public class GalleryListControl extends AbstractMagicCardsListControl {
 	public GalleryListControl(AbstractCardsView abstractCardsView) {
@@ -17,13 +17,13 @@ public class GalleryListControl extends AbstractMagicCardsListControl {
 	@Override
 	protected Control createTableControl(Composite parent) {
 		Control c = super.createTableControl(parent);
-		manager.hookDragAndDrop();
+		viewer.hookDragAndDrop();
 		return c;
 	}
 
 	@Override
-	public IMagicColumnViewer createViewerManager() {
-		return new Gallery2ViewerManager(getPreferencePageId());
+	public IMagicViewer createViewer(Composite parent) {
+		return new Gallery2ViewerManager(getPreferencePageId(), parent);
 	}
 
 	@Override

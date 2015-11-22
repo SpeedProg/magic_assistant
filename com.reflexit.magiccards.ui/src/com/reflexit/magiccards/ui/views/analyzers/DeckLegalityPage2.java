@@ -315,8 +315,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	public GroupListControl doGetMagicCardListControl() {
 		return new GroupListControl(view) {
 			@Override
-			public IMagicColumnViewer createViewerManager() {
-				return new GroupTreeManager(getPreferencePageId()) {
+			public IMagicColumnViewer createViewer(Composite parent) {
+				return new GroupTreeViewer(getPreferencePageId(), parent) {
 					@Override
 					protected void createCustomColumns(List<AbstractColumn> columns) {
 						createPageCustomColumns(columns);

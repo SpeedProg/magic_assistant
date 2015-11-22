@@ -71,13 +71,15 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 
 	@Override
 	public void handleEvent(Event event) {
+		if (event.type == SWT.PaintItem) {
+			cannotPaintImage = false;
+		}
 		if (event.index == this.columnIndex) {
 			if (event.type == SWT.EraseItem) {
 				handleEraseEvent(event);
 			} else if (event.type == SWT.MeasureItem) {
 				handleMeasureEvent(event);
 			} else if (event.type == SWT.PaintItem) {
-				cannotPaintImage = false;
 				handlePaintEvent(event);
 			}
 		}

@@ -49,6 +49,7 @@ import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
  */
 public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> implements
 		ICardCollection<IMagicCard>, IDbCardStore<IMagicCard> {
+	private static DbMultiFileCardStore instance;
 	private boolean flatDbLoaded;
 	private boolean loadDefault;
 	private GlobalDbHandler handler;
@@ -182,9 +183,15 @@ public class DbMultiFileCardStore extends AbstractMultiStore<IMagicCard> impleme
 		}
 	}
 
-	public DbMultiFileCardStore(boolean load) {
+	protected DbMultiFileCardStore(boolean load) {
 		init();
 		this.loadDefault = load;
+	}
+
+	public synchronized static DbMultiFileCardStore getInstance() {
+		if (instance == null)
+			instance = new DbMultiFileCardStore(true);
+		return instance;
 	}
 
 	public synchronized DbFileCardStore addFile(final File file, final Location location, boolean initialize) {

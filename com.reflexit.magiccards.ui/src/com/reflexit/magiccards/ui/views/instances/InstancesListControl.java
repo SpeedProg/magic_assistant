@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.widgets.Composite;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -28,8 +30,8 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	public IMagicColumnViewer createViewerManager() {
-		return new InstancesManager(getPreferencePageId());
+	public IMagicColumnViewer createViewer(Composite parent) {
+		return new InstancesViewer(getPreferencePageId(), parent);
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected void sort(int index) {
+	protected void sort(int index, int dir) {
 		updateSortColumn(index);
 		updateViewer();
 	}

@@ -22,6 +22,7 @@ import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.IMagicViewer;
 
 public class GallerySelectionView extends GalleryView {
 	public static final String ID = "com.reflexit.magiccards.ui.gallery.GallerySelectionView";
@@ -68,8 +69,8 @@ public class GallerySelectionView extends GalleryView {
 			}
 
 			@Override
-			public IMagicColumnViewer createViewerManager() {
-				return new GalleryViewerManager(getPreferencePageId()) {
+			public IMagicViewer createViewer(Composite parent) {
+				GalleryViewerManager m = new GalleryViewerManager(getPreferencePageId()) {
 					@Override
 					public Control createContents(Composite parent) {
 						Control x = super.createContents(parent);
@@ -77,6 +78,8 @@ public class GallerySelectionView extends GalleryView {
 						return x;
 					}
 				};
+				m.createContents(parent);
+				return m;
 			}
 		};
 	}

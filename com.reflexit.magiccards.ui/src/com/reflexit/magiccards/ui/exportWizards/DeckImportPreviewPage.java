@@ -24,7 +24,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
@@ -42,7 +41,8 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.TableViewerManager;
+import com.reflexit.magiccards.ui.views.ExtendedTableViewer;
+import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
@@ -50,7 +50,7 @@ import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
 public class DeckImportPreviewPage extends WizardPage {
-	private TableViewerManager manager;
+	private IMagicColumnViewer manager;
 	private Text text;
 	protected ImportData previewResult;
 	private Job thread = new Job("Modify") {
@@ -95,7 +95,7 @@ public class DeckImportPreviewPage extends WizardPage {
 		startingPage.performImport(true);
 		safeSetText(previewResult.getText());
 		updateColumns(previewResult.getFields());
-		manager.updateViewer(previewResult.getList());
+		manager.setInput(previewResult.getList());
 		validate();
 	}
 
@@ -193,11 +193,10 @@ public class DeckImportPreviewPage extends WizardPage {
 		ld.heightHint = text.getLineHeight() * 5;
 		text.setLayoutData(ld);
 		text.addModifyListener(modifyLister);
-		manager = new TableViewerManager(columns);
-		Control control = manager.createContents(comp);
+		manager = new ExtendedTableViewer(comp, columns);
 		GridData tld = new GridData(GridData.FILL_BOTH);
 		tld.widthHint = 100 * 5;
-		control.setLayoutData(tld);
+		manager.getControl().setLayoutData(tld);
 	}
 
 	public ImportData getPreviewResult() {
@@ -254,7 +253,7 @@ public class DeckImportPreviewPage extends WizardPage {
 										card.setError(ImportError.SET_NOT_FOUND_ERROR);
 									}
 								}
-								manager.getViewer().refresh(true);
+								manager.getColumnViewer().refresh(true);
 								validate();
 							}
 						}

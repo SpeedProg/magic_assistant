@@ -26,7 +26,8 @@ public class DbMultiFileCardStoreTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		this.store = new DbMultiFileCardStore(false);
+		this.store = new DbMultiFileCardStore(false) {
+		};
 		addStore(LORWYN);
 		addStore(MORNINGTIDE);
 		this.m1 = CardGenerator.generateRandomCard();

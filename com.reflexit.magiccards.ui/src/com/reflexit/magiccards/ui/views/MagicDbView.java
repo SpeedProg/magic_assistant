@@ -64,9 +64,8 @@ public class MagicDbView extends AbstractCardsView {
 		}
 
 		@Override
-		public IMagicColumnViewer createViewerManager() {
-			CompositeViewerManager m = new CompositeViewerManager(getPreferencePageId());
-			return m;
+		public IMagicColumnViewer createViewer(Composite parent) {
+			return new SplitViewer(parent, getPreferencePageId());
 		}
 
 		@Override
@@ -133,22 +132,6 @@ public class MagicDbView extends AbstractCardsView {
 				editCard();
 			}
 		};
-	}
-
-	public void showViewer(IMagicColumnViewer v) {
-		IMagicColumnViewer m = ((AbstractMagicCardsListControl) control).getManager();
-		CompositeViewerManager cm = (CompositeViewerManager) m;
-		int i = cm.findManager(v);
-		if (i < 0)
-			i = cm.addManager((ViewerManager) v);
-		cm.setActivePage(i);
-		control.updateViewer();
-	}
-
-	public void showPage(int i) {
-		IMagicColumnViewer m = ((AbstractMagicCardsListControl) control).getManager();
-		((CompositeViewerManager) m).setActivePage(i);
-		control.updateViewer();
 	}
 
 	protected void editCard() {

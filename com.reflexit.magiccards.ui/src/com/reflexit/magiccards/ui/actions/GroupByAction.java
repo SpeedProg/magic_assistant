@@ -92,7 +92,7 @@ public class GroupByAction extends Action {
 	}
 
 	public GroupAction createGroupAction(GroupOrder order) {
-		boolean checked = filter.getGroupOrder().equals(order);
+		boolean checked = filter == null ? false : filter.getGroupOrder().equals(order);
 		return new GroupAction(order, checked, this::actionGroupBy);
 	}
 

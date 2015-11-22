@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -31,8 +32,8 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	public IMagicColumnViewer createViewerManager() {
-		return new PrintingsManager(getPreferencePageId());
+	public IMagicColumnViewer createViewer(Composite parent) {
+		return new PrintingsViewer(getPreferencePageId(), parent);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected void sort(int index) {
+	protected void sort(int index, int dir) {
 		updateSortColumn(index);
 		updateViewer();
 	}

@@ -2,17 +2,20 @@ package com.reflexit.magiccards.ui.gallery;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.reflexit.magiccards.ui.views.IMagicViewer;
 import com.reflexit.magiccards.ui.views.SortOrderViewerComparator;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 
-public class GalleryViewerManager extends ViewerManager {
+public class GalleryViewerManager extends ViewerManager implements IMagicViewer {
 	protected LazyGalleryTreeViewer viewer;
 	private FlatTreeContentProvider flatTreeContentProvider;
 
@@ -20,7 +23,6 @@ public class GalleryViewerManager extends ViewerManager {
 		super(id);
 	}
 
-	@Override
 	public Control createContents(Composite parent) {
 		this.viewer = new LazyGalleryTreeViewer(parent);
 		this.viewer.getControl().setFont(getFont());
@@ -31,7 +33,7 @@ public class GalleryViewerManager extends ViewerManager {
 		this.viewer.setContentProvider(flatTreeContentProvider);
 		getViewer().setLabelProvider(new MagicCardImageLabelProvider(viewer));
 		this.viewer.setUseHashlookup(true);
-		updateGrid();
+		updatePresentation();
 		// viewer.setSorter(new NameSorter());
 		// createDefaultColumns();
 		// hookDoubleClickListener(new IDoubleClickListener() {
@@ -56,14 +58,14 @@ public class GalleryViewerManager extends ViewerManager {
 		return this.viewer;
 	}
 
-	@Override
+
 	public void updateColumns(String value) {
 		ColumnCollection columnsCollection = getColumnsCollection();
 		columnsCollection.updateColumnsFromPropery(value);
 		columnsCollection.moveColumnOnTop(columnsCollection.getColumn(GroupColumn.COL_NAME));
 	}
 
-	@Override
+
 	public String getColumnLayoutProperty() {
 		ColumnCollection columnsCollection = getColumnsCollection();
 		return columnsCollection.getColumnLayoutProperty();
@@ -74,7 +76,7 @@ public class GalleryViewerManager extends ViewerManager {
 		// nothing
 	}
 
-	@Override
+
 	public void setSortColumn(int index, int direction) {
 		boolean sort = index >= 0;
 		if (sort) {
@@ -93,7 +95,7 @@ public class GalleryViewerManager extends ViewerManager {
 		}
 	}
 
-	@Override
+
 	public int getSortDirection() {
 		return SWT.UP;
 	}
@@ -103,11 +105,35 @@ public class GalleryViewerManager extends ViewerManager {
 	}
 
 	@Override
-	public void updateViewer(Object input) {
+	public void setInput(Object input) {
 		if (viewer == null || this.viewer.getControl().isDisposed())
 			return;
-		updateTableHeader();
-		updateGrid();
+		updatePresentation();
 		this.viewer.setInput(input);
+	}
+
+	private void updatePresentation() {
+		// TODO Auto-generated method stub
+	}
+
+	public ColumnViewer getColumnViewer() {
+		return viewer;
+	}
+
+	@Override
+	public ISelectionProvider getSelectionProvider() {
+		// TODO Auto-generated method stub
+		return viewer;
+	}
+
+	@Override
+	public void refresh() {
+		viewer.refresh();
+		updatePresentation();
+	}
+
+	@Override
+	public void addDoubleClickListener(IDoubleClickListener iDoubleClickListener) {
+		viewer.addDoubleClickListener(iDoubleClickListener);
 	}
 }

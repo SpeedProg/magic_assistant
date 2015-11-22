@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class LazyTableViewContentProvider implements ILazyContentProvider {
+public class LazyTableViewContentProvider implements ILazyContentProvider, ISizeContentProvider {
 	private boolean inChange = false;
 	private TableViewer tableViewer;
 	private IFilteredCardStore root;
@@ -35,6 +35,7 @@ public class LazyTableViewContentProvider implements ILazyContentProvider {
 		this.root = null;
 	}
 
+	@Override
 	public int getSize(Object newInput) {
 		if (newInput instanceof IFilteredCardStore) {
 			return ((IFilteredCardStore) newInput).getSize();

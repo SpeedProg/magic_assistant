@@ -12,22 +12,30 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public abstract class ColumnCollection {
-	private final List<AbstractColumn> columns;
+	private List<AbstractColumn> columns;
 	protected LinkedHashMap<String, AbstractColumn> order = new LinkedHashMap<String, AbstractColumn>();
 
 	public ColumnCollection() {
-		List<AbstractColumn> columns = new ArrayList<AbstractColumn>();
-		createColumns(columns);
-		this.columns = Collections.unmodifiableList(columns);
-		order = new LinkedHashMap<String, AbstractColumn>(columns.size());
-		setColulmnsIndex();
+		init();
 	}
 
-	public Collection<AbstractColumn> getColumns() {
+	protected synchronized void init() {
+		if (columns == null) {
+			List<AbstractColumn> columns = new ArrayList<AbstractColumn>();
+			createColumns(columns);
+			this.columns = Collections.unmodifiableList(columns);
+			order = new LinkedHashMap<String, AbstractColumn>(columns.size());
+			setColulmnsIndex();
+		}
+	}
+
+	public synchronized Collection<AbstractColumn> getColumns() {
+		init();
 		return this.columns;
 	}
 
 	public int getColumnsNumber() {
+		init();
 		return this.columns.size();
 	}
 
@@ -59,6 +67,7 @@ public abstract class ColumnCollection {
 	}
 
 	public ICardField[] getColumnFields() {
+		init();
 		ArrayList<ICardField> cf = new ArrayList<ICardField>();
 		for (Iterator<AbstractColumn> iterator = order.values().iterator(); iterator.hasNext();) {
 			AbstractColumn col = iterator.next();
@@ -69,6 +78,7 @@ public abstract class ColumnCollection {
 	}
 
 	public void updateColumnsFromPropery(String value) {
+		init();
 		String allModifier = "";
 		if (value.equals("+") || value.equals("-")) {
 			allModifier = value;
@@ -130,10 +140,13 @@ public abstract class ColumnCollection {
 	}
 
 	public void setColumnOrder(int aorder[]) {
+		init();
 		LinkedHashMap<String, AbstractColumn> oldorder = order;
 		order = new LinkedHashMap<String, AbstractColumn>();
 		for (int i = 0; i < aorder.length; i++) {
 			int index = aorder[i];
+			if (index >= columns.size())
+				continue;
 			AbstractColumn column = getColumn(index);
 			String key = column.getColumnFullName();
 			order.put(key, column);
@@ -155,10 +168,12 @@ public abstract class ColumnCollection {
 	 * @return
 	 */
 	public AbstractColumn getColumn(String key) {
+		init();
 		return order.get(key);
 	}
 
 	public AbstractColumn getColumn(ICardField field) {
+		init();
 		for (Iterator<AbstractColumn> iterator = order.values().iterator(); iterator.hasNext();) {
 			AbstractColumn column = iterator.next();
 			if (column.getDataField() == field)
@@ -168,6 +183,7 @@ public abstract class ColumnCollection {
 	}
 
 	public void moveColumnOnTop(AbstractColumn acolumn) {
+		init();
 		LinkedHashMap<String, AbstractColumn> oldorder = order;
 		order = new LinkedHashMap<String, AbstractColumn>();
 		oldorder.remove(acolumn.getColumnFullName());
@@ -176,6 +192,7 @@ public abstract class ColumnCollection {
 	}
 
 	public String getColumnLayoutProperty() {
+		init();
 		String line = "";
 		for (Iterator<AbstractColumn> iterator = order.values().iterator(); iterator.hasNext();) {
 			AbstractColumn column = iterator.next();
@@ -194,6 +211,7 @@ public abstract class ColumnCollection {
 	}
 
 	public int[] getColumnsOrder() {
+		init();
 		int ordera[] = new int[order.size()];
 		int i = 0;
 		for (Iterator<String> iterator = order.keySet().iterator(); iterator.hasNext();) {
@@ -205,6 +223,7 @@ public abstract class ColumnCollection {
 	}
 
 	private void setColulmnsIndex() {
+		init();
 		int j = 0;
 		order.clear();
 		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
@@ -217,6 +236,7 @@ public abstract class ColumnCollection {
 	}
 
 	public AbstractColumn getColumn(int i) {
+		init();
 		return columns.get(i);
 	}
 

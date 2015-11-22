@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.gallery;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -13,42 +14,56 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.Menu;
 
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
+import com.reflexit.magiccards.ui.views.GroupExpandContentProvider;
+import com.reflexit.magiccards.ui.views.IColumnSortAction;
+import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.RootTreeViewContentProvider;
-import com.reflexit.magiccards.ui.views.TreeViewerManager;
-import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
-public class Gallery2ViewerManager extends TreeViewerManager {
+public class Gallery2ViewerManager implements IMagicColumnViewer {
+	private Composite control;
 	protected LazyGalleryTreeViewer galleryviewer;
+	private ExtendedTreeViewer viewer;
 
-	public Gallery2ViewerManager(String id) {
-		super(id);
+	public Gallery2ViewerManager(String preferencePageId, Composite parent) {
+		createContents(parent);
 	}
 
 	@Override
+	public Control getControl() {
+		return control;
+	}
+
 	public Control createContents(Composite parent) {
 		// Composite comp = new Composite(parent, SWT.NONE);
 		SashForm form = new SashForm(parent, SWT.HORIZONTAL);
-		Composite comp = form;
-		super.createContents(comp);
-		comp.setLayout(new FillLayout());
-		// this.viewer.setContentProvider(new LazyTreeViewContentProvider());
+		control = form;
+		control.setLayout(new FillLayout());
+		this.viewer = new ExtendedTreeViewer(control, doGetColumnCollection(""));
+		this.viewer.getTree().setFont(MagicUIActivator.getDefault().getFont());
 		this.viewer.setContentProvider(new RootTreeViewContentProvider());
 		this.viewer.setAutoExpandLevel(2);
 		this.viewer.getTree().setHeaderVisible(false);
 		this.viewer.getTree().setLayoutData(null);
-		this.galleryviewer = new LazyGalleryTreeViewer(comp);
-		this.galleryviewer.getControl().setFont(getFont());
-		this.galleryviewer.setContentProvider(new GroupExpandContentProvider());
-		this.galleryviewer.setLabelProvider(new MagicCardImageLabelProvider(galleryviewer));
-		this.galleryviewer.setGroupsVisible(false);
-		this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		GroupColumn labelProvider = new GroupColumn(true, true, false);
+		this.viewer.setLabelProvider(labelProvider);
+		this.viewer.getControl().addListener(SWT.EraseItem, labelProvider);
+		this.viewer.getControl().addListener(SWT.PaintItem, labelProvider);
+		this.viewer.getControl().addListener(SWT.MeasureItem, labelProvider);
+		galleryviewer = new LazyGalleryTreeViewer(control);
+		galleryviewer.getControl().setFont(MagicUIActivator.getDefault().getFont());
+		galleryviewer.setContentProvider(new GroupExpandContentProvider());
+		galleryviewer.setLabelProvider(new MagicCardImageLabelProvider(galleryviewer));
+		galleryviewer.setGroupsVisible(false);
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection ssel = (IStructuredSelection) event.getSelection();
@@ -57,24 +72,9 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 			}
 		});
 		form.setWeights(new int[] { 22, 78 });
-		return comp;
+		return control;
 	}
 
-	@Override
-	public void updateColumns(String value) {
-		for (AbstractColumn col : getColumnsCollection().getColumns()) {
-			col.setVisible(false);
-		}
-		syncColumns();
-	}
-
-	@Override
-	protected void createFillerColumn() {
-		// ignore
-		// super.createFillerColumn();
-	}
-
-	@Override
 	protected ColumnCollection doGetColumnCollection(String prefPageId) {
 		return new MagicColumnCollection(prefPageId) {
 			@Override
@@ -86,7 +86,8 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 
 	@Override
 	public void dispose() {
-		super.dispose();
+		this.viewer.getLabelProvider().dispose();
+		this.viewer.getControl().dispose();
 		this.galleryviewer.getLabelProvider().dispose();
 		this.galleryviewer.getControl().dispose();
 		this.galleryviewer = null;
@@ -99,11 +100,12 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 
 	@Override
 	public ColumnViewer getViewer() {
-		return super.getViewer();
+		return viewer;
 	}
 
+	@Override
 	public ColumnViewer getColumnViewer() {
-		return super.getViewer();
+		return viewer;
 	}
 
 	public StructuredViewer getStructuredViewer() {
@@ -111,39 +113,28 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 	}
 
 	@Override
-	public void hookDoubleClickListener(IDoubleClickListener doubleClickListener) {
+	public void addDoubleClickListener(IDoubleClickListener doubleClickListener) {
 		getStructuredViewer().addDoubleClickListener(doubleClickListener);
 	}
 
 	@Override
-	protected void createContentMenu() {
-		Control control = getStructuredViewer().getControl();
-		control.setMenu(getMenuManager().createContextMenu(control));
-	}
-
-	@Override
-	protected void hookMenuDetect(Tree tcontrol) {
-		// ignore
-	}
-
-	@Override
 	public void hookDragAndDrop() {
-		super.hookDragAndDrop(getStructuredViewer());
+		viewer.hookDragAndDrop(getStructuredViewer());
 	}
 
 	@Override
 	public void setSortColumn(int index, int direction) {
-		super.setSortColumn(index, direction);
-		getStructuredViewer().setComparator(getViewer().getComparator());
+		viewer.setSortColumn(index, direction);
+		getStructuredViewer().setComparator(null);
 	}
 
 	@Override
-	public void updateViewer(Object input) {
-		if (viewer == null || this.viewer.getControl().isDisposed())
+	public void setInput(Object input) {
+		if (viewer == null || viewer.getControl().isDisposed())
 			return;
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 		viewer.setSelection(new StructuredSelection());
-		super.updateViewer(input);
+		viewer.setInput(input);
 		if (galleryviewer == null || this.galleryviewer.getControl().isDisposed())
 			return;
 		if (input instanceof IFilteredCardStore) {
@@ -157,5 +148,52 @@ public class Gallery2ViewerManager extends TreeViewerManager {
 			}
 			galleryviewer.refresh(true);
 		}
+	}
+
+	@Override
+	public ColumnCollection getColumnsCollection() {
+		return viewer.getColumnsCollection();
+	}
+
+	@Override
+	public void hookContextMenu(MenuManager menuMgr) {
+		Control gcontrol = galleryviewer.getControl();
+		Menu menu = menuMgr.createContextMenu(gcontrol);
+		gcontrol.setMenu(menu);
+	}
+
+	@Override
+	public void hookSortAction(IColumnSortAction sortAction) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void updateColumns(String preferenceValue) {
+		// ignore
+	}
+
+	@Override
+	public void refresh() {
+		viewer.refresh();
+	}
+
+	@Override
+	public void setLinesVisible(boolean grid) {
+		viewer.setLinesVisible(grid);
+	}
+
+	@Override
+	public int getSortDirection() {
+		return 0;
+	}
+
+	@Override
+	public String getColumnLayoutProperty() {
+		return null;
+	}
+
+	@Override
+	public void hookContext(String id) {
+		viewer.hookContext(id);
 	}
 }

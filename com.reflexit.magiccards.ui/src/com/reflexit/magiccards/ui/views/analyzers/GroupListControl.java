@@ -5,15 +5,12 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.services.IDisposable;
-
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
-import com.reflexit.magiccards.ui.views.TreeViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
@@ -21,17 +18,10 @@ import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public abstract class GroupListControl extends AbstractMagicCardsListControl {
-	public class GroupTreeManager extends TreeViewerManager implements IDisposable {
-		protected GroupTreeManager(String id) {
-			super(id);
-		}
-
-		@Override
-		public Control createContents(Composite parent) {
-			Control control = super.createContents(parent);
+	public class GroupTreeViewer extends ExtendedTreeViewer {
+		protected GroupTreeViewer(String id, Composite parent) {
+			super(parent, id);
 			hookDragAndDrop();
-			// getViewer().setComparator(new CollectorViewerComparator());
-			return control;
 		}
 
 		@Override
@@ -53,7 +43,6 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 		public void updateColumns(String value) {
 			// no update
 		}
-
 	}
 
 	/**
@@ -61,10 +50,10 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 	 */
 	@Override
 	public void updateViewer() {
-		if (manager.getControl().isDisposed())
+		if (viewer.getControl().isDisposed())
 			return;
 		ISelection selection = getSelection();
-		manager.getViewer().refresh(true);
+		viewer.getViewer().refresh();
 		if (revealSelection != null) {
 			// set desired selection
 			getSelectionProvider().setSelection(revealSelection);
@@ -91,8 +80,8 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	public IMagicColumnViewer createViewerManager() {
-		return new GroupTreeManager(getPreferencePageId());
+	public IMagicColumnViewer createViewer(Composite parent) {
+		return new GroupTreeViewer(getPreferencePageId(), parent);
 	}
 
 	@Override
@@ -101,10 +90,13 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected void updateSortColumn(final int index) {
-		if (index >= 0) {
-			manager.setSortColumn(index, 0);
-		} else {
-			manager.setSortColumn(-1, 0);
+		if (viewer instanceof IMagicColumnViewer) {
+			IMagicColumnViewer cviewer = (IMagicColumnViewer) viewer;
+			if (index >= 0) {
+				cviewer.setSortColumn(index, 0);
+			} else {
+				cviewer.setSortColumn(-1, 0);
+			}
 		}
 	}
 }

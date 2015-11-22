@@ -53,9 +53,11 @@ public class SetColumn extends AbstractImageColumn implements Listener {
 
 	@Override
 	public Color getBackground(Object element) {
-		IMagicCard card = (IMagicCard) element;
-		if (card.getCardId() == 0 && element instanceof MagicCardPhysical)
-			return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+		if (element instanceof IMagicCard) {
+			IMagicCard card = (IMagicCard) element;
+			if (card.getCardId() == 0 && element instanceof MagicCardPhysical)
+				return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+		}
 		return super.getBackground(element);
 	}
 

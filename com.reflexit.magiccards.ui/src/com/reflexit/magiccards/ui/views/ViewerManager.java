@@ -2,40 +2,29 @@ package com.reflexit.magiccards.ui.views;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.part.PluginTransfer;
+import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.widgets.ContextFocusListener;
 
-public abstract class ViewerManager implements IMagicColumnViewer {
+public abstract class ViewerManager implements IDisposable {
 	private SortOrderViewerComparator vcomp = new SortOrderViewerComparator();
 	private ColumnCollection collumns;
 	private IColumnSortAction sortAction;
@@ -48,9 +37,6 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 	protected ViewerManager(ColumnCollection columns) {
 		this.collumns = columns;
 	}
-
-	@Override
-	public abstract Control createContents(Composite parent);
 
 	@Override
 	public void dispose() {
@@ -67,7 +53,6 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		return collumns.getColumn(i);
 	}
 
-	@Override
 	public ColumnCollection getColumnsCollection() {
 		return collumns;
 	}
@@ -76,29 +61,20 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		return collumns.getColumnsNumber();
 	}
 
-	@Override
 	public void hookContext(String id) {
 		getViewer().getControl().addFocusListener(new ContextFocusListener(id));
 	}
 
-	@Override
+	public abstract Viewer getViewer();
+
 	public Control getControl() {
 		return getViewer().getControl();
-	}
-
-	@Override
-	public ISelectionProvider getSelectionProvider() {
-		return getViewer();
 	}
 
 	public Shell getShell() {
 		return getControl().getShell();
 	}
 
-	@Override
-	public abstract ColumnViewer getViewer();
-
-	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		this.menuManager = menuMgr;
 		createContentMenu();
@@ -113,68 +89,36 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		return menuManager;
 	}
 
-	@Override
-	public void hookDoubleClickListener(IDoubleClickListener doubleClickListener) {
-		getViewer().addDoubleClickListener(doubleClickListener);
-	}
-
-	@Override
 	public void hookSortAction(IColumnSortAction sortAction) {
 		this.sortAction = sortAction;
 	}
 
-	protected void sortColumn(final int coln) {
+	protected final void callSortAction(final int coln, int direction) {
 		if (sortAction != null)
-			sortAction.sort(coln);
+			sortAction.sort(coln, direction);
 	}
 
-	protected void updateTableHeader() {
-		// to be overriden
-	}
-
-	@Override
-	public void setGrouppingEnabled(boolean hasGroups) {
-		// flip between tree and table if control supports it
-	}
-
-	protected void updateGrid() {
-		try {
-			boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
-			setLinesVisible(grid);
-			getViewer().getControl().setFont(getFont());
-			getViewer().getControl().setForeground(MagicUIActivator.getDefault().getTextColor());
-		} catch (Exception e) {
-			// ignore
-		}
-	}
-
-	@Override
-	public void refresh() {
-		if (getViewer() == null || getViewer().getControl().isDisposed())
-			return;
-		updateTableHeader();
-		updateGrid();
-		getViewer().refresh(true);
-	}
-
-	@Override
 	public void hookDragAndDrop() {
-		hookDragAndDrop(getViewer());
+		if (getViewer() instanceof StructuredViewer)
+			hookDragAndDrop((StructuredViewer) getViewer());
 	}
 
-	public void hookDragAndDrop(StructuredViewer viewer) {
+	public static final void hookDragAndDrop(StructuredViewer viewer) {
 		viewer.getControl().setDragDetect(true);
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDragSupport(ops, new Transfer[] { MagicCardTransfer.getInstance(), TextTransfer.getInstance(),
-				PluginTransfer.getInstance() }, new MagicCardDragListener(viewer));
-		viewer.addDropSupport(ops, new Transfer[] { MagicCardTransfer.getInstance(), PluginTransfer.getInstance() },
-				new MagicCardDropAdapter(viewer));
+		viewer.addDragSupport(ops,
+				new Transfer[] { MagicCardTransfer.getInstance(), //
+						TextTransfer.getInstance(), //
+						PluginTransfer.getInstance() //
+		}, new MagicCardDragListener(viewer));
+		viewer.addDropSupport(ops,
+				new Transfer[] { //
+						MagicCardTransfer.getInstance(), //
+						PluginTransfer.getInstance() //
+		}, new MagicCardDropAdapter(viewer));
 	}
 
-	@Override
-	public abstract int getSortDirection();
-
-	public Font getFont() {
+	public static Font getFont() {
 		return MagicUIActivator.getDefault().getFont();
 	}
 
@@ -187,107 +131,7 @@ public abstract class ViewerManager implements IMagicColumnViewer {
 		return getColumnsCollection().getId();
 	}
 
-	@Override
-	public void setSortColumn(int index, int direction) {
-		int sortDirection = getSortDirection();
-		if (index >= 0) {
-			if (direction == 0) {
-				if (sortDirection != SWT.DOWN)
-					sortDirection = SWT.DOWN;
-				else
-					sortDirection = SWT.UP;
-			} else if (direction == 1)
-				sortDirection = SWT.DOWN;
-			else
-				sortDirection = SWT.UP;
-		}
-		setControlSortColumn(index, sortDirection);
-		if (index >= 0) {
-			AbstractColumn man = (AbstractColumn) getViewer().getLabelProvider(index);
-			vcomp.setOrder(man.getSortField(), sortDirection == SWT.UP);
-			getViewer().setComparator(vcomp);
-		} else {
-			getViewer().setComparator(null);
-		}
-	}
-
 	public SortOrderViewerComparator getViewerComparator() {
 		return vcomp;
 	}
-
-	protected Item getTColumn(int index) {
-		Control control = getControl();
-		if (control instanceof Table)
-			return ((Table) control).getColumn(index);
-		else if (control instanceof Tree)
-			return ((Tree) control).getColumn(index);
-		return null;
-	}
-
-	protected Menu createColumnHeaderContextMenu(int index) {
-		if (index < 0)
-			return null;
-		final Item column = getTColumn(index);
-		Menu menu = new Menu(getControl());
-		String name = column.getText();
-		if (!name.isEmpty()) {
-			final MenuItem itemHide = new MenuItem(menu, SWT.PUSH);
-			itemHide.setText("Hide Column: " + name);
-			itemHide.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					hide(column);
-				}
-			});
-			final MenuItem itemSort = new MenuItem(menu, SWT.PUSH);
-			itemSort.setText("Sort Accending: " + name);
-			itemSort.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					setSortColumn(index, 1);
-				}
-			});
-			final MenuItem itemSortD = new MenuItem(menu, SWT.PUSH);
-			itemSortD.setText("Sort Descending: " + name);
-			itemSortD.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					setSortColumn(index, -1);
-				}
-			});
-			final MenuItem itemSortUnsort = new MenuItem(menu, SWT.PUSH);
-			itemSortUnsort.setText("Unsort");
-			itemSortUnsort.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					setSortColumn(-1, 0);
-				}
-			});
-			final MenuItem itemShow = new MenuItem(menu, SWT.PUSH);
-			itemShow.setText("Show Column... ");
-			itemShow.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					openColumnPreferences(getPreferencesId());
-				}
-			});
-		}
-		return menu;
-	}
-
-	protected void setControlSortColumn(int index, int sortDirection) {
-		throw new UnsupportedOperationException();
-	}
-
-	protected int getColumnIndex(Point pt) {
-		throw new UnsupportedOperationException();
-	}
-
-	protected void hide(final Item column) {
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean supportsGroupping(boolean groupped) {
-		return true;
-	};
 }

@@ -35,7 +35,7 @@ import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
-import com.reflexit.magiccards.ui.views.LazyTableViewerManager;
+import com.reflexit.magiccards.ui.views.LazyTableViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CostColumn;
@@ -147,13 +147,8 @@ public class DrawPage extends AbstractDeckListPage {
 		}
 
 		@Override
-		public IMagicColumnViewer createViewerManager() {
-			return new LazyTableViewerManager(getId()) {
-				@Override
-				public ColumnCollection getColumnsCollection() {
-					return DrawPage.this.columns;
-				}
-			};
+		public IMagicColumnViewer createViewer(Composite parent) {
+			return new LazyTableViewer(parent, columns);
 		}
 
 		@Override

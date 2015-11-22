@@ -9,7 +9,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import com.reflexit.magiccards.ui.views.TableViewerManager;
+import com.reflexit.magiccards.ui.views.ExtendedTableViewer;
+import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
@@ -19,7 +20,7 @@ import com.reflexit.magiccards.ui.views.columns.OwnCountColumn;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
 public class CardReconcileDialog extends TitleAreaDialog {
-	private TableViewerManager manager;
+	private IMagicColumnViewer manager;
 	private ColumnCollection columns = new ColumnCollection() {
 		@Override
 		protected void createColumns(List<AbstractColumn> columns) {
@@ -41,12 +42,11 @@ public class CardReconcileDialog extends TitleAreaDialog {
 		setTitle("Preview");
 		setMessage("Check that cards are pulled from correct locations");
 		Composite comp = (Composite) super.createDialogArea(parent);
-		manager = new TableViewerManager(columns);
-		Control control = manager.createContents(comp);
+		manager = new ExtendedTableViewer(comp, columns);
 		GridData tld = new GridData(GridData.FILL_BOTH);
 		tld.widthHint = 100 * 5;
-		control.setLayoutData(tld);
-		manager.updateViewer(elements);
+		manager.getControl().setLayoutData(tld);
+		manager.setInput(elements);
 		return comp;
 	}
 

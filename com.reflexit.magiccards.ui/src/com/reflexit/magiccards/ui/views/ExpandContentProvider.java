@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.reflexit.magiccards.ui.gallery;
+package com.reflexit.magiccards.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,53 +16,54 @@ import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
- * Flat contents of the object with one root. Expanded up "Name" groups.
+ * Flat contents of the object. Expanded up "Name" groups.
  * 
  * @author elaskavaia
  *
  */
-public class GroupExpandContentProvider implements ITreeContentProvider {
+public class ExpandContentProvider implements ITreeContentProvider, ISizeContentProvider {
 	private Object input;
-	private String top;
 	private Object[] topChildren;
 
 	@Override
 	public void dispose() {
+		topChildren = null;
+		input = null;
 	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (this.input == newInput)
 			return;
-		Object[] res = getChildren(newInput);
 		this.input = newInput;
-		this.top = "Cards";
-		this.topChildren = res;
-		// viewer.refresh();
+		this.topChildren = getFlatChildren(newInput);
 	}
 
 	@Override
 	public Object[] getChildren(Object element) {
-		Object[] res = null;
 		if (element == input) {
-			return new Object[] { top };
-		}
-		if (element == top) {
 			return topChildren;
 		}
+		return new Object[0];
+	}
+
+	public Object[] getFlatChildren(Object element) {
+		Object[] res = null;
 		if (element instanceof CardGroup) {
 			CardGroup group = (CardGroup) element;
 			Collection<ICard> children = daexpand(group);
 			res = children.toArray(new Object[children.size()]);
 		} else if (element instanceof IFilteredCardStore) {
 			ICardGroup root = ((IFilteredCardStore<?>) element).getCardGroupRoot();
-			res = getChildren(root);
+			res = getFlatChildren(root);
 		} else if (element instanceof Collection) {
 			Collection<ICard> list = daexpand((Collection<?>) element);
 			res = list.toArray(new Object[list.size()]);
 		} else if (element instanceof Object[]) {
 			return (Object[]) element;
 		}
+		if (res == null)
+			return new Object[0];
 		return res;
 	}
 
@@ -107,20 +108,15 @@ public class GroupExpandContentProvider implements ITreeContentProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {
+		return getSize(element) > 0;
+	}
+
+	@Override
+	public int getSize(Object element) {
 		if (element == input) {
-			return true;
+			return topChildren.length;
 		}
-		if (element instanceof ICardGroup) {
-			return ((ICardGroup) element).size() > 0;
-		} else if (element instanceof IFilteredCardStore) {
-			IFilteredCardStore fstore = (IFilteredCardStore) element;
-			return fstore.getCardGroupRoot().size() > 0;
-		} else if (element instanceof Collection) {
-			return ((Collection) element).size() > 0;
-		} else if (element instanceof Object[]) {
-			return ((Object[]) element).length > 0;
-		}
-		return false;
+		return 0;
 	}
 
 	@Override

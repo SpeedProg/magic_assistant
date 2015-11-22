@@ -50,7 +50,7 @@ public class XmlCardHolder implements ICardHandler {
 
 	@Override
 	public IDbCardStore getMagicDBStore() {
-		return (IDbCardStore) getMagicDBFilteredStore().getCardStore();
+		return DbMultiFileCardStore.getInstance();
 	}
 
 	@Override

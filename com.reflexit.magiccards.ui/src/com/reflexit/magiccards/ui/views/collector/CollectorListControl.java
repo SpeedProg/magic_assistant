@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.widgets.Composite;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
@@ -20,6 +22,7 @@ import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.LazyTreeViewer;
 
 public class CollectorListControl extends AbstractMagicCardsListControl {
 	public static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG,
@@ -30,8 +33,12 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	public IMagicColumnViewer createViewerManager() {
-		return new CollectorManager(getPreferencePageId());
+	public IMagicColumnViewer createViewer(Composite parent) {
+		return new LazyTreeViewer(parent, new CollectorColumnCollection()) {
+			{
+				hookDragAndDrop();
+			}
+		};
 	}
 
 	@Override

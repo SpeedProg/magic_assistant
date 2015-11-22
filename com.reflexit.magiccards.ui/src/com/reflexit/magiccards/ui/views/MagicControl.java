@@ -30,8 +30,9 @@ public abstract class MagicControl implements IMagicControl {
 		partControl = new Composite(parent, SWT.NONE);
 		partControl.setLayout(GridLayoutFactory.fillDefaults().create());
 		partControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		// partControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+		// partControl.setBackground(partControl.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 		createMainControl(partControl);
+		site.setSelectionProvider(getSelectionProvider());
 		makeActions();
 		loadInitial();
 		return partControl;
@@ -51,7 +52,7 @@ public abstract class MagicControl implements IMagicControl {
 	@Override
 	public void init(IViewSite site) {
 		this.site = site;
-		site.setSelectionProvider(getSelectionProvider());
+
 		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceListener);
 		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(preferenceListener);
 	}

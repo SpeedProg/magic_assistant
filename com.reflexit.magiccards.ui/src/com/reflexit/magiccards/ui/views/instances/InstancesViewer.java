@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views.instances;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -8,14 +7,13 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
-import com.reflexit.magiccards.ui.views.TreeViewerManager;
+import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CommentColumn;
@@ -28,19 +26,13 @@ import com.reflexit.magiccards.ui.views.columns.PriceColumn;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 import com.reflexit.magiccards.ui.views.columns.StringEditorColumn;
 
-public class InstancesManager extends TreeViewerManager implements IDisposable {
+public class InstancesViewer extends ExtendedTreeViewer implements IDisposable {
 	private boolean groupped = false;
 
-	protected InstancesManager(String id) {
-		super(id);
-	}
-
-	@Override
-	public Control createContents(Composite parent) {
-		super.createContents(parent);
-		this.viewer.setComparator(null);
-		hookDragAndDrop(getViewer());
-		return this.viewer.getControl();
+	protected InstancesViewer(String id, Composite parent) {
+		super(parent, id);
+		setComparator(null);
+		hookDragAndDrop(getStructuredViewer());
 	}
 
 	@Override
@@ -49,10 +41,6 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE;
 		viewer.addDragSupport(ops, new Transfer[] { MagicCardTransfer.getInstance(), TextTransfer.getInstance(),
 				PluginTransfer.getInstance() }, new MagicCardDragListener(viewer));
-	}
-
-	public void setInput(Collection<Object> input) {
-		this.viewer.setInput(input);
 	}
 
 	@Override
@@ -73,15 +61,13 @@ public class InstancesManager extends TreeViewerManager implements IDisposable {
 		};
 	}
 
-	@Override
 	protected void updateTableHeader() {
-		showColumn(0, groupped);
+		manager.showColumn(0, groupped);
 	}
 
-	@Override
 	public void setGrouppingEnabled(boolean hasGroups) {
 		groupped = hasGroups;
-		if (viewer == null)
+		if (getViewer() == null)
 			return;
 		updateTableHeader();
 	}

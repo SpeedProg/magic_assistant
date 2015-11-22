@@ -52,7 +52,8 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 				}
 				if (ed != null) {
 					ed.setLegalityMap(ed.getLegalityMap().put(format, Legality.LEGAL).complete());
-					System.err.println("Set " + string + " is set to " + format);
+					// System.err.println("Set " + string + " is set to " +
+					// format);
 				}
 			}
 		}
