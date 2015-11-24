@@ -3,15 +3,19 @@
  */
 package com.reflexit.magiccards.ui.views;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public class TableViewerContentProvider<T> implements IStructuredContentProvider {
+	private Object input;
+
 	@Override
 	public void dispose() {
 		// ignore
@@ -20,6 +24,28 @@ public class TableViewerContentProvider<T> implements IStructuredContentProvider
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// ignore
+		this.input = newInput;
+	}
+
+	public int[] getIndices(IStructuredSelection selection) {
+		if (selection.isEmpty())
+			return new int[] {};
+		ArrayList<Integer> res = new ArrayList<>();
+		Object[] elements = getElements(input);
+		for (Object element : selection.toArray()) {
+			int i = 0;
+			for (Object object : elements) {
+				if (element.equals(object)) {
+					res.add(i);
+				}
+				i++;
+			}
+		}
+		int[] ind = new int[res.size()];
+		for (int i = 0; i < ind.length; i++) {
+			ind[i] = res.get(i);
+		}
+		return ind;
 	}
 
 	@Override

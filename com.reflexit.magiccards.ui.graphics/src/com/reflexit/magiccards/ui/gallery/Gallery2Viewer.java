@@ -19,21 +19,20 @@ import org.eclipse.swt.widgets.Menu;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
+import com.reflexit.magiccards.ui.views.SingleColumnTreeViewer;
 import com.reflexit.magiccards.ui.views.GroupExpandContentProvider;
 import com.reflexit.magiccards.ui.views.IColumnSortAction;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
-import com.reflexit.magiccards.ui.views.RootTreeViewContentProvider;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
-public class Gallery2ViewerManager implements IMagicColumnViewer {
+public class Gallery2Viewer implements IMagicColumnViewer {
 	private Composite control;
 	protected LazyGalleryTreeViewer galleryviewer;
-	private ExtendedTreeViewer viewer;
+	private SingleColumnTreeViewer viewer;
 
-	public Gallery2ViewerManager(String preferencePageId, Composite parent) {
+	public Gallery2Viewer(String preferencePageId, Composite parent) {
 		createContents(parent);
 	}
 
@@ -47,17 +46,8 @@ public class Gallery2ViewerManager implements IMagicColumnViewer {
 		SashForm form = new SashForm(parent, SWT.HORIZONTAL);
 		control = form;
 		control.setLayout(new FillLayout());
-		this.viewer = new ExtendedTreeViewer(control, doGetColumnCollection(""));
-		this.viewer.getTree().setFont(MagicUIActivator.getDefault().getFont());
-		this.viewer.setContentProvider(new RootTreeViewContentProvider());
-		this.viewer.setAutoExpandLevel(2);
-		this.viewer.getTree().setHeaderVisible(false);
-		this.viewer.getTree().setLayoutData(null);
-		GroupColumn labelProvider = new GroupColumn(true, true, false);
-		this.viewer.setLabelProvider(labelProvider);
-		this.viewer.getControl().addListener(SWT.EraseItem, labelProvider);
-		this.viewer.getControl().addListener(SWT.PaintItem, labelProvider);
-		this.viewer.getControl().addListener(SWT.MeasureItem, labelProvider);
+		viewer = new SingleColumnTreeViewer(control);
+		viewer.getTree().setHeaderVisible(false);
 		galleryviewer = new LazyGalleryTreeViewer(control);
 		galleryviewer.getControl().setFont(MagicUIActivator.getDefault().getFont());
 		galleryviewer.setContentProvider(new GroupExpandContentProvider());

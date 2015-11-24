@@ -41,8 +41,8 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.NewSetDialog;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.ExtendedTableViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.SimpleTableViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
@@ -50,7 +50,7 @@ import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
 public class DeckImportPreviewPage extends WizardPage {
-	private IMagicColumnViewer manager;
+	private IMagicColumnViewer viewer;
 	private Text text;
 	protected ImportData previewResult;
 	private Job thread = new Job("Modify") {
@@ -95,7 +95,7 @@ public class DeckImportPreviewPage extends WizardPage {
 		startingPage.performImport(true);
 		safeSetText(previewResult.getText());
 		updateColumns(previewResult.getFields());
-		manager.setInput(previewResult.getList());
+		viewer.setInput(previewResult.getList());
 		validate();
 	}
 
@@ -126,7 +126,7 @@ public class DeckImportPreviewPage extends WizardPage {
 
 	public void updateColumns(ICardField[] fields) {
 		if (fields != null) {
-			ColumnCollection colls = manager.getColumnsCollection();
+			ColumnCollection colls = viewer.getColumnsCollection();
 			AbstractColumn errColumn = colls.getColumn(MagicCardField.ERROR);
 			String prefColumns = errColumn.getColumnFullName();
 			for (int i = 0; i < fields.length; i++) {
@@ -136,7 +136,7 @@ public class DeckImportPreviewPage extends WizardPage {
 					prefColumns += "," + column.getColumnFullName();
 			}
 			final String p = prefColumns;
-			Display.getDefault().syncExec(() -> manager.updateColumns(p));
+			Display.getDefault().syncExec(() -> viewer.updateColumns(p));
 		}
 	}
 
@@ -193,10 +193,10 @@ public class DeckImportPreviewPage extends WizardPage {
 		ld.heightHint = text.getLineHeight() * 5;
 		text.setLayoutData(ld);
 		text.addModifyListener(modifyLister);
-		manager = new ExtendedTableViewer(comp, columns);
+		viewer = new SimpleTableViewer(comp, columns);
 		GridData tld = new GridData(GridData.FILL_BOTH);
 		tld.widthHint = 100 * 5;
-		manager.getControl().setLayoutData(tld);
+		viewer.getControl().setLayoutData(tld);
 	}
 
 	public ImportData getPreviewResult() {
@@ -253,7 +253,7 @@ public class DeckImportPreviewPage extends WizardPage {
 										card.setError(ImportError.SET_NOT_FOUND_ERROR);
 									}
 								}
-								manager.getColumnViewer().refresh(true);
+								viewer.refresh(true);
 								validate();
 							}
 						}

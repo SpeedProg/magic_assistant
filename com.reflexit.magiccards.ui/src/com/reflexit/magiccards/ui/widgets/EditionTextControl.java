@@ -5,14 +5,12 @@ import java.util.Collection;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -23,12 +21,11 @@ public class EditionTextControl extends Composite {
 
 	public EditionTextControl(Composite parent, int style) {
 		super(parent, SWT.NONE);
+		setLayout(new FillLayout());
 		set = new Text(this, style);
-		this.setLayout(GridLayoutFactory.fillDefaults().margins(0, 0).create());
 		ContentProposalAdapter proposalAdapter = ContextAssist.addContextAssist(set, new String[0],
 				false);
 		updateProposals(proposalAdapter.getContentProposalProvider());
-		set.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		set.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -41,8 +38,6 @@ public class EditionTextControl extends Composite {
 			}
 		});
 		set.addFocusListener(new SearchContextFocusListener());
-		if (parent.getLayout() instanceof GridLayout)
-			this.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
 
 	public void setText(String text) {

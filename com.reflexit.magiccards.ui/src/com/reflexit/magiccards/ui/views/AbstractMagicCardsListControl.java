@@ -53,6 +53,7 @@ import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.SortOrder;
@@ -322,7 +323,31 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		MagicLogger.trace("reload data " + getClass());
 		setNextSelection(getSelection());
 		syncFilter();
+		WaitUtils.asyncExec(this::syncSortColumnIndicator);
 		loadData(null);
+	}
+
+	protected void syncSortColumnIndicator() {
+		if (viewer instanceof IMagicColumnViewer) {
+			IMagicColumnViewer cviewer = (IMagicColumnViewer) viewer;
+			SortOrder o = getFilter().getSortOrder();
+			if (o.isEmpty()) {
+				cviewer.setSortColumn(-1, 0);
+			} else {
+				MagicCardComparator top = o.peek();
+				ICardField field = top.getField();
+				AbstractColumn column = cviewer.getColumnsCollection().getColumn(field);
+				if (column == null && field == MagicCardField.CMC) {
+					column = cviewer.getColumnsCollection().getColumn(MagicCardField.COST);
+				}
+				if (column != null) {
+					int index = column.getColumnIndex();
+					cviewer.setSortColumn(index, o.isAccending(field) ? -1 : 1);
+				} else {
+					cviewer.setSortColumn(-1, 0);
+				}
+			}
+		}
 	}
 
 	public void refilterData() {
@@ -701,12 +726,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		TableSearch.search(context, getFilteredStore());
 		if (context.isFound()) {
 			final Object last = context.getLast();
-			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					highlightCard(last);
-				}
-			});
+			WaitUtils.syncExec(() -> highlightCard(last));
 		}
 	}
 
@@ -847,6 +867,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	protected void updateSortColumn(final int index) {
 		if (viewer instanceof IMagicColumnViewer) {
 			IMagicColumnViewer cviewer = (IMagicColumnViewer) viewer;
+			GroupOrder groupOrder = null; // do not sort by group order
+											// automatically
 			if (index >= 0) {
 				AbstractColumn man = (AbstractColumn) cviewer.getColumnViewer().getLabelProvider(index);
 				ICardField sortField = man != null ? man.getSortField() : null;
@@ -855,12 +877,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 				if (sortField == null)
 					return;
 				final ICardField so = sortField;
-				new SortAction(sortField.getLabel(), sortField, getFilter().getSortOrder(), getFilter().getGroupOrder(),
-						(o) -> {
-							cviewer.setSortColumn(index, o.isAccending(so) ? -1 : 1);
-						}).force();
+				new SortAction(sortField.getLabel(), sortField, getFilter().getSortOrder(), groupOrder, (o) -> {
+					cviewer.setSortColumn(index, o.isAccending(so) ? -1 : 1);
+				}).force();
 			} else {
-				new UnsortAction(getFilter().getSortOrder(), getFilter().getGroupOrder(), (o) -> {
+				new UnsortAction(getFilter().getSortOrder(), groupOrder, (o) -> {
 					cviewer.setSortColumn(-1, 0);
 				}).force();
 			}

@@ -24,18 +24,20 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.widgets.ContextFocusListener;
 
-public abstract class ViewerManager implements IDisposable {
+public class ViewerManager implements IDisposable {
 	private SortOrderViewerComparator vcomp = new SortOrderViewerComparator();
 	private ColumnCollection collumns;
 	private IColumnSortAction sortAction;
 	protected MenuManager menuManager;
+	protected Viewer viewer;
 
-	protected ViewerManager(String prefPageId) {
-		this.collumns = doGetColumnCollection(prefPageId);
+	public ViewerManager(Viewer viewer, ColumnCollection columns) {
+		this.collumns = columns;
+		this.viewer = viewer;
 	}
 
-	protected ViewerManager(ColumnCollection columns) {
-		this.collumns = columns;
+	public void setCollumns(ColumnCollection collumns) {
+		this.collumns = collumns;
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public abstract class ViewerManager implements IDisposable {
 		return new MagicColumnCollection(prefPageId);
 	}
 
-	protected AbstractColumn getColumn(int i) {
+	public AbstractColumn getColumn(int i) {
 		return collumns.getColumn(i);
 	}
 
@@ -65,7 +67,9 @@ public abstract class ViewerManager implements IDisposable {
 		getViewer().getControl().addFocusListener(new ContextFocusListener(id));
 	}
 
-	public abstract Viewer getViewer();
+	public Viewer getViewer() {
+		return viewer;
+	};
 
 	public Control getControl() {
 		return getViewer().getControl();

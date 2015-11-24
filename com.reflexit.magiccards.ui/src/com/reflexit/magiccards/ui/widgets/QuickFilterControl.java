@@ -255,8 +255,7 @@ public class QuickFilterControl extends Composite {
 	}
 
 	private void createEditionField(ToolBar toolbar) {
-		Composite parent = toolbar;
-		EditionTextControl setCombo = new EditionTextControl(parent, SWT.BORDER);
+		EditionTextControl setCombo = new EditionTextControl(toolbar, SWT.BORDER);
 		setCombo.setToolTipText("Set filter");
 		setCombo.addModifyListener(new ModifyListener() {
 			@Override

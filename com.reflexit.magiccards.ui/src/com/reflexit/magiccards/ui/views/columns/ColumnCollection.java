@@ -174,7 +174,7 @@ public abstract class ColumnCollection {
 
 	public AbstractColumn getColumn(ICardField field) {
 		init();
-		for (Iterator<AbstractColumn> iterator = order.values().iterator(); iterator.hasNext();) {
+		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
 			AbstractColumn column = iterator.next();
 			if (column.getDataField() == field)
 				return column;

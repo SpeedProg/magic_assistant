@@ -23,7 +23,7 @@ import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public class SplitViewer implements IMagicColumnViewer {
 	private ExtendedTreeViewer treeviewer;
-	private LazyTableViewer viewer;
+	private ExtendedTableViewer viewer;
 
 	public SplitViewer(Composite parent, String id) {
 		createContents(parent, id);
@@ -38,18 +38,8 @@ public class SplitViewer implements IMagicColumnViewer {
 		// Composite comp = new Composite(parent, SWT.NONE);
 		SashForm form = new SashForm(parent, SWT.HORIZONTAL);
 		Composite comp = form;
-		treeviewer = new ExtendedTreeViewer(comp, "");
-		treeviewer.setContentProvider(new RootTreeViewContentProvider());
-		treeviewer.setAutoExpandLevel(2);
-		treeviewer.getTree().setHeaderVisible(false);
-		treeviewer.getTree().setLayoutData(null);
-		GroupColumn labelProvider = new GroupColumn(true, true, false);
-		treeviewer.setLabelProvider(labelProvider);
-		treeviewer.getControl().addListener(SWT.EraseItem, labelProvider);
-		treeviewer.getControl().addListener(SWT.PaintItem, labelProvider);
-		treeviewer.getControl().addListener(SWT.MeasureItem, labelProvider);
-		treeviewer.getControl().setLayoutData(null);
-		viewer = new LazyTableViewer(comp, doGetColumnCollection(id));
+		treeviewer = new SingleColumnTreeViewer(comp);
+		viewer = new SimpleTableViewer(comp, doGetColumnCollection(id));
 		viewer.getTable().setLayoutData(null);
 		viewer.setSorter(null);
 		viewer.setContentProvider(new ExpandContentProvider());

@@ -9,6 +9,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -74,6 +75,7 @@ public class SetImportWizard extends DeckImportWizard implements IImportWizard {
 			}
 		});
 		setCombo.setToolTipText("Set into which cards will be imported");
+		setCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Button button = new Button(comp, SWT.PUSH);
 		button.setText("New Set...");
 		button.addSelectionListener(new SelectionAdapter() {

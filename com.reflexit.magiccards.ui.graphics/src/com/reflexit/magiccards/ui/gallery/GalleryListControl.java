@@ -23,7 +23,7 @@ public class GalleryListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	public IMagicViewer createViewer(Composite parent) {
-		return new Gallery2ViewerManager(getPreferencePageId(), parent);
+		return new Gallery2Viewer(getPreferencePageId(), parent);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.Map;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.abs.ICardModifiable;
 import com.reflexit.magiccards.core.model.abs.ICardVisitor;
 import com.reflexit.magiccards.core.model.expr.TextValue;
@@ -33,6 +34,11 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	}
 
 	public MagicCardPhysical(IMagicCard card, Location location) {
+		if (card instanceof ICardGroup) {
+			IMagicCard card1 = (IMagicCard) ((ICardGroup) card).getFirstCard();
+			if (card1 != null)
+				card = card1;
+		}
 		if (card instanceof MagicCard) {
 			this.card = (MagicCard) card;
 			this.count = 1;

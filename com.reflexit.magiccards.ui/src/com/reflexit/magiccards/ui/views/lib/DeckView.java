@@ -206,7 +206,7 @@ public class DeckView extends AbstractMyCardsView {
 					ICardStore<IMagicCard> cardStore = getFilteredStore().getCardStore();
 					getStorageInfo().setVirtual(false);
 					DataManager.getInstance().remove(orig, cardStore);
-					DataManager.getInstance().moveCards(elements, cardStore);
+					DataManager.getInstance().moveCards((Collection<IMagicCard>) elements, cardStore);
 					super.okPressed();
 				}
 			};

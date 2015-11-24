@@ -7,7 +7,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IViewSite;
@@ -21,7 +20,6 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
-import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.IMagicViewer;
 
 public class GallerySelectionView extends GalleryView {
@@ -70,15 +68,7 @@ public class GallerySelectionView extends GalleryView {
 
 			@Override
 			public IMagicViewer createViewer(Composite parent) {
-				GalleryViewerManager m = new GalleryViewerManager(getPreferencePageId()) {
-					@Override
-					public Control createContents(Composite parent) {
-						Control x = super.createContents(parent);
-						((LazyGalleryTreeViewer) getViewer()).setGroupsVisible(false);
-						return x;
-					}
-				};
-				m.createContents(parent);
+				GallerySimpleViewer m = new GallerySimpleViewer(parent, getPreferencePageId());
 				return m;
 			}
 		};

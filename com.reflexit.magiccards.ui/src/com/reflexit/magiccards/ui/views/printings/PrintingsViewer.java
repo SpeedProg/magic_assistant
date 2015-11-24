@@ -52,7 +52,7 @@ public class PrintingsViewer extends ExtendedTreeViewer implements IDisposable {
 
 
 	protected void updateTableHeader() {
-		manager.showColumn(0, groupped);
+		showColumn(0, groupped);
 	}
 
 	public void setGrouppingEnabled(boolean hasGroups) {

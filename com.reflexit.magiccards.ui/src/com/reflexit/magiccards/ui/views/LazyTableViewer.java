@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
@@ -9,25 +8,16 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 public class LazyTableViewer extends ExtendedTableViewer implements IMagicColumnViewer {
 	public LazyTableViewer(Composite parent, ColumnCollection collection) {
 		super(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL);
-		this.manager = new ViewerManager(collection) {
-			@Override
-			public
-			Viewer getViewer() {
-				return LazyTableViewer.this;
-			}
-		};
-		createContents();
+		setColumnCollection(collection);
 	}
 
 	@Override
 	public void setSortColumn(int index, int direction) {
-		int sortDirection = getSortDirection();
+		int sortDirection = SWT.NONE;
 		if (index >= 0) {
 			if (direction == -1)
 				sortDirection = SWT.DOWN;
-			else if (direction == 0)
-				sortDirection = SWT.NONE;
-			else
+			else if (direction == 1)
 				sortDirection = SWT.UP;
 		}
 		setControlSortColumn(index, sortDirection);
@@ -35,10 +25,8 @@ public class LazyTableViewer extends ExtendedTableViewer implements IMagicColumn
 
 	@Override
 	public void createContents() {
+		super.createContents();
 		setContentProvider(new LazyTableViewContentProvider());
-		setUseHashlookup(true);
-		updatePresentation();
-		createDefaultColumns();
 	}
 	// @Override
 	// public void setInput(Object input) {

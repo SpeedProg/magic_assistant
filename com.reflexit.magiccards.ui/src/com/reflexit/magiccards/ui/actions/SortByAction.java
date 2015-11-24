@@ -12,6 +12,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
+import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.SortOrder;
@@ -67,13 +68,14 @@ public class SortByAction extends ImageAction {
 		MagicCardFilter filter = getFilter();
 		if (filter == null)
 			return;
-		menuSort.add(new UnsortAction(filter.getSortOrder(), filter.getGroupOrder(), this::sortBy));
+		GroupOrder groupOrder = null;
+		menuSort.add(new UnsortAction(filter.getSortOrder(), groupOrder, this::sortBy));
 		Collection<AbstractColumn> columns = sortColumns.getColumns();
 		for (Iterator<AbstractColumn> iterator = columns.iterator(); iterator.hasNext();) {
 			final AbstractColumn man = iterator.next();
 			String name = man.getColumnFullName();
 			ICardField sortField = man.getSortField();
-			menuSort.add(new SortAction(name, sortField, filter.getSortOrder(), filter.getGroupOrder(), this::sortBy));
+			menuSort.add(new SortAction(name, sortField, filter.getSortOrder(), groupOrder, this::sortBy));
 		}
 	}
 
