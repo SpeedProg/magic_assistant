@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.utils;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -16,17 +18,25 @@ import org.eclipse.jface.viewers.Viewer;
  * @author Marc R. Hoffmann
  */
 public class SelectionProviderIntermediate extends StoredSelectionProvider {
-	private ISelectionProvider delegate;
+	private ArrayList<ISelectionProvider> delegates;
+
+	public SelectionProviderIntermediate() {
+		delegates = new ArrayList<>();
+	}
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
-			fireSelectionChanged(event.getSelection());
+			ISelection selection = event.getSelection();
+			setStoredSelection(selection);
+			fireSelectionChanged(selection);
 		}
 	};
 	private ISelectionChangedListener postSelectionListener = new ISelectionChangedListener() {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
-			firePostSelectionChanged(event.getSelection());
+			ISelection selection = event.getSelection();
+			setStoredSelection(selection);
+			firePostSelectionChanged(selection);
 		}
 	};
 
@@ -38,33 +48,50 @@ public class SelectionProviderIntermediate extends StoredSelectionProvider {
 	 *            new selection provider
 	 */
 	public void setSelectionProviderDelegate(ISelectionProvider newDelegate) {
+		ISelectionProvider delegate = getDelegate();
 		if (delegate == newDelegate) {
 			return;
 		}
+		removeDelegate(delegate);
+		addDelegate(newDelegate);
+	}
+
+	public ISelectionProvider getDelegate() {
+		ISelectionProvider delegate = null;
+		if (delegates.size() > 0)
+			delegate = delegates.get(delegates.size() - 1);
+		return delegate;
+	}
+
+	public void addDelegate(ISelectionProvider newDelegate) {
+		if (newDelegate != null) {
+			delegates.add(newDelegate);
+			newDelegate.addSelectionChangedListener(selectionListener);
+			if (newDelegate instanceof IPostSelectionProvider) {
+				((IPostSelectionProvider) newDelegate).addPostSelectionChangedListener(postSelectionListener);
+			}
+			super.setSelection(newDelegate.getSelection());
+		}
+	}
+
+	public void removeDelegate(ISelectionProvider delegate) {
 		if (delegate != null) {
 			delegate.removeSelectionChangedListener(selectionListener);
 			if (delegate instanceof IPostSelectionProvider) {
 				((IPostSelectionProvider) delegate).removePostSelectionChangedListener(postSelectionListener);
 			}
-		}
-		delegate = newDelegate;
-		if (newDelegate != null) {
-			newDelegate.addSelectionChangedListener(selectionListener);
-			if (newDelegate instanceof IPostSelectionProvider) {
-				((IPostSelectionProvider) newDelegate).addPostSelectionChangedListener(postSelectionListener);
-			}
-			fireSelectionChanged(newDelegate.getSelection());
-			firePostSelectionChanged(newDelegate.getSelection());
+			delegates.remove(delegate);
 		}
 	}
 
 	@Override
 	public ISelection getSelection() {
-		return delegate == null ? null : delegate.getSelection();
+		return super.getSelection();
 	}
 
 	@Override
 	public void setSelection(ISelection selection) {
+		ISelectionProvider delegate = getDelegate();
 		if (delegate != null) {
 			if (delegate instanceof Viewer) {
 				((Viewer) delegate).setSelection(selection, true);
@@ -72,5 +99,6 @@ public class SelectionProviderIntermediate extends StoredSelectionProvider {
 				delegate.setSelection(selection);
 			}
 		}
+		setStoredSelection(selection);
 	}
 }

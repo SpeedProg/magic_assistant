@@ -8,7 +8,10 @@ import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -39,7 +42,7 @@ import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
-public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer {
+public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer, ISelectionTranslator {
 	protected final ViewerManager manager;
 	private int filler = 0;
 
@@ -379,6 +382,27 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 	protected void setControlSortColumn(int index, int sortDirection) {
 		getTControl().setSortColumn(index >= 0 ? getTColumn(index) : null);
 		getTControl().setSortDirection(sortDirection);
+	}
+
+	@Override
+	public void setSelection(ISelection selection) {
+		setSelection(selection, true);
+	}
+
+	@Override
+	public void setSelection(ISelection selection, boolean reveal) {
+		if (!(selection instanceof IStructuredSelection))
+			return;
+		super.setSelection(translateSelection((IStructuredSelection) selection, -1), reveal);
+	}
+
+	@Override
+	public IStructuredSelection translateSelection(IStructuredSelection selection, int level) {
+		IContentProvider contentProvider = getContentProvider();
+		if (contentProvider instanceof ISelectionTranslator) {
+			selection = ((ISelectionTranslator) contentProvider).translateSelection(selection, level);
+		}
+		return selection;
 	}
 
 	@Override

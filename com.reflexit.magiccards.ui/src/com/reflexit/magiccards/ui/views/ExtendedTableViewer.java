@@ -11,10 +11,8 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
@@ -398,16 +396,19 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 
 	@Override
 	public void setSelection(ISelection selection, boolean reveal) {
+		if (!(selection instanceof IStructuredSelection))
+			return;
 		IContentProvider contentProvider = getContentProvider();
-		if (selection instanceof IStructuredSelection && contentProvider instanceof LazyTableViewContentProvider) {
+		if (contentProvider instanceof LazyTableViewContentProvider) {
 			LazyTableViewContentProvider provider = (LazyTableViewContentProvider) contentProvider;
 			int[] indices = provider.getIndices((IStructuredSelection) selection);
 			getTable().setSelection(indices);
 			getTable().showSelection();
+		} else if (contentProvider instanceof ISelectionTranslator) {
+			super.setSelection(
+					((ISelectionTranslator) contentProvider).translateSelection((IStructuredSelection) selection, 1),
+					reveal);
 		} else {
-			if (selection instanceof TreeSelection) {
-				selection = new StructuredSelection(((TreeSelection) selection).getPaths()[0].getLastSegment());
-			}
 			super.setSelection(selection, reveal);
 		}
 	}

@@ -23,12 +23,16 @@ public class StoredSelectionProvider implements IPostSelectionProvider {
 
 	@Override
 	public void setSelection(ISelection selection) {
+		setStoredSelection(selection);
+		fireSelectionChanged(storedSelection);
+		firePostSelectionChanged(storedSelection);
+	}
+
+	public void setStoredSelection(ISelection selection) {
 		if (selection == null)
 			storedSelection = StructuredSelection.EMPTY;
 		else
 			storedSelection = selection;
-		fireSelectionChanged(storedSelection);
-		firePostSelectionChanged(storedSelection);
 	}
 
 	@Override

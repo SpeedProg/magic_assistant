@@ -5,20 +5,25 @@ package com.reflexit.magiccards.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class TableViewerContentProvider<T> implements IStructuredContentProvider {
+public class TableViewerContentProvider<T> implements IStructuredContentProvider, ISelectionTranslator {
 	private Object input;
 
 	@Override
 	public void dispose() {
-		// ignore
+		input = null;
+	}
+
+	public Object getInput() {
+		return input;
 	}
 
 	@Override
@@ -30,22 +35,63 @@ public class TableViewerContentProvider<T> implements IStructuredContentProvider
 	public int[] getIndices(IStructuredSelection selection) {
 		if (selection.isEmpty())
 			return new int[] {};
-		ArrayList<Integer> res = new ArrayList<>();
 		Object[] elements = getElements(input);
+		ArrayList<Integer> res = new ArrayList<>();
 		for (Object element : selection.toArray()) {
-			int i = 0;
-			for (Object object : elements) {
-				if (element.equals(object)) {
-					res.add(i);
-				}
-				i++;
-			}
+			int i = indexOf(element, elements);
+			res.add(i);
 		}
 		int[] ind = new int[res.size()];
 		for (int i = 0; i < ind.length; i++) {
 			ind[i] = res.get(i);
 		}
 		return ind;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.reflexit.magiccards.ui.views.ISelectionTranslator#translateSelection(
+	 * org.eclipse.jface.viewers.IStructuredSelection)
+	 */
+	@Override
+	public IStructuredSelection translateSelection(IStructuredSelection selection, int level) {
+		if (selection.isEmpty())
+			return selection;
+		ArrayList<Object> res = new ArrayList<>();
+		Object[] elements = getElements(input);
+		for (Object object : selection.toArray()) {
+			if (object instanceof TreePath) {
+				object = ((TreePath) object).getLastSegment();
+			}
+			int i = indexOf(object, elements);
+			if (i >= 0)
+				res.add(elements[i]);
+			else
+				res.add(object);
+		}
+		return new StructuredSelection(res);
+	}
+
+	public int indexOf(Object element, Object[] elements) {
+		int i = 0;
+		for (Object object : elements) {
+			if (element.equals(object)) {
+				return i;
+			}
+			i++;
+		}
+		i = 0;
+		for (Object object : elements) {
+			if (object instanceof ICardGroup) {
+				int j = indexOf(element, ((ICardGroup) object).getChildren());
+				if (j >= 0)
+					return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 
 	@Override
@@ -62,7 +108,7 @@ public class TableViewerContentProvider<T> implements IStructuredContentProvider
 			} else
 				return fstore.getCardGroupRoot().getChildren();
 		}
-		return null;
+		return new Object[0];
 	}
 
 	private boolean isFlat(IFilteredCardStore<T> fstore) {

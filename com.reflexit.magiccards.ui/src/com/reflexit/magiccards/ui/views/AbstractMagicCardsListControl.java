@@ -369,6 +369,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	public void runFind() {
 		searchControl.setVisible(true);
+		searchControl.getControl().setFocus();
 	}
 
 	/**

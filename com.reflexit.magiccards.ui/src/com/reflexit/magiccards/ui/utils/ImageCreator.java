@@ -392,6 +392,7 @@ public class ImageCreator {
 			gc.setFont(getFont(TITLE_FONT_KEY));
 			gc.drawText(card.getName(), 20, 17, true);
 			Image costImage = SymbolConverter.buildCostImage(card.getCost());
+			if (costImage != null)
 			gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
 			gc.setFont(getFont(TYPE_FONT_KEY));
 			gc.drawText(card.getType() == null ? "Uknown Type" : card.getType(), 20, 175, true);

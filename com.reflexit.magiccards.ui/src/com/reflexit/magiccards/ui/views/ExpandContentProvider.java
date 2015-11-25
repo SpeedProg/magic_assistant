@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -21,31 +20,23 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  * @author elaskavaia
  *
  */
-public class ExpandContentProvider implements ITreeContentProvider, ISizeContentProvider {
-	private Object input;
-	private Object[] topChildren;
+public class ExpandContentProvider extends TableViewerContentProvider
+ implements ISizeContentProvider {
+	private Object[] topChildren = new Object[0];
 
 	@Override
 	public void dispose() {
 		topChildren = null;
-		input = null;
 	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (this.input == newInput)
-			return;
-		this.input = newInput;
+		if (getInput() == newInput)
+			return; // XXX?
+		super.inputChanged(viewer, oldInput, newInput);
 		this.topChildren = getFlatChildren(newInput);
 	}
 
-	@Override
-	public Object[] getChildren(Object element) {
-		if (element == input) {
-			return topChildren;
-		}
-		return new Object[0];
-	}
 
 	public Object[] getFlatChildren(Object element) {
 		Object[] res = null;
@@ -107,13 +98,8 @@ public class ExpandContentProvider implements ITreeContentProvider, ISizeContent
 	}
 
 	@Override
-	public boolean hasChildren(Object element) {
-		return getSize(element) > 0;
-	}
-
-	@Override
 	public int getSize(Object element) {
-		if (element == input) {
+		if (element == getInput()) {
 			return topChildren.length;
 		}
 		return 0;
@@ -122,5 +108,12 @@ public class ExpandContentProvider implements ITreeContentProvider, ISizeContent
 	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
+	}
+
+	public Object[] getChildren(Object element) {
+		if (element == getInput()) {
+			return topChildren;
+		}
+		return new Object[0];
 	}
 }

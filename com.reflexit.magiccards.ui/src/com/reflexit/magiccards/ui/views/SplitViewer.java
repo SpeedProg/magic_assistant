@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -15,8 +16,10 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
@@ -24,6 +27,8 @@ import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 public class SplitViewer implements IMagicColumnViewer {
 	private ExtendedTreeViewer treeviewer;
 	private ExtendedTableViewer viewer;
+	private SelectionProviderIntermediate selProvider;
+	private int expansionLevel = 3;
 
 	public SplitViewer(Composite parent, String id) {
 		createContents(parent, id);
@@ -38,7 +43,12 @@ public class SplitViewer implements IMagicColumnViewer {
 		// Composite comp = new Composite(parent, SWT.NONE);
 		SashForm form = new SashForm(parent, SWT.HORIZONTAL);
 		Composite comp = form;
-		treeviewer = new SingleColumnTreeViewer(comp);
+		treeviewer = new SingleColumnTreeViewer(comp) {
+			@Override
+			public IStructuredSelection translateSelection(IStructuredSelection selection, int level) {
+				return super.translateSelection(selection, expansionLevel);
+			}
+		};
 		viewer = new SimpleTableViewer(comp, doGetColumnCollection(id));
 		viewer.getTable().setLayoutData(null);
 		viewer.setSorter(null);
@@ -49,14 +59,27 @@ public class SplitViewer implements IMagicColumnViewer {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection ssel = (IStructuredSelection) event.getSelection();
 				if (!ssel.isEmpty()) {
-					// viewer.setInput(ssel.toList());
+					viewer.setSelection(new StructuredSelection());
 					viewer.setInput(ssel.toList());
 				}
 			}
 		});
+		selProvider = new SelectionProviderIntermediate() {
+			@Override
+			public void setSelection(ISelection selection) {
+				SplitViewer.this.setSelection(selection);
+			}
+		};
+		selProvider.addDelegate(treeviewer);
+		selProvider.addDelegate(viewer);
 		form.setLayout(new FillLayout());
 		form.setWeights(new int[] { 22, 78 });
 		return comp;
+	}
+
+	public void setSelection(ISelection selection) {
+		treeviewer.setSelection(selection, true);
+		viewer.setSelection(selection, true);
 	}
 
 	public boolean supportsGroupping(boolean groupped) {
@@ -83,7 +106,7 @@ public class SplitViewer implements IMagicColumnViewer {
 
 	@Override
 	public ISelectionProvider getSelectionProvider() {
-		return viewer;
+		return selProvider;
 	}
 
 	@Override
@@ -120,22 +143,26 @@ public class SplitViewer implements IMagicColumnViewer {
 	public void setInput(Object input) {
 		if (treeviewer == null || this.treeviewer.getControl().isDisposed())
 			return;
+		if (viewer == null || this.viewer.getControl().isDisposed())
+			return;
 		IStructuredSelection selection = (IStructuredSelection) treeviewer.getSelection();
 		treeviewer.setSelection(new StructuredSelection());
 		treeviewer.setInput(input);
-		if (viewer == null || this.viewer.getControl().isDisposed())
-			return;
 		if (input instanceof IFilteredCardStore) {
+			IFilteredCardStore fstore = (IFilteredCardStore) input;
 			if (selection.isEmpty()) {
-				IFilteredCardStore fstore = (IFilteredCardStore) input;
 				ICardGroup group = fstore.getCardGroupRoot();
 				selection = new StructuredSelection(group);
 				treeviewer.setSelection(selection, true);
 			} else {
 				treeviewer.setSelection(selection, true);
 			}
-			viewer.refresh(true);
+			expansionLevel = 3;
+			if (fstore.getFilter().getGroupField() == MagicCardField.TYPE)
+				expansionLevel = 5;
+			treeviewer.expandToLevel(expansionLevel - 1);
 		}
+		viewer.refresh(true);
 	}
 
 	@Override
