@@ -21,8 +21,8 @@ import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
-import com.reflexit.magiccards.ui.views.LazyTreeViewer;
 
 public class CollectorListControl extends AbstractMagicCardsListControl {
 	public static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG,
@@ -34,7 +34,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	public IMagicColumnViewer createViewer(Composite parent) {
-		return new LazyTreeViewer(parent, new CollectorColumnCollection()) {
+		return new ExtendedTreeViewer(parent, new CollectorColumnCollection()) {
 			{
 				hookDragAndDrop();
 			}

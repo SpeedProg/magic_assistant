@@ -22,7 +22,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -35,7 +34,6 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ShowInContext;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -46,6 +44,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
@@ -56,7 +55,6 @@ import com.reflexit.magiccards.ui.views.IMagicCardListControl;
  */
 public class PrintingsView extends AbstractCardsView implements ISelectionListener {
 	public static final String ID = PrintingsView.class.getName();
-	private Action delete;
 	private Action refresh;
 	private Action sync;
 	private IMagicCard card;
@@ -81,9 +79,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
-		ActionHandler deleteHandler = new ActionHandler(this.delete);
-		IHandlerService service = (getSite()).getService(IHandlerService.class);
-		service.activateHandler("org.eclipse.ui.edit.delete", deleteHandler);
+		super.setGlobalHandlers(bars);
 	}
 
 	@Override
@@ -95,8 +91,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
-		// manager.add(PerspectiveFactoryMagic.createNewMenu(getViewSite().getWorkbenchWindow()));
-		// drillDownAdapter.addNavigationActions(manager);
 		fillShowInMenu(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -113,22 +107,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		this.delete = new Action("Delete") {
-			@Override
-			public void run() {
-				actionDelete();
-			}
-		};
-		this.refresh = new Action("Refresh", SWT.NONE) {
-			{
-				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
-			}
-
-			@Override
-			public void run() {
-				updateViewer();
-			}
-		};
+		this.refresh = new RefreshAction(this::updateViewer);
 		this.sync = new Action("Update printings from web", SWT.NONE) {
 			{
 				setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/software_update.png"));
@@ -172,13 +151,6 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 				monitor.done();
 			}
 		}
-	}
-
-	/**
-	 *
-	 */
-	protected void actionDelete() {
-		// TODO
 	}
 
 	@Override
