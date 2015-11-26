@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class TreeViewContentProvider implements ITreeContentProvider, ISelectionTranslator {
+public class TreeViewContentProvider implements ITreeContentProvider, ISelectionTranslator, ISizeContentProvider {
 	public static final Object[] EMPTY_CHILDREN = new Object[] {};
 	private int maxCount = 200;
 	private Object input;
@@ -48,6 +48,11 @@ public class TreeViewContentProvider implements ITreeContentProvider, ISelection
 	}
 
 	@Override
+	public int getSize(Object object) {
+		return getChildCount(object);
+	}
+
+	@Override
 	public Object[] getChildren(Object element) {
 		Object[] res;
 		if (element instanceof ICardGroup) {
@@ -58,6 +63,8 @@ public class TreeViewContentProvider implements ITreeContentProvider, ISelection
 		} else if (element instanceof IFilteredCardStore) {
 			IFilteredCardStore fstore = (IFilteredCardStore) element;
 			ICardGroup root = fstore.getCardGroupRoot();
+			if (root.size() == 0)
+				return EMPTY_CHILDREN;
 			res = getChildren(root);
 		} else {
 			return EMPTY_CHILDREN;

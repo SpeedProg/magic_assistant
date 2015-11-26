@@ -342,6 +342,7 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 
 	@Override
 	public void setSelection(ISelection selection, boolean reveal) {
+		// TODO translate
 		try {
 			super.setSelection(selection, reveal);
 		} catch (NullPointerException e) {

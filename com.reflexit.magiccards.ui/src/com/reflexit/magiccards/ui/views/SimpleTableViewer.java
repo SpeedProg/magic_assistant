@@ -11,10 +11,6 @@ public class SimpleTableViewer extends ExtendedTableViewer {
 		super(parent, collection);
 	}
 
-	public SimpleTableViewer(Composite parent, int style, ColumnCollection collection) {
-		super(parent, style, collection);
-	}
-
 	@Override
 	public void setSortColumn(int index, int direction) {
 		super.setSortColumn(index, direction);

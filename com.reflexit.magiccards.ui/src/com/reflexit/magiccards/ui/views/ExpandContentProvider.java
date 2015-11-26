@@ -12,6 +12,7 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
+import com.reflexit.magiccards.core.model.storage.ArrayCardStorage;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
@@ -52,6 +53,8 @@ public class ExpandContentProvider extends TableViewerContentProvider
 			res = list.toArray(new Object[list.size()]);
 		} else if (element instanceof Object[]) {
 			return (Object[]) element;
+		} else if (element instanceof ArrayCardStorage) {
+			return ((ArrayCardStorage) element).getElements();
 		}
 		if (res == null)
 			return new Object[0];
