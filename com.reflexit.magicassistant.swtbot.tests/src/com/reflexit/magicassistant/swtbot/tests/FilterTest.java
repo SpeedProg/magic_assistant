@@ -11,7 +11,7 @@ import com.reflexit.magiccards.ui.views.MagicDbView;
 public class FilterTest extends AbstractSwtBotTest {
 	protected void assertHasType(String pattern, String viewId) {
 		bot.viewById(viewId).setFocus();
-		String str = bot.table().cell(1, 3);
+		String str = bot.table().cell(0, 3);
 		assertMatchesRegex(pattern, str);
 	}
 
@@ -40,12 +40,14 @@ public class FilterTest extends AbstractSwtBotTest {
 	@Test
 	public void testFilterType2() throws Exception {
 		bot.viewByTitle("MTG Database").setFocus();
+		bot.table().unselect();
+		bot.tree().unselect();
 		openFilterShell();
 		bot.tree().select("Basic Filter");
 		bot.checkBox("Artifact").select();
 		bot.textWithLabel("Type").setText("Creature");
 		bot.button("OK").click();
-		bot.sleep(2000);
+		bot.sleep(1000);
 		assertHasType("Artifact Creature.*", MagicDbView.ID);
 	}
 }
