@@ -137,6 +137,8 @@ class CardDescComposite extends Composite {
 	}
 
 	private void setImage(Image remoteImage) {
+		if (imageControl.isDisposed())
+			return;
 		if (this.image != null && this.image != this.loadingImage && this.image != this.cardNotFound) {
 			this.image.dispose();
 			this.image = null;

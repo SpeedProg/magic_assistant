@@ -24,6 +24,7 @@ public class MagicPasteAction extends AbstractMagicAction {
 		setActionDefinitionId(ActionFactory.PASTE.getCommandId());
 	}
 
+	@Override
 	public void run() {
 		try {
 			runPaste();
@@ -37,7 +38,11 @@ public class MagicPasteAction extends AbstractMagicAction {
 		Object contents = mt.fromClipboard();
 		if (contents instanceof Collection) {
 			DataManager DM = DataManager.getInstance();
-			DM.copyCards(DM.resolve((Collection) contents), getCardStore());
+			ICardStore<IMagicCard> cardStore = getCardStore();
+			if (cardStore == null)
+				MessageDialog.openError(getShell(), "Error", "Cannot figure out where to copy");
+			else
+				DM.copyCards(DM.resolve((Collection) contents), cardStore);
 		} else if (contents == null) {
 			// sad
 			MessageDialog.openError(getShell(), "Error", "Nothing is in the clipboard");
@@ -50,13 +55,19 @@ public class MagicPasteAction extends AbstractMagicAction {
 	private ICardStore<IMagicCard> getCardStore() {
 		ISelectionService s = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 		IStructuredSelection sel = (IStructuredSelection) s.getSelection();
-
-		if (sel.isEmpty()) {
-			IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService()
-					.getActivePart();
-			sel = new StructuredSelection(activePart);
+		if (!sel.isEmpty()) {
+			ICardStore cardStore = MagicAdapterFactory.adaptToICardStore(sel);
+			if (cardStore != null)
+				return cardStore;
 		}
-		ICardStore cardStore = MagicAdapterFactory.adaptToICardStore(sel);
-		return cardStore;
+		IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService()
+				.getActivePart();
+		sel = new StructuredSelection(activePart);
+		if (!sel.isEmpty()) {
+			ICardStore cardStore = MagicAdapterFactory.adaptToICardStore(sel);
+			if (cardStore != null)
+				return cardStore;
+		}
+		return null;
 	}
 }
