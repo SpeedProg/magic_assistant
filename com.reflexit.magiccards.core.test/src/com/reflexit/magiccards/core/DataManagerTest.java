@@ -17,7 +17,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.test.assist.Profiler;
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+import com.reflexit.unittesting.TestFileUtils;
 
 import static org.junit.Assert.assertNotEquals;
 

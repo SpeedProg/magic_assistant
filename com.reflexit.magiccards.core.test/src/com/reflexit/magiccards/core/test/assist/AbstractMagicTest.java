@@ -6,6 +6,8 @@ import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 
+import com.reflexit.unittesting.TestFileUtils;
+
 @FixMethodOrder(MethodSorters.JVM)
 public class AbstractMagicTest {
 	protected String getAboveComment() {

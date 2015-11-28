@@ -10,10 +10,10 @@ import org.junit.runners.MethodSorters;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+import com.reflexit.unittesting.CardGenerator;
+import com.reflexit.unittesting.TestFileUtils;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class AbstarctExportTest extends AbstractMagicTest {

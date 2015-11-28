@@ -14,7 +14,7 @@ import org.junit.runners.MethodSorters;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+import com.reflexit.unittesting.TestFileUtils;
 
 import static org.junit.Assert.*;
 

@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
+import com.reflexit.unittesting.CardGenerator;
 
 public class TextPrinterTest extends AbstractMagicTest {
 	@Test

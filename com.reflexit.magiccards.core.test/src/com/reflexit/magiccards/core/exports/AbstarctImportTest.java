@@ -17,7 +17,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+import com.reflexit.unittesting.TestFileUtils;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class AbstarctImportTest extends AbstractMagicTest {

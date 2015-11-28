@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Unit Testing Dependencies
-Bundle-SymbolicName: com.reflexit.unittesting
+Bundle-SymbolicName: com.reflexit.unittesting;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Alena Laskavaia
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -12,7 +12,8 @@ Bundle-ClassPath: lib/cglib-nodep-2.2.2.jar,
  lib/objenesis-2.1.jar,
  lib/powermock-mockito-1.6.1-full.jar,
  .
-Export-Package: javassist,
+Export-Package: com.reflexit.unittesting,
+ javassist,
  javassist.bytecode,
  javassist.bytecode.analysis,
  javassist.bytecode.annotation,
@@ -202,4 +203,5 @@ Export-Package: javassist,
  org.powermock.reflect.spi,
  org.powermock.tests.utils,
  org.powermock.tests.utils.impl
-Require-Bundle: org.junit;bundle-version="4.0.0"
+Require-Bundle: org.junit;bundle-version="4.0.0",
+ com.reflexit.magiccards.core;bundle-version="1.5.0"

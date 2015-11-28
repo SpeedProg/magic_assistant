@@ -19,7 +19,7 @@
  * Created on: 2011-01-27
  * Last modified by: $Author: elaskavaia $
  */
-package com.reflexit.magiccards.core.test.assist;
+package com.reflexit.unittesting;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

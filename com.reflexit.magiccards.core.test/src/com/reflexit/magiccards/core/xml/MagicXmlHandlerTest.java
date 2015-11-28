@@ -17,8 +17,8 @@ import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+import com.reflexit.unittesting.CardGenerator;
+import com.reflexit.unittesting.TestFileUtils;
 
 /**
  * Test xml reader and writer

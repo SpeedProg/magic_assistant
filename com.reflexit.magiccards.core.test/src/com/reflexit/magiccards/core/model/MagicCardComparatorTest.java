@@ -14,7 +14,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardModifiable;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
+import com.reflexit.unittesting.CardGenerator;
 
 public class MagicCardComparatorTest extends TestCase {
 	private MagicCardComparator acc;

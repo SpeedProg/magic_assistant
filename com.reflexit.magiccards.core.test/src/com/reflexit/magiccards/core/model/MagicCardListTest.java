@@ -5,8 +5,8 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
 import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
+import com.reflexit.unittesting.CardGenerator;
 
 public class MagicCardListTest extends AbstractMagicTest {
 	private MagicCard card1;

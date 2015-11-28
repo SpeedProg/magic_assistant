@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.DataManager;
 // import static org.junit.Assert.assertTrue;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
-import com.reflexit.magiccards.core.test.assist.TestFileUtils;
+import com.reflexit.unittesting.TestFileUtils;
 
 @FixMethodOrder(MethodSorters.JVM)
 public class CardOrganizerTest extends TestCase {

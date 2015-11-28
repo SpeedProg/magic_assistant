@@ -11,7 +11,7 @@ import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck.ZonedFilter;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
+import com.reflexit.unittesting.CardGenerator;
 
 import static org.junit.Assert.*;
 

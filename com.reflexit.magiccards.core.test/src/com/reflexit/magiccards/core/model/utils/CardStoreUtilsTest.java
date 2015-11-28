@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.Colors;
 import com.reflexit.magiccards.core.model.Colors.ManaColor;
+import com.reflexit.unittesting.CardGenerator;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 

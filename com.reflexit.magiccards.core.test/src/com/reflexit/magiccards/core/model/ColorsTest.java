@@ -7,7 +7,7 @@ import java.util.HashSet;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.Colors.ManaColor;
-import com.reflexit.magiccards.core.model.utils.CardGenerator;
+import com.reflexit.unittesting.CardGenerator;
 
 import static org.junit.Assert.*;
 

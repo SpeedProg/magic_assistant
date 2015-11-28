@@ -4,7 +4,7 @@
  *
  * Contributors: Alena Laskavaia - initial API and implementation
  *******************************************************************************/
-package com.reflexit.magiccards.core.model.utils;
+package com.reflexit.unittesting;
 
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.Editions.Edition;
