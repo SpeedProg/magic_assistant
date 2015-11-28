@@ -41,6 +41,9 @@ import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.views.model.ISelectionTranslator;
+import com.reflexit.magiccards.ui.views.model.SortOrderViewerComparator;
+import com.reflexit.magiccards.ui.views.model.TreeViewerContentProvider;
 
 public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer, ISelectionTranslator {
 	protected final ViewerManager manager;
@@ -145,7 +148,7 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 	}
 
 	protected void createContents() {
-		setContentProvider(new TreeViewContentProvider());
+		setContentProvider(new TreeViewerContentProvider());
 		setUseHashlookup(true);
 		updatePresentation();
 		createLabelProviders();

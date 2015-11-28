@@ -26,9 +26,9 @@ import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
 import com.reflexit.magiccards.core.model.abs.ICardField;
-import com.reflexit.magiccards.ui.views.TreeViewContentProvider;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.model.TreeViewerContentProvider;
 
 public class ColumnFieldEditor extends CheckedTreeEditor {
 	private ColumnCollection columns;
@@ -76,7 +76,7 @@ public class ColumnFieldEditor extends CheckedTreeEditor {
 				return super.getText(element);
 			}
 		});
-		viewer.setContentProvider(new TreeViewContentProvider());
+		viewer.setContentProvider(new TreeViewerContentProvider());
 		viewer.setCheckStateProvider(new ICheckStateProvider() {
 			@Override
 			public boolean isGrayed(Object element) {

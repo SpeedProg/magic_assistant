@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.reflexit.magiccards.ui.views;
+package com.reflexit.magiccards.ui.views.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class TreeViewContentProvider implements ITreeContentProvider, ISelectionTranslator, ISizeContentProvider {
+public class TreeViewerContentProvider implements ITreeContentProvider, ISelectionTranslator, ISizeContentProvider {
 	public static final Object[] EMPTY_CHILDREN = new Object[] {};
 	private int maxCount = 200;
 	private Object input;
@@ -33,18 +33,26 @@ public class TreeViewContentProvider implements ITreeContentProvider, ISelection
 		this.input = newInput;
 	}
 
+	public Object getInput() {
+		return input;
+	}
+
 	protected int getChildCount(Object element) {
 		int count = 0;
 		if (element instanceof IFilteredCardStore) {
 			IFilteredCardStore fstore = (IFilteredCardStore) element;
 			ICardGroup root = fstore.getCardGroupRoot();
 			count = getChildCount(root);
+		} else if (element instanceof Collection) {
+			Collection children = (Collection) element;
+			count = ((Collection) element).size();
 		} else if (element instanceof ICardGroup) {
 			count = ((ICardGroup) element).size();
 		}
-		if (count > getMaxCount())
-			count = getMaxCount();
-		return count;
+		int m = getMaxCount();
+		if (count <= m + 1)
+			return count;
+		return m + 1;
 	}
 
 	@Override
@@ -57,30 +65,25 @@ public class TreeViewContentProvider implements ITreeContentProvider, ISelection
 		Object[] res;
 		if (element instanceof ICardGroup) {
 			res = ((ICardGroup) element).getChildren();
-		} else if (element instanceof Collection) {
-			Collection children = (Collection) element;
-			res = children.toArray(new Object[children.size()]);
 		} else if (element instanceof IFilteredCardStore) {
 			IFilteredCardStore fstore = (IFilteredCardStore) element;
 			ICardGroup root = fstore.getCardGroupRoot();
-			if (root.size() == 0)
-				return EMPTY_CHILDREN;
 			res = getChildren(root);
+		} else if (element instanceof Collection) {
+			Collection children = (Collection) element;
+			res = children.toArray();
 		} else {
 			return EMPTY_CHILDREN;
 		}
 		int m = getMaxCount();
-		return truncate(res, m);
-	}
-
-	private Object[] truncate(Object[] source, int m) {
-		if (source.length <= m + 1)
-			return source;
-		Object o = createOverflow(m, source, m);
-		Object[] boo = Arrays.copyOf(source, m + 1);
-		boo[m] = o;
+		if (res.length <= m + 1)
+			return res;
+		Object overflowElement = createOverflow(m, res, m);
+		Object[] boo = Arrays.copyOf(res, m + 1);
+		boo[m] = overflowElement;
 		return boo;
 	}
+
 
 	@Override
 	public IStructuredSelection translateSelection(IStructuredSelection selection, int level) {
@@ -182,7 +185,7 @@ public class TreeViewContentProvider implements ITreeContentProvider, ISelection
 
 	@Override
 	public boolean hasChildren(Object element) {
-		return getChildCount(element) > 0;
+		return getSize(element) > 0;
 	}
 
 	@Override

@@ -9,10 +9,10 @@ import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.ui.views.IColumnSortAction;
 import com.reflexit.magiccards.ui.views.IMagicViewer;
-import com.reflexit.magiccards.ui.views.SortOrderViewerComparator;
 import com.reflexit.magiccards.ui.views.ViewerManager;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.views.model.SortOrderViewerComparator;
 
 public class GallerySimpleViewer extends LazyGalleryTreeViewer implements IMagicViewer {
 	private FlatTreeContentProvider flatTreeContentProvider;

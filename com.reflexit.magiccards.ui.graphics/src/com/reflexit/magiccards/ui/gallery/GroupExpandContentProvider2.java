@@ -17,7 +17,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.views.TreeViewContentProvider;
+import com.reflexit.magiccards.ui.views.model.TreeViewerContentProvider;
 
 public class GroupExpandContentProvider2 implements ITreeContentProvider {
 	private Object input;
@@ -89,7 +89,7 @@ public class GroupExpandContentProvider2 implements ITreeContentProvider {
 			return children.toArray(new Object[children.size()]);
 		}
 		if (element instanceof IMagicCard) {
-			return TreeViewContentProvider.EMPTY_CHILDREN;
+			return TreeViewerContentProvider.EMPTY_CHILDREN;
 		}
 		System.err.println("Unknonwn chold " + element);
 		return res;

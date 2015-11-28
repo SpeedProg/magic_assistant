@@ -26,6 +26,8 @@ import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.views.model.ExpandContentProvider;
+import com.reflexit.magiccards.ui.views.model.ISizeContentProvider;
 
 public class SplitViewer implements IMagicColumnViewer {
 	private ExtendedTreeViewer treeviewer;

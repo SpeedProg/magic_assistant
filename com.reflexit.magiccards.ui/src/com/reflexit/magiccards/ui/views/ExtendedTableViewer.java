@@ -37,6 +37,10 @@ import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.views.model.ISelectionTranslator;
+import com.reflexit.magiccards.ui.views.model.LazyTableViewContentProvider;
+import com.reflexit.magiccards.ui.views.model.SortOrderViewerComparator;
+import com.reflexit.magiccards.ui.views.model.TableViewerContentProvider;
 
 public class ExtendedTableViewer extends TableViewer implements IMagicColumnViewer {
 	protected final ViewerManager manager;

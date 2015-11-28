@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.ui.views;
+package com.reflexit.magiccards.ui.views.model;
 
 import org.eclipse.jface.viewers.IContentProvider;
 

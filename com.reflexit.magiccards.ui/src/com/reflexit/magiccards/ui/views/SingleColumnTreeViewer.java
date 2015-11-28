@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
+import com.reflexit.magiccards.ui.views.model.RootTreeViewContentProvider;
 
 public class SingleColumnTreeViewer extends ExtendedTreeViewer {
 	public SingleColumnTreeViewer(Composite parent) {

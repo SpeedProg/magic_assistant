@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.model.LazyTableViewContentProvider;
 
 public class LazyTableViewer extends ExtendedTableViewer implements IMagicColumnViewer {
 	public LazyTableViewer(Composite parent, ColumnCollection collection) {

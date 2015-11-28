@@ -22,6 +22,7 @@ import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.views.model.SortOrderViewerComparator;
 import com.reflexit.magiccards.ui.widgets.ContextFocusListener;
 
 public class ViewerManager implements IDisposable {

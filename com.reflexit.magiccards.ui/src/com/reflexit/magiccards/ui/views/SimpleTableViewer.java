@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.model.SortOrderViewerComparator;
 
 public class SimpleTableViewer extends ExtendedTableViewer {
 	public SimpleTableViewer(Composite parent, ColumnCollection collection) {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.reflexit.magiccards.ui.views;
+package com.reflexit.magiccards.ui.views.model;
 
 import java.util.ArrayList;
 import java.util.Collection;

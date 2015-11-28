@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.model.LazyTreeViewContentProvider;
 
 public class LazyTreeViewer extends ExtendedTreeViewer implements IMagicColumnViewer {
 	public LazyTreeViewer(Composite parent, ColumnCollection collection) {
