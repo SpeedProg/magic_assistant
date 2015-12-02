@@ -478,7 +478,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		statusLine = createStatusLine(topToolBar);
 		statusLine.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		warning = new Label(topToolBar, SWT.NONE);
-		warning.setImage(MagicUIActivator.getImageDescriptor("icons/clcl16/exclamation.gif").createImage());
+		warning.setImage(MagicUIActivator.getImage("icons/clcl16/exclamation.gif"));
 		warning.setToolTipText("There are filtered cards!");
 		warning.addMouseListener(new MouseListener() {
 			@Override

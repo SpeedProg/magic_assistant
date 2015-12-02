@@ -146,7 +146,10 @@ public class TreeViewerContentProvider implements ITreeContentProvider, ISelecti
 			System.arraycopy(source, startIndex, boo, 0, rem);
 			return boo;
 		}
-		Object boo[] = new Object[rem / max + 1];
+		int size = rem / max;
+		if (size * max < rem)
+			size++;
+		Object boo[] = new Object[size];
 		for (int i = startIndex; i < source.length; i += max) {
 			int endIndex = i + max;
 			if (endIndex >= source.length) {

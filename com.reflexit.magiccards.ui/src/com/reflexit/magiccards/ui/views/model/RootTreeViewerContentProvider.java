@@ -6,7 +6,7 @@ import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public class RootTreeViewContentProvider extends TreeViewerContentProvider {
+public class RootTreeViewerContentProvider extends TreeViewerContentProvider {
 	private Object[] rootChildren;
 	private Object root;
 
@@ -28,7 +28,7 @@ public class RootTreeViewContentProvider extends TreeViewerContentProvider {
 		if (element instanceof Iterable) {
 			CardGroup root = new CardGroup(null, "All");
 			root.addAll((Iterable) element);
-			return element;
+			return root;
 		}
 		return element;
 	}
