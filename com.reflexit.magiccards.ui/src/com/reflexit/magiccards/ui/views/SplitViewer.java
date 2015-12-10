@@ -65,7 +65,7 @@ public class SplitViewer implements IMagicColumnViewer {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection ssel = (IStructuredSelection) event.getSelection();
-				System.err.println("selection changed " + ssel);
+				// System.err.println("selection changed " + ssel);
 				List root = ssel.toList();
 				if (!ssel.isEmpty()) {
 					viewer.setSelection(new StructuredSelection());

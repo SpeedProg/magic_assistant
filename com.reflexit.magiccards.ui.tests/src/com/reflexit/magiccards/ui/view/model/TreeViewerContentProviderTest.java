@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
+import com.reflexit.magiccards.ui.views.model.ISizeContentProvider;
 import com.reflexit.magiccards.ui.views.model.TreeViewerContentProvider;
 import com.reflexit.unittesting.CardGenerator;
 
@@ -69,7 +70,7 @@ public class TreeViewerContentProviderTest {
 
 	@Test
 	public void testGetSizeNull() {
-		assertEquals(0, provider.getSize(null));
+		assertEquals(0, ((ISizeContentProvider) provider).getSize(null));
 	}
 
 	@Test
@@ -88,21 +89,25 @@ public class TreeViewerContentProviderTest {
 	}
 
 	protected void checkEmpty(Object element) {
-		assertEquals(0, provider.getSize(element));
+		assertEquals(0, getSize(element));
 		assertEquals(false, provider.hasChildren(element));
 		assertArrayEquals(TreeViewerContentProvider.EMPTY_CHILDREN, provider.getChildren(element));
 		checkInvariant(element);
 	}
 
+	private int getSize(Object element) {
+		return ((ISizeContentProvider) provider).getSize(element);
+	}
+
 	protected void checkCollection(Collection treeBoo) {
-		assertEquals(treeBoo.size(), provider.getSize(treeBoo));
+		assertEquals(treeBoo.size(), getSize(treeBoo));
 		assertEquals(treeBoo.size() > 0, provider.hasChildren(treeBoo));
 		assertArrayEquals(treeBoo.toArray(), provider.getChildren(treeBoo));
 		checkInvariant(treeBoo);
 	}
 
 	protected void checkGroup(ICardGroup cardGroup) {
-		assertEquals(cardGroup.size(), provider.getSize(cardGroup));
+		assertEquals(cardGroup.size(), getSize(cardGroup));
 		assertEquals(cardGroup.size() > 0, provider.hasChildren(cardGroup));
 		assertArrayEquals(cardGroup.getChildren(), provider.getChildren(cardGroup));
 		checkInvariant(cardGroup);
@@ -111,7 +116,7 @@ public class TreeViewerContentProviderTest {
 	protected void checkInvariant(Object element) {
 		Object[] children = provider.getChildren(element);
 		assertEquals(children.length > 0, provider.hasChildren(element));
-		assertEquals(children.length, provider.getSize(element));
+		assertEquals(children.length, getSize(element));
 
 		for (int i = 0; i < children.length; i++) {
 			Object child = children[i];
@@ -156,7 +161,7 @@ public class TreeViewerContentProviderTest {
 		}
 		setInput(cardGroup);
 		checkInvariant(cardGroup);
-		assertEquals(provider.getMaxCount() + 1, provider.getSize(cardGroup));
+		assertEquals(provider.getMaxCount() + 1, getSize(cardGroup));
 	}
 
 	@Test

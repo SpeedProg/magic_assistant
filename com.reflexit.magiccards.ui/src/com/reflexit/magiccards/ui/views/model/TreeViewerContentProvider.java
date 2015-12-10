@@ -62,19 +62,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider, ISelecti
 
 	@Override
 	public Object[] getChildren(Object element) {
-		Object[] res;
-		if (element instanceof ICardGroup) {
-			res = ((ICardGroup) element).getChildren();
-		} else if (element instanceof IFilteredCardStore) {
-			IFilteredCardStore fstore = (IFilteredCardStore) element;
-			ICardGroup root = fstore.getCardGroupRoot();
-			res = getChildren(root);
-		} else if (element instanceof Collection) {
-			Collection children = (Collection) element;
-			res = children.toArray();
-		} else {
-			return EMPTY_CHILDREN;
-		}
+		Object[] res = getRawChildren(element);
 		int m = getMaxCount();
 		if (res.length <= m + 1)
 			return res;
@@ -84,6 +72,22 @@ public class TreeViewerContentProvider implements ITreeContentProvider, ISelecti
 		return boo;
 	}
 
+	protected Object[] getRawChildren(Object element) {
+		Object[] res;
+		if (element instanceof ICardGroup) {
+			res = ((ICardGroup) element).getChildren();
+		} else if (element instanceof IFilteredCardStore) {
+			IFilteredCardStore fstore = (IFilteredCardStore) element;
+			ICardGroup root = fstore.getCardGroupRoot();
+			res = root.getChildren();
+		} else if (element instanceof Collection) {
+			Collection children = (Collection) element;
+			res = children.toArray();
+		} else {
+			return EMPTY_CHILDREN;
+		}
+		return res;
+	}
 
 	@Override
 	public IStructuredSelection translateSelection(IStructuredSelection selection, int level) {
@@ -95,33 +99,43 @@ public class TreeViewerContentProvider implements ITreeContentProvider, ISelecti
 			if (object instanceof TreePath) {
 				toSearch = ((TreePath) object).getLastSegment();
 			}
-			Object found = object;
-			ArrayList<Object> list = new ArrayList<>();
-			list.add(input);
-			TreePath path = translatePath(toSearch, list);
-			if (path != null)
-				found = path;
-			if (level >= 1 && found instanceof TreePath) {
-				// truncate
-				path = (TreePath) found;
-				int count = path.getSegmentCount();
-				if (count > level) {
-					Object segments[] = new Object[level];
-					for (int i = 0; i < segments.length; i++) {
-						segments[i] = path.getSegment(i);
-					}
-					found = new TreePath(segments);
-				}
-			}
-			res.add(found);
+			Object found = findTreePath(toSearch, level);
+			if (found != null)
+				res.add(found);
 		}
 		return new StructuredSelection(res);
 	}
 
-	private TreePath translatePath(Object object, List<Object> parenPath) {
+	protected Object findTreePath(Object toSearch, int levelTruncate) {
+		Object found;
+		ArrayList<Object> list = new ArrayList<>();
+		list.add(input);
+		List<Object> path = findElement(toSearch, list, levelTruncate);
+		if (path != null) {
+			found = new TreePath(path.toArray());
+		} else {
+			found = toSearch;
+		}
+		return found;
+	}
+
+	protected List<Object> findElement(Object object, List<Object> parenPath, int levelTruncate) {
+		List<Object> path = findElement(object, parenPath);
+		if (path != null) {
+			if (levelTruncate >= 1 && path.size() > levelTruncate) {
+				// truncate
+				while (path.size() > levelTruncate) {
+					path.remove(path.size() - 1);
+				}
+			}
+		}
+		return path;
+	}
+
+	protected List<Object> findElement(Object object, List<Object> parenPath) {
 		Object root = parenPath.get(parenPath.size() - 1);
 		if (root.equals(object))
-			return new TreePath(parenPath.toArray());
+			return parenPath;
 		if (parenPath.size() > 20) {
 			return null;
 		}
@@ -130,11 +144,14 @@ public class TreeViewerContentProvider implements ITreeContentProvider, ISelecti
 			if (child == null || root.equals(child))
 				continue;
 			parenPath.add(child);
-			TreePath subPath = translatePath(object, parenPath);
-			if (subPath != null) {
-				return subPath;
+			try {
+				List<Object> subPath = findElement(object, parenPath);
+				if (subPath != null) {
+					return subPath;
+				}
+			} finally {
+				parenPath.remove(parenPath.size() - 1);
 			}
-			parenPath.remove(parenPath.size() - 1);
 		}
 		return null;
 	}

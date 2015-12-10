@@ -51,7 +51,8 @@ public class CreateDeck extends AbstractSwtBotTest {
 
 	@After
 	public void deleteDeck() {
-		deckView.close();
+		if (deckView != null)
+			deckView.close();
 		// XXX delete deck
 	}
 

@@ -24,14 +24,7 @@ public class PricesXmlStreamReader {
 	private static SAXParserFactory factory = SAXParserFactory.newInstance();
 
 	static enum Tag {
-		cards,
-		list,
-		properties,
-		property,
-		mc,
-		name,
-		comment,
-		fake,
+		cards, list, properties, property, mc, name, comment, dbprice, id, fake,
 	}
 
 	static class PricesXmlHandler extends DefaultHandler {
@@ -66,20 +59,20 @@ public class PricesXmlStreamReader {
 				current = Tag.fake;
 			}
 			switch (current) {
-				case list:
-					store.map = new TIntFloatHashMap();
-					break;
-				case mc:
-					id = 0;
-					price = 0;
-					break;
-				case property:
-					String name = attributes.getValue("name");
-					String value = attributes.getValue("value");
-					store.properties.setProperty(name, value);
-					break;
-				default:
-					break;
+			case list:
+				store.map = new TIntFloatHashMap();
+				break;
+			case mc:
+				id = 0;
+				price = 0;
+				break;
+			case property:
+				String name = attributes.getValue("name");
+				String value = attributes.getValue("value");
+				store.properties.setProperty(name, value);
+				break;
+			default:
+				break;
 			}
 			states.push(state);
 			state = current;
@@ -90,39 +83,53 @@ public class PricesXmlStreamReader {
 			try {
 				String ttStr = text.toString().trim();
 				switch (state) {
-					case mc:
-						store.map.put(id, price);
-						break;
-					case name:
-						store.name = ttStr;
-						break;
-					case comment:
-						store.comment = ttStr;
-						break;
-					case property:
-						break;
-					case properties:
-						break;
-					case fake: {
-						switch (states.peek()) {
-							case mc: {
-								if (ttStr != null && !ttStr.isEmpty()) {
-									if (last.equals("id"))
-										id = Integer.valueOf(ttStr);
-									else if (last.equals("dbprice"))
-										price = Float.valueOf(ttStr);
-								}
-								break;
-							}
-							default:
-								break;
+				case mc:
+					store.map.put(id, price);
+					break;
+				case name:
+					store.name = ttStr;
+					break;
+				case comment:
+					store.comment = ttStr;
+					break;
+				case property:
+					break;
+				case properties:
+					break;
+				case id:
+					if (states.peek() == Tag.mc) {
+						if (ttStr != null && !ttStr.isEmpty()) {
+							id = Integer.valueOf(ttStr);
+						}
+					}
+					break;
+				case dbprice:
+					if (states.peek() == Tag.mc) {
+						if (ttStr != null && !ttStr.isEmpty()) {
+							price = Float.valueOf(ttStr);
+						}
+					}
+					break;
+				case fake: {
+					switch (states.peek()) {
+					case mc: {
+						if (ttStr != null && !ttStr.isEmpty()) {
+							if (last.equals("id"))
+								id = Integer.valueOf(ttStr);
+							else if (last.equals("dbprice"))
+								price = Float.valueOf(ttStr);
 						}
 						break;
 					}
-					case cards:
+					default:
 						break;
-					case list:
-						break;
+					}
+					break;
+				}
+				case cards:
+					break;
+				case list:
+					break;
 				}
 			} catch (Exception e) {
 				// System.err.println("error at " + locator.getLineNumber());
@@ -135,21 +142,22 @@ public class PricesXmlStreamReader {
 		@Override
 		public void characters(char[] ch, int start, int length) {
 			switch (state) {
-				case name:
-				case comment:
-				case fake:
-					text.append(ch, start, length);
-					break;
-				default:
-					break;
+			case name:
+			case comment:
+			case fake:
+			case id:
+			case dbprice:
+				text.append(ch, start, length);
+				break;
+			default:
+				break;
 			}
 		}
 	}
 
 	public PriceProviderStoreObject load(File file) throws IOException {
 		try {
-			BufferedInputStream st = new BufferedInputStream(new FileInputStream(file),
-					FileUtils.DEFAULT_BUFFER_SIZE);
+			BufferedInputStream st = new BufferedInputStream(new FileInputStream(file), FileUtils.DEFAULT_BUFFER_SIZE);
 			PriceProviderStoreObject object = load(st);
 			object.file = file;
 			st.close();

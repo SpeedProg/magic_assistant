@@ -9,6 +9,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,8 +41,9 @@ public class RenameDeck extends AbstractSwtBotTest {
 		// rename
 		SWTBotView navView = bot.viewById(CardsNavigatorView.ID);
 		navView.setFocus();
-		bot.tree().getTreeItem("My Cards").expand();
-		SWTBotTreeItem decks = bot.tree().getTreeItem("My Cards").getNode("Decks");
+		SWTBotTree tree = navView.bot().tree();
+		tree.getTreeItem("My Cards").expand();
+		SWTBotTreeItem decks = tree.getTreeItem("My Cards").getNode("Decks");
 		decks.expand();
 		decks.getNode("bbb (Active)").select();
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.F2);
