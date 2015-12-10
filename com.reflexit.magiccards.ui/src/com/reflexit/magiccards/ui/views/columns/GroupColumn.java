@@ -186,11 +186,6 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 	}
 
 	@Override
-	protected void handleEraseEvent(Event event) {
-		event.detail &= ~SWT.FOREGROUND;
-	}
-
-	@Override
 	public void handlePaintEvent(Event event) {
 		paintCellWithImage(event, SetColumn.SET_IMAGE_WIDTH);
 	}
