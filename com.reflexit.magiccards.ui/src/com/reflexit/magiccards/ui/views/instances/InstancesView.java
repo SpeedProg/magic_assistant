@@ -262,7 +262,7 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 
 	@Override
 	protected String getPreferencePageId() {
-		return null;
+		return ID;
 	}
 
 	@Override
