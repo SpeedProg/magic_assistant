@@ -111,6 +111,25 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 					hide(column);
 				}
 			});
+			final MenuItem showColumn = new MenuItem(menu, SWT.CASCADE);
+			showColumn.setText("Show Column");
+			Menu smenu = new Menu(menu);
+			TreeColumn[] columns = getTControl().getColumns();
+			for (int i = 0; i < columns.length; i++) {
+				TreeColumn tcolumn = columns[i];
+				AbstractColumn man = (AbstractColumn) tcolumn.getData("man");
+				if (man == null)
+					continue;
+				final MenuItem itemShow = new MenuItem(smenu, SWT.PUSH);
+				itemShow.setText(man.getColumnFullName());
+				itemShow.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						show(tcolumn, man.getUserWidth());
+					}
+				});
+			}
+			showColumn.setMenu(smenu);
 			final MenuItem itemSort = new MenuItem(menu, SWT.PUSH);
 			itemSort.setText("Sort Accending: " + name);
 			itemSort.addSelectionListener(new SelectionAdapter() {
@@ -135,8 +154,9 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 					manager.callSortAction(-1, 0);
 				}
 			});
+
 			final MenuItem itemShow = new MenuItem(menu, SWT.PUSH);
-			itemShow.setText("Show Column... ");
+			itemShow.setText("Column Preferences... ");
 			itemShow.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -163,6 +183,7 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 			AbstractColumn man = manager.getColumn(i);
 			TreeViewerColumn colv = new TreeViewerColumn(getTViewer(), i);
 			TreeColumn col = colv.getColumn();
+			col.setData("man", man);
 			col.setText(man.getColumnName());
 			col.setWidth(man.getUserWidth());
 			col.setToolTipText(man.getColumnTooltip());
@@ -444,12 +465,18 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 		if (!show) {
 			hide(column);
 		} else {
-			if (column.getWidth() < 16) {
-				int def = manager.getColumn(i).getColumnWidth();
-				column.setWidth(def);
-			}
-			column.setResizable(true);
+			int def = manager.getColumn(i).getColumnWidth();
+			show(column, def);
 		}
+	}
+
+	protected void show(final TreeColumn acol, int width) {
+		if (width < 16)
+			width = 16; // min reasonable width
+		if (width > 500)
+			width = 500;
+		acol.setWidth(width);
+		acol.setResizable(true);
 	}
 
 	public boolean supportsGroupping(boolean groupped) {

@@ -107,6 +107,25 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 					hide(column);
 				}
 			});
+			final MenuItem showColumn = new MenuItem(menu, SWT.CASCADE);
+			showColumn.setText("Show Column");
+			Menu smenu = new Menu(menu);
+			TableColumn[] columns = getTControl().getColumns();
+			for (int i = 0; i < columns.length; i++) {
+				TableColumn tcolumn = columns[i];
+				AbstractColumn man = (AbstractColumn) tcolumn.getData("man");
+				if (man == null)
+					continue;
+				final MenuItem itemShow = new MenuItem(smenu, SWT.PUSH);
+				itemShow.setText(man.getColumnFullName());
+				itemShow.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						show(tcolumn, man.getUserWidth());
+					}
+				});
+			}
+			showColumn.setMenu(smenu);
 			final MenuItem itemSort = new MenuItem(menu, SWT.PUSH);
 			itemSort.setText("Sort Accending: " + name);
 			itemSort.addSelectionListener(new SelectionAdapter() {
@@ -131,8 +150,9 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 					setSortColumn(-1, 0);
 				}
 			});
+
 			final MenuItem itemShow = new MenuItem(menu, SWT.PUSH);
-			itemShow.setText("Show Column... ");
+			itemShow.setText("Preferences... ");
 			itemShow.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -173,6 +193,7 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 			AbstractColumn man = manager.getColumn(i);
 			TableViewerColumn colv = new TableViewerColumn(this, SWT.LEFT);
 			TableColumn col = colv.getColumn();
+			col.setData("man", man);
 			col.setText(man.getColumnName());
 			col.setWidth(man.getUserWidth());
 			col.setToolTipText(man.getColumnTooltip());
