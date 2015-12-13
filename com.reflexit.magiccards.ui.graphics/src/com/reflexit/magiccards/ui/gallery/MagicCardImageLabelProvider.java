@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.gallery;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -74,8 +75,14 @@ final class MagicCardImageLabelProvider extends LabelProvider implements IImageO
 	@Override
 	public void drawAllOverlays(GC gc, Object element, int x, int y, Point imageSize, int xShift, int yShift) {
 		String text = getCountDecoration(element);
-		if (!text.isEmpty())
-			gc.drawText(text, x + xShift, y + yShift + imageSize.y, true);
+		if (!text.isEmpty()) {
+			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
+			gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_WHITE));
+			int x1 = x + xShift - 5;
+			int y1 = y + yShift + imageSize.y - 20 + 5;
+			gc.fillOval(x1, y1, 20, 20);
+			gc.drawText(text, x1, y1, true);
+		}
 	}
 
 	private String getCountDecoration(Object element) {
