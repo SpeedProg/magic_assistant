@@ -429,6 +429,8 @@ public class CardGroupTest extends TestCase {
 		card.set(MagicCardField.TOUGHNESS, "1.0");
 		card.set(MagicCardField.POWER, "1.0");
 		card.set(MagicCardField.SET, "Lorwyn");
+		card.set(MagicCardField.TYPE, "Creature - Elf");
+		card.setOwn(true);
 	}
 
 	public void preset2(MagicCardPhysical card) {
@@ -436,8 +438,8 @@ public class CardGroupTest extends TestCase {
 		card.setSpecial("foil");
 		card.setDbPrice(1.0f);
 		card.set(MagicCardField.RATING, "1");
-		card.set(MagicCardField.TOUGHNESS, "");
-		card.set(MagicCardField.POWER, "");
+		card.set(MagicCardField.TOUGHNESS, null);
+		card.set(MagicCardField.POWER, null);
 		card.set(MagicCardField.SET, "Lorwyn");
 		card.set(MagicCardField.TYPE, "Instant");
 	}

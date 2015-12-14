@@ -108,8 +108,8 @@ public class PerformanceFilteringTest extends TestCase {
 		this.filter.setGroupFields(MagicCardField.NAME);
 		this.filter.setFilter(textFilter("\"o\""));
 		assertFast(90, runfiltering());
-		assertTrue("was " + fstore.getSize(), fstore.getSize() > 13500);
-		assertTrue("was " + fstore.getSize(), fstore.getSize() < 14500);
+		assertTrue("was " + fstore.getSize(), fstore.getSize() > 14000);
+		assertTrue("was " + fstore.getSize(), fstore.getSize() < 15000);
 		this.filter.setFilter(textFilter("\"ob\""));
 		assertFast(90, runfiltering());
 		assertTrue("was " + fstore.getSize(), fstore.getSize() >= 260);

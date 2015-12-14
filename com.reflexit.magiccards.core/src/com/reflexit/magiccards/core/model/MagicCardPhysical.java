@@ -305,7 +305,7 @@ public class MagicCardPhysical extends AbstractMagicCard implements ICardModifia
 	}
 
 	public int getCount4() {
-		int c = card.getOwnCount();
+		int c = getOwnCount();
 		if (c > 4)
 			return 4;
 		return c;

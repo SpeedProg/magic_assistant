@@ -129,7 +129,7 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	public void setPower(String power) {
-		this.power = power == null ? "" : power;
+		this.power = power;
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	public void setToughness(String toughness) {
-		this.toughness = toughness == null ? "" : toughness;
+		this.toughness = toughness;
 	}
 
 	@Override
