@@ -10,6 +10,7 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
+import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -38,6 +39,12 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 	public String getText(Object element) {
 		if (!visible)
 			return "";
+		if (element instanceof ICardGroup) {
+			ICardGroup group = (ICardGroup) element;
+			if (group.isTransient() && group != group.getFirstCard()) {
+				return getText(group.getFirstCard());
+			}
+		}
 		if (element instanceof ICard) {
 			ICard card = (ICard) element;
 			try {

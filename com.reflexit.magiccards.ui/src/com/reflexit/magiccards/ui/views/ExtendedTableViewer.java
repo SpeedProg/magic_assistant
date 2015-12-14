@@ -46,13 +46,13 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 	protected final ViewerManager manager;
 	protected int filler = 0;
 
-	public ExtendedTableViewer(Composite parent, int style, ColumnCollection collection) {
-		this(parent, style);
-		setColumnCollection(collection);
+	protected ExtendedTableViewer(Composite parent, int style) {
+		super(parent, style);
+		this.manager = new ViewerManager(this, null);
 	}
 
 	public ExtendedTableViewer(Composite parent, ColumnCollection collection) {
-		this(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER | SWT.VIRTUAL);
+		this(parent, SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.VIRTUAL);
 		setColumnCollection(collection);
 	}
 
@@ -66,11 +66,6 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 	protected void setColumnCollection(ColumnCollection collection) {
 		manager.setCollumns(collection);
 		createContents();
-	}
-
-	protected ExtendedTableViewer(Composite parent, int style) {
-		super(parent, style);
-		this.manager = new ViewerManager(this, null);
 	}
 
 	public ExtendedTableViewer(Composite parent, String id) {
@@ -150,7 +145,6 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 					setSortColumn(-1, 0);
 				}
 			});
-
 			final MenuItem itemShow = new MenuItem(menu, SWT.PUSH);
 			itemShow.setText("Preferences... ");
 			itemShow.addSelectionListener(new SelectionAdapter() {

@@ -461,4 +461,9 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 		subs.clear();
 		recache();
 	}
+
+	@Override
+	public boolean isTransient() {
+		return size() == 1 || (size() > 0 && getFieldIndex() == MagicCardField.NAME);
+	}
 }

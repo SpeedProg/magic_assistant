@@ -29,4 +29,6 @@ public interface ICardGroup extends ICard, Iterable<ICard> {
 	public int depth();
 
 	public abstract void removeAll();
+
+	public boolean isTransient();
 }

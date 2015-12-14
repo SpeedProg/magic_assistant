@@ -26,10 +26,12 @@ public class PowerColumn extends GenColumn {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof ICardGroup) {
-			CardGroup node = (CardGroup) element;
-			int cc = node.getCreatureCount();
+			CardGroup group = (CardGroup) element;
+			if (group.isTransient())
+				return super.getText(group.getFirstCard());
+			int cc = group.getCreatureCount();
 			if (cc > 1) {
-				String pow = (String) node.get(dataIndex);
+				String pow = (String) group.get(dataIndex);
 				Float fpow = MagicCard.convertFloat(pow);
 				return pow + " (" + String.format("%.1f", 0.009 + fpow / cc) + ")";
 			}
