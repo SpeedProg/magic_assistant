@@ -73,8 +73,8 @@ public class TestFileUtils {
 		return saveResource(path, new File(dir, new File(path).getName()));
 	}
 
-	public static String saveResourceToString(String path) throws IOException {
-		InputStream resourceAsStream = TestFileUtils.class.getClassLoader().getResourceAsStream(path);
+	public static String saveResourceToString(String path, Class<?> clazz) throws IOException {
+		InputStream resourceAsStream = clazz.getClassLoader().getResourceAsStream(path);
 		if (resourceAsStream == null)
 			throw new FileNotFoundException("Resource not found " + path);
 		ByteArrayOutputStream writeStream = new ByteArrayOutputStream();

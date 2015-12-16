@@ -89,7 +89,7 @@ public class MTGStudioImportTest extends AbstarctImportTest {
 
 	@Test
 	public void test_big() throws IOException {
-		line = TestFileUtils.saveResourceToString("mtgstudio.csv");
+		line = TestFileUtils.saveResourceToString("mtgstudio.csv", getClass());
 		assertNotNull(line);
 		parse();
 		line = null;
