@@ -104,12 +104,11 @@ public class CompactHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 		CardGroup top = (CardGroup) group.getChildAtIndex(0);
 		w.startEl("td", "valign", "top", "width", COLWIDTH);
 		// list
-		CardGroup spell = (CardGroup) top.getChildAtIndex(1);
-		CardGroup creature = (CardGroup) spell.getChildAtIndex(1);
+		CardGroup creature = (CardGroup) top.getChildAtIndex(2);
 		listWithTotals(w, creature, "creatures");
 		w.endEl(); // td
 		w.startEl("td", "valign", "top", "width", COLWIDTH);
-		CardGroup other = (CardGroup) spell.getChildAtIndex(0);
+		CardGroup other = (CardGroup) top.getChildAtIndex(1);
 		listWithTotals(w, other, "other spells");
 		CardGroup land = (CardGroup) top.getChildAtIndex(0);
 		listWithTotals(w, land, "lands");

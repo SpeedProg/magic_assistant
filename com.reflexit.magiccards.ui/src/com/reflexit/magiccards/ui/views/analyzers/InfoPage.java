@@ -60,12 +60,11 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	public Composite createContents(Composite parent) {
 		super.createContents(parent);
 		getArea().setLayout(new GridLayout(1, false));
-		createTextArea().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, true).minSize(-1, 40).create());
-		createEditButton(getArea()).setLayoutData(
-				GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.END).create());
-		createStatsArea(getArea()).setLayoutData(
-				GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
+		createTextArea().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).minSize(-1, 40).create());
+		createEditButton(getArea())
+				.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.END).create());
+		createStatsArea(getArea())
+				.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
 		return getArea();
 	}
 
@@ -103,8 +102,8 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 			}
 		});
 		protection = createDynCombo("Protection: ",
-				"If collection is read only it cannot be modfied, except for unsetting read only flag",
-				"Read Only", "Writable");
+				"If collection is read only it cannot be modfied, except for unsetting read only flag", "Read Only",
+				"Writable");
 		protection.getCombo().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -124,8 +123,8 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 				"How many time each card repeats, excluding basic land (for legality purposes)");
 		rarity = createTextLabel("Rarity: ");
 		// tree.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
-		dbprice = createTextLabel("Price: ", "Cost of a deck using Online Price column,"
-				+ " in brackets cost of a deck using User Price column");
+		dbprice = createTextLabel("Price: ",
+				"Cost of a deck using Online Price column," + " in brackets cost of a deck using User Price column");
 		return stats;
 	}
 
@@ -237,15 +236,19 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		maxRepeats.setText(String.valueOf(CardStoreUtils.getMaxRepeats(childrenList)));
 		CardGroup types = CardStoreUtils.buildTypeGroups(childrenList);
 		CardGroup top = (CardGroup) types.getChildAtIndex(0);
-		CardGroup land = (CardGroup) top.getChildAtIndex(0);
-		CardGroup spell = (CardGroup) top.getChildAtIndex(1);
-		int spellCount = spell.getCount();
+		CardGroup ncre = (CardGroup) top.getChildAtIndex(1);
+		CardGroup cre = (CardGroup) top.getChildAtIndex(2);
+		if (ncre.getRarity().equals(cre.getRarity())) {
+			rarity.setText(ncre.getRarity());
+		} else {
+			rarity.setText("*");
+		}
+		int spellCount = ncre.getCount() + cre.getCount();
 		if (spellCount > 0) {
-			rarity.setText(spell.getRarity());
-			averagecost.setText(String.valueOf(CardStoreUtils.getManaCost(spell.expand())
-					/ (float) spellCount)
-					+ " (" + spellCount
-					+ " spells)");
+			int creCost = CardStoreUtils.getManaCost(cre.expand());
+			int ncreCost = CardStoreUtils.getManaCost(ncre.expand());
+			averagecost.setText(
+					String.valueOf((creCost + ncreCost) / (float) spellCount) + " (" + spellCount + " spells)");
 		}
 		getArea().layout(true);
 	}

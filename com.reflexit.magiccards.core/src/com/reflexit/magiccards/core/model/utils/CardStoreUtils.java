@@ -308,17 +308,18 @@ public final class CardStoreUtils {
 	}
 
 	public static CardGroup buildTypeGroups(Iterable iterable) {
-		CardGroup spellNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Spell);
+		CardGroup typeNode = new CardGroup(MagicCardField.TYPE, "Type");
 		CardGroup landNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Land);
+		typeNode.add(landNode);
 		CardGroup unknownNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Unknown);
 		CardGroup basic = new CardGroup(MagicCardField.TYPE, CardText.Type_Basic);
 		landNode.add(basic);
 		CardGroup nonbasic = new CardGroup(MagicCardField.TYPE, CardText.Type_Non_Basic);
 		landNode.add(nonbasic);
 		CardGroup noncreatureNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Non_Creature);
-		spellNode.add(noncreatureNode);
+		typeNode.add(noncreatureNode);
 		CardGroup creatureNode = new CardGroup(MagicCardField.TYPE, CardText.Type_Creature);
-		spellNode.add(creatureNode);
+		typeNode.add(creatureNode);
 		CardGroup instant = new CardGroup(MagicCardField.TYPE, CardText.Type_Instant);
 		noncreatureNode.add(instant);
 		CardGroup sorcery = new CardGroup(MagicCardField.TYPE, CardText.Type_Sorcery);
@@ -400,10 +401,9 @@ public final class CardStoreUtils {
 			}
 		}
 		CardGroup root = new CardGroup(MagicCardField.TYPE, ""); //$NON-NLS-1$
-		CardGroup typeNode = new CardGroup(MagicCardField.TYPE, "Type");
+
 		root.add(typeNode);
-		typeNode.add(landNode);
-		typeNode.add(spellNode);
+
 		if (unknownNode.getCount() > 0)
 			typeNode.add(unknownNode);
 		return root;

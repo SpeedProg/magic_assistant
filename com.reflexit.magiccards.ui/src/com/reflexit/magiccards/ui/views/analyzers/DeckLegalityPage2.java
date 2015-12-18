@@ -257,10 +257,14 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		maxRepeats.setText(String.valueOf(stats.maxRepeats));
 		CardGroup types = CardStoreUtils.buildTypeGroups(store);
 		CardGroup top = (CardGroup) types.getChildAtIndex(0);
-		CardGroup spell = (CardGroup) top.getChildAtIndex(1);
-		int spellCount = spell.getCount();
-		if (spellCount > 0) {
-			rarity.setText(spell.getRarity());
+		CardGroup ncre = (CardGroup) top.getChildAtIndex(1);
+		CardGroup cre = (CardGroup) top.getChildAtIndex(2);
+		
+
+		if (ncre.getRarity().equals(cre.getRarity())) {
+			rarity.setText(ncre.getRarity());
+		} else {
+			rarity.setText("*");
 		}
 		totalDeco.updateVisibility();
 		maxRepeastDeco.updateVisibility();
