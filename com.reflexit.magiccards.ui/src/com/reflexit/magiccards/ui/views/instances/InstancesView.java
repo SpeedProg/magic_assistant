@@ -74,7 +74,7 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		((IMagicCardListControl) control).setStatus("Click on a card to populate the view");
+		((IMagicCardListControl) getMagicControl()).setStatus("Click on a card to populate the view");
 		loadInitial();
 	}
 
@@ -109,7 +109,7 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		// drillDownAdapter.addNavigationActions(manager);
 		// manager.add(this.groupMenuButton);
-		manager.add(((InstancesListControl) control).getGroupAction());
+		manager.add(((InstancesListControl) getMagicControl()).getGroupAction());
 		manager.add(refresh);
 		manager.add(showPrintings);
 	}
@@ -244,12 +244,12 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 			return;
 		this.card = cardSel;
 		// System.err.println("Printings for " + card);
-		((InstancesListControl) control).setCard(card);
+		((InstancesListControl) getMagicControl()).setCard(card);
 		reloadData();
 	}
 
 	@Override
-	protected InstancesListControl doGetViewControl() {
+	protected InstancesListControl createViewControl() {
 		return new InstancesListControl(this);
 	}
 

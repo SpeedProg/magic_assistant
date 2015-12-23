@@ -12,6 +12,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -38,22 +39,29 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 
 	@Override
 	public Composite createContents(Composite parent) {
-		Composite area = super.createContents(parent);
+		Composite area = createArea(parent);
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
 		canvas = new ChartCanvas(sashForm, SWT.BORDER);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
-		createCardsTree(sashForm);
+		createListControl(sashForm);
 		sashForm.setWeights(new int[] { 60, 40 });
-		actionRefresh = new RefreshAction(this::activate);
+		makeActions();
 		return area;
 	}
 
 	@Override
-	public void createCardsTree(Composite parent) {
-		super.createCardsTree(parent);
+	protected void makeActions() {
+		super.makeActions();
+		actionRefresh = new RefreshAction(this::activate);
+	}
+
+	@Override
+	public Control createListControl(Composite parent) {
+		Control part = super.createListControl(parent);
 		stats = (TreeViewer) getListControl().getManager().getViewer();
 		stats.setAutoExpandLevel(3);
+		return part;
 	}
 
 	@Override

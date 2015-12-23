@@ -154,7 +154,6 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 					manager.callSortAction(-1, 0);
 				}
 			});
-
 			final MenuItem itemShow = new MenuItem(menu, SWT.PUSH);
 			itemShow.setText("Column Preferences... ");
 			itemShow.addSelectionListener(new SelectionAdapter() {
@@ -366,8 +365,11 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 					int columnIndex = getColumnIndex(pt);
 					tcontrol.setMenu(createColumnHeaderContextMenu(columnIndex));
 				} else {
-					Menu menu = getMenuManager().createContextMenu(tcontrol);
-					tcontrol.setMenu(menu);
+					MenuManager menuManager = getMenuManager();
+					if (menuManager != null) {
+						Menu menu = menuManager.createContextMenu(tcontrol);
+						tcontrol.setMenu(menu);
+					}
 				}
 			}
 		});

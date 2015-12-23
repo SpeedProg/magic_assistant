@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
+import com.reflexit.magiccards.ui.views.lib.MyCardsListControl.Presentation;
 
 public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
@@ -44,7 +45,7 @@ public class MyCardsView extends AbstractMyCardsView {
 	@Override
 	protected void createMainControl(Composite parent) {
 		super.createMainControl(parent);
-		control.setStatus("Loading ...");
+		getMagicControl().setStatus("Loading ...");
 	}
 
 	@Override
@@ -64,8 +65,8 @@ public class MyCardsView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected MyCardsListControl doGetViewControl() {
-		return new MyCardsListControl(this) {
+	protected MyCardsListControl createViewControl() {
+		return new MyCardsListControl(this, Presentation.MIX) {
 			@Override
 			public IFilteredCardStore doGetFilteredStore() {
 				return DataManager.getCardHandler().getLibraryFilteredStore();
@@ -84,7 +85,7 @@ public class MyCardsView extends AbstractMyCardsView {
 	}
 
 	public void setLocationFilter(Location loc) {
-		control.setStatus("Loading " + loc + "...");
+		getMagicControl().setStatus("Loading " + loc + "...");
 		WaitUtils.scheduleJob("Updating location", () -> {
 			IPreferenceStore preferenceStore = getLocalPreferenceStore();
 			Collection ids = Locations.getInstance().getIds();
@@ -113,6 +114,5 @@ public class MyCardsView extends AbstractMyCardsView {
 		// IViewPart showView =
 		// getViewSite().getWorkbenchWindow().getActivePage().showView(GallerySelectionView.ID);
 		// ((GallerySelectionView) showView).setDetails(getSelection());
-
 	}
 }

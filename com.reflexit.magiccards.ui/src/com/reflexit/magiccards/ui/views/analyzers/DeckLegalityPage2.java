@@ -95,11 +95,11 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 
 	@Override
 	public Composite createContents(Composite parent) {
-		Composite area = super.createContents(parent);
+		Composite area = createArea(parent);
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
 		createInfoPanel(sashForm);
-		createCardsTree(sashForm);
+		createListControl(sashForm);
 		sashForm.setWeights(new int[] { 25, 75 });
 		makeActions();
 		return area;
@@ -215,10 +215,9 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		// super.fillLocalToolBar(manager);
 	}
 
+	@Override
 	protected void makeActions() {
-		this.load = new ImageAction("Check Legality Online",
-				"icons/clcl16/software_update.png",
-				() -> performUpdate());
+		this.load = new ImageAction("Check Legality Online", "icons/clcl16/software_update.png", () -> performUpdate());
 		refresh = new RefreshAction(this::reloadData);
 	}
 
@@ -259,8 +258,6 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		CardGroup top = (CardGroup) types.getChildAtIndex(0);
 		CardGroup ncre = (CardGroup) top.getChildAtIndex(1);
 		CardGroup cre = (CardGroup) top.getChildAtIndex(2);
-		
-
 		if (ncre.getRarity().equals(cre.getRarity())) {
 			rarity.setText(ncre.getRarity());
 		} else {
@@ -309,10 +306,11 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	}
 
 	@Override
-	public void createCardsTree(Composite parent) {
-		super.createCardsTree(parent);
+	public Control createListControl(Composite parent) {
+		Control part = super.createListControl(parent);
 		tree = (TreeViewer) getListControl().getManager().getViewer();
 		tree.setAutoExpandLevel(2);
+		return part;
 	}
 
 	@Override
@@ -375,16 +373,16 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 					LegalityMap legalityMap = ((IMagicCard) element).getLegalityMap();
 					Legality legality = legalityMap.get(format);
 					switch (legality) {
-						case UNKNOWN:
-						case NOT_LEGAL:
-						case BANNED:
-							return MagicUIActivator.COLOR_PINKINSH;
-						case LEGAL:
-							return MagicUIActivator.COLOR_GREENISH;
-						case RESTRICTED:
-							return Display.getDefault().getSystemColor(SWT.COLOR_DARK_YELLOW);
-						default:
-							break;
+					case UNKNOWN:
+					case NOT_LEGAL:
+					case BANNED:
+						return MagicUIActivator.COLOR_PINKINSH;
+					case LEGAL:
+						return MagicUIActivator.COLOR_GREENISH;
+					case RESTRICTED:
+						return Display.getDefault().getSystemColor(SWT.COLOR_DARK_YELLOW);
+					default:
+						break;
 					}
 				}
 				return super.getBackground(element);
@@ -431,8 +429,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 
 	private Map<Integer, LegalityMap> calculateCardLegalities(IProgressMonitor monitor) {
 		try {
-			return ParseGathererLegality.cardSetLegality(fstore.getCardStore(), new CoreMonitorAdapter(
-					monitor));
+			return ParseGathererLegality.cardSetLegality(fstore.getCardStore(), new CoreMonitorAdapter(monitor));
 		} catch (IOException e) {
 			MessageDialog.openError(getControl().getShell(), "Error", e.getMessage());
 			return null;

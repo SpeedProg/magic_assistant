@@ -123,6 +123,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	private Label warning;
 	private String statusMessage = "";
 	private boolean isFiltered = false;
+	private boolean isGroupped = false;
 
 	/**
 	 * The constructor.
@@ -146,11 +147,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	public abstract IMagicViewer createViewer(Composite parent);
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilter()
-	 */
 	@Override
 	public MagicCardFilter getFilter() {
 		if (getFilteredStore() == null)
@@ -158,18 +154,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		return getFilteredStore().getFilter();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getFilteredStore()
-	 */
 	@Override
 	public synchronized IFilteredCardStore getFilteredStore() {
 		if (fstore == null) {
 			fstore = doGetFilteredStore();
 			if (fstore != null) {
-				if (actionGroupBy != null)
+				if (actionSortBy != null)
 					actionSortBy.setFilter(fstore.getFilter());
 				if (actionGroupBy != null)
 					actionGroupBy.setFilter(fstore.getFilter());
@@ -318,6 +308,15 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		DM.getMagicDBStore().removeListener(AbstractMagicCardsListControl.this);
 	}
 
+	public void reGroup() {
+		boolean changed = isGroupped == getFilter().isGroupped();
+		if (changed) {
+			createTableControl(partControl);
+			partControl.layout(true, true);
+		}
+		reloadData();
+	}
+
 	@Override
 	public void reloadData() {
 		MagicLogger.trace("reload data " + getClass());
@@ -460,6 +459,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected Control createTableControl(Composite parent) {
+		if (viewer != null) {
+			viewer.getControl().dispose();
+		}
 		this.viewer = createViewer(parent);
 		Control control = viewer.getControl();
 		control.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -630,7 +632,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
 		this.actionSortBy = new SortByAction(getSortColumnCollection(), null, getLocalPreferenceStore(),
 				this::reloadData);
-		this.actionGroupBy = new GroupByAction(getGroups(), null, getLocalPreferenceStore(), this::reloadData);
+		this.actionGroupBy = new GroupByAction(getGroups(), null, getLocalPreferenceStore(), this::reGroup);
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.actionShowPrefs = new Action("Preferences...") {
 			@Override
@@ -798,6 +800,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		GroupOrder groupOrder = new GroupOrder(fields);
 		filter.setGroupOrder(groupOrder);
 		filter.setSortOrder(SortOrder.valueOf(getLocalPreferenceStore().getString(PreferenceConstants.SORT_ORDER)));
+		isGroupped = filter.isGroupped();
 	}
 
 	protected void updateStatus() {

@@ -9,8 +9,8 @@ import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
 public class DeckListControl extends MyCardsListControl {
-	public DeckListControl(AbstractCardsView abstractCardsView) {
-		super(abstractCardsView);
+	public DeckListControl(AbstractCardsView abstractCardsView, Presentation pres) {
+		super(abstractCardsView, pres);
 		filterStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, getPreferencePageId() + ".deck." + getName());
 	}
 

@@ -14,10 +14,10 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -43,11 +43,12 @@ public class AbstractDeckPage implements IDeckPage {
 
 	@Override
 	public Composite createContents(Composite parent) {
+		return createArea(parent);
+	}
+
+	protected Composite createArea(Composite parent) {
 		area = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		area.setLayout(layout);
+		area.setLayout(GridLayoutFactory.fillDefaults().create());
 		return area;
 	}
 
@@ -87,13 +88,13 @@ public class AbstractDeckPage implements IDeckPage {
 	@Override
 	public void activate() {
 		IActionBars bars = view.getViewSite().getActionBars();
-		fillActionBars(bars);
+		contributeToActionBars(bars);
 		// selection provider
 		view.getSelectionProvider().setSelectionProviderDelegate(getSelectionProvider());
 		getCardStore();
 	}
 
-	public void fillActionBars(IActionBars actionBars) {
+	public void contributeToActionBars(IActionBars actionBars) {
 		// toolbar
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
 		toolBarManager.removeAll();
@@ -107,6 +108,8 @@ public class AbstractDeckPage implements IDeckPage {
 		// global handlers
 		setGlobalControlHandlers(actionBars);
 		actionBars.updateActionBars();
+		// context menu
+		hookContextMenu();
 	}
 
 	public ISelectionProvider getSelectionProvider() {

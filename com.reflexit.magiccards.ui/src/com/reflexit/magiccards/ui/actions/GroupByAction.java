@@ -62,7 +62,7 @@ public class GroupByAction extends Action {
 
 	@Override
 	public void run() { // group button itself
-		if (!filter.isGroupped())
+		if (filter != null && !filter.isGroupped())
 			actionGroupBy(new GroupOrder(MagicCardField.CMC));
 		else
 			actionGroupBy(new GroupOrder());

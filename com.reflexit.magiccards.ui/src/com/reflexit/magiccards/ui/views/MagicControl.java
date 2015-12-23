@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public abstract class MagicControl implements IMagicControl {
-	private Composite partControl;
+	protected Composite partControl;
 	private IViewSite site;
 
 	public MagicControl() {
@@ -52,7 +52,6 @@ public abstract class MagicControl implements IMagicControl {
 	@Override
 	public void init(IViewSite site) {
 		this.site = site;
-
 		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceListener);
 		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(preferenceListener);
 	}

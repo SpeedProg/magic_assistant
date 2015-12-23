@@ -31,6 +31,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
@@ -129,8 +130,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) selection;
 					if (!sel.isEmpty()) {
-						ICardStore cardStore = DM.getCardHandler().getCardCollectionFilteredStore(id)
-								.getCardStore();
+						ICardStore cardStore = DM.getCardHandler().getCardCollectionFilteredStore(id).getCardStore();
 						DM.moveCards(DM.expandGroups(sel.toList()), cardStore);
 					}
 				}
@@ -208,8 +208,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 					}
 				}
 				if (max == 1) {
-					MessageDialog.openInformation(getShell(), "Split",
-							"Minimum pile, cannot split any further");
+					MessageDialog.openInformation(getShell(), "Split", "Minimum pile, cannot split any further");
 					return;
 				}
 				int type = PICK;
@@ -266,7 +265,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		manager.add(this.actionCopy);
-		manager.add(this.actionPaste);
 		manager.add(this.moveToDeckMenu);
 		manager.add(this.addToDeck);
 		manager.add(this.split);
@@ -287,17 +285,15 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		WaitUtils.scheduleJob("Initializing " + getPartName(),
-				() -> {
-					if (WaitUtils.waitForLibrary()) {
-						DM.getLibraryCardStore().addListener(AbstractMyCardsView.this);
-						DM.getModelRoot().addListener(AbstractMyCardsView.this);
-					} else {
-						MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
-					}
-					loadInitialInBackground();
-				}
-				);
+		WaitUtils.scheduleJob("Initializing " + getPartName(), () -> {
+			if (WaitUtils.waitForLibrary()) {
+				DM.getLibraryCardStore().addListener(AbstractMyCardsView.this);
+				DM.getModelRoot().addListener(AbstractMyCardsView.this);
+			} else {
+				MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
+			}
+			loadInitialInBackground();
+		});
 	}
 
 	protected void loadInitialInBackground() {
@@ -316,7 +312,6 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 		super.dispose();
 	}
 
-
 	protected void editSelected() {
 		final IStructuredSelection selection = (IStructuredSelection) getSelectionProvider().getSelection();
 		if (selection.isEmpty())
@@ -331,5 +326,4 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	public void handleEvent(CardEvent event) {
 		// do nothing
 	}
-
 }

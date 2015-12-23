@@ -294,6 +294,7 @@ public class DrawPage extends AbstractDeckListPage {
 		}
 	}
 
+	@Override
 	protected void makeActions() {
 		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7", () -> {
 			playdeck.newGame();
@@ -380,21 +381,8 @@ public class DrawPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public void createCardsTree(Composite parent) {
-		super.createCardsTree(parent);
-	}
-
-	@Override
 	public DrawListControl doGetMagicCardListControl() {
 		return new DrawListControl(view);
-	}
-
-	@Override
-	public Composite createContents(Composite parent) {
-		Composite p = super.createContents(parent);
-		createCardsTree(p);
-		makeActions();
-		return p;
 	}
 
 	@Override

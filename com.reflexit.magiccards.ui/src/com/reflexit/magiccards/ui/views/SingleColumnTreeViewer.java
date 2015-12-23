@@ -11,7 +11,7 @@ public class SingleColumnTreeViewer extends ExtendedTreeViewer {
 		setColumnCollection(doGetColumnCollection(""));
 		setContentProvider(new RootTreeViewerContentProvider());
 		setAutoExpandLevel(2);
-		getTree().setHeaderVisible(true);
+		getTree().setHeaderVisible(false);
 		GroupColumn labelProvider = new GroupColumn(true, true, false);
 		setLabelProvider(labelProvider);
 	}

@@ -60,6 +60,7 @@ import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
+import com.reflexit.magiccards.ui.views.lib.MyCardsListControl.Presentation;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 public class DeckView extends AbstractMyCardsView {
@@ -85,7 +86,6 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	private static ArrayList<DeckPageExtension> extensionPages;
-
 	static {
 		loadExtensions();
 	}
@@ -141,11 +141,6 @@ public class DeckView extends AbstractMyCardsView {
 		site.getPage().addPartListener(PartListener.getInstance());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.lib.CollectionView#makeActions()
-	 */
 	@Override
 	protected void makeActions() {
 		super.makeActions();
@@ -262,11 +257,6 @@ public class DeckView extends AbstractMyCardsView {
 		return deckViewRes[0];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.reflexit.magiccards.ui.views.lib.MyCardsView#dispose()
-	 */
 	@Override
 	public void dispose() {
 		if (deck != null)
@@ -315,7 +305,7 @@ public class DeckView extends AbstractMyCardsView {
 		final CTabItem cardsList = new CTabItem(folder, SWT.CLOSE);
 		cardsList.setText("Cards");
 		cardsList.setShowClose(false);
-		Control control1 = control.createPartControl(folder);
+		Control control1 = getMagicControl().createPartControl(folder);
 		cardsList.setControl(control1);
 		// Pages
 		createExtendedTabs();
@@ -336,8 +326,8 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected AbstractMagicCardsListControl doGetViewControl() {
-		return new DeckListControl(this);
+	protected AbstractMagicCardsListControl createViewControl() {
+		return new DeckListControl(this, Presentation.SPLITTREE);
 	}
 
 	private void createExtendedTabs() {
@@ -494,7 +484,7 @@ public class DeckView extends AbstractMyCardsView {
 		CTabItem sel = folder.getSelection();
 		if (sel.isDisposed())
 			return;
-		if (sel.getControl() == control.getControl()) {
+		if (sel.getControl() == getMagicControl().getControl()) {
 			activateCardsTab();
 			return;
 		}
@@ -513,8 +503,8 @@ public class DeckView extends AbstractMyCardsView {
 		CTabItem sel = folder.getSelection();
 		if (sel.isDisposed())
 			return null;
-		if (sel.getControl() == control.getControl()) {
-			return control;
+		if (sel.getControl() == getMagicControl().getControl()) {
+			return getMagicControl();
 		}
 		// System.err.println(sel + " " + sel.getData());
 		for (IDeckPage deckPage : pages) {
@@ -551,6 +541,11 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	protected void activateCardsTab() {
+		contributeToActionBars();
+	}
+
+	@Override
+	protected void contributeToActionBars() {
 		// toolbar
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager toolBarManager = bars.getToolBarManager();
@@ -563,9 +558,10 @@ public class DeckView extends AbstractMyCardsView {
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
 		// global
-		setGlobalControlHandlers(bars);
+		setGlobalHandlers(bars);
 		bars.updateActionBars();
-		getSelectionProvider().setSelectionProviderDelegate(control.getSelectionProvider());
+		getSelectionProvider().setSelectionProviderDelegate(getMagicControl().getSelectionProvider());
+		hookContextMenu();
 	}
 
 	@Override
@@ -581,7 +577,7 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	public IAction getGroupAction() {
-		return ((AbstractMagicCardsListControl) control).getGroupAction();
+		return ((AbstractMagicCardsListControl) getMagicControl()).getGroupAction();
 	}
 
 	@Override
@@ -589,7 +585,7 @@ public class DeckView extends AbstractMyCardsView {
 		CTabItem sel = folder.getSelection();
 		if (sel.isDisposed())
 			return;
-		if (sel.getControl() == control.getControl()) {
+		if (sel.getControl() == getMagicControl().getControl()) {
 			super.saveColumnLayout();
 		}
 	}

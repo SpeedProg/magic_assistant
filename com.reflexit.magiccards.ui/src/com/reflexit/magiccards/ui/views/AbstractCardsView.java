@@ -52,7 +52,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.actions.MagicCopyAction;
-import com.reflexit.magiccards.ui.actions.MagicPasteAction;
+import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.dialogs.BrowserOpenAcknoledgementDialog;
 import com.reflexit.magiccards.ui.dialogs.BuyCardsConfirmationDialog;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
@@ -64,11 +64,10 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public abstract class AbstractCardsView extends ViewPart implements IShowInTarget, IShowInSource {
 	protected Action loadExtras;
-	protected IMagicControl control;
+	private IMagicControl magicControl;
 	private Composite partControl;
 	protected Action actionRefresh;
 	protected Action actionCopy;
-	protected Action actionPaste;
 	protected Action buyCards;
 	private HashMap<String, IHandlerActivation> activations = new HashMap<String, IHandlerActivation>();
 
@@ -76,13 +75,14 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	 * The constructor.
 	 */
 	public AbstractCardsView() {
-		control = doGetViewControl();
+		setMagicControl(createViewControl());
 	}
 
-	protected abstract AbstractMagicCardsListControl doGetViewControl();
+	protected abstract AbstractMagicCardsListControl createViewControl();
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize it.
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -102,16 +102,16 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	public abstract String getHelpId();
 
 	protected void createMainControl(Composite parent) {
-		control.createPartControl(parent);
+		getMagicControl().createPartControl(parent);
 	}
 
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		control.init(site);
+		getMagicControl().init(site);
 	}
 
-	private void hookContextMenu() {
+	protected void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
@@ -120,12 +120,12 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 				AbstractCardsView.this.fillContextMenu(manager);
 			}
 		});
-		control.hookContextMenu(menuMgr);
+		getMagicControl().hookContextMenu(menuMgr);
 		getSite().registerContextMenu(menuMgr, getSelectionProvider());
 	}
 
 	protected ISelectionProvider getSelectionProvider() {
-		return control.getSelectionProvider();
+		return getMagicControl().getSelectionProvider();
 	}
 
 	protected void contributeToActionBars() {
@@ -141,12 +141,11 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	 */
 	protected void setGlobalHandlers(IActionBars bars) {
 		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), actionCopy);
-		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), actionPaste);
 		setGlobalControlHandlers(bars);
 	}
 
 	protected void setGlobalControlHandlers(IActionBars bars) {
-		control.setGlobalControlHandlers(bars);
+		getMagicControl().setGlobalControlHandlers(bars);
 	}
 
 	public IHandlerActivation activateActionHandler(Action action, String actionId) {
@@ -171,7 +170,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {
-		control.fillLocalPullDown(manager);
+		getMagicControl().fillLocalPullDown(manager);
 		manager.add(this.loadExtras);
 		manager.add(this.actionRefresh);
 		// Other plug-ins can contribute there actions here
@@ -179,7 +178,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	protected void fillContextMenu(IMenuManager manager) {
-		control.fillContextMenu(manager);
+		getMagicControl().fillContextMenu(manager);
 		manager.add(this.loadExtras);
 		fillShowInMenu(manager);
 		// Other plug-ins can contribute there actions here
@@ -196,7 +195,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	protected void fillLocalToolBar(IToolBarManager manager) {
-		control.fillLocalToolBar(manager);
+		getMagicControl().fillLocalToolBar(manager);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -204,7 +203,6 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	protected void makeActions() {
 		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
 		this.actionCopy = new MagicCopyAction(getSelectionProvider());
-		this.actionPaste = new MagicPasteAction(getSelectionProvider());
 		this.loadExtras = new Action("Load Extra Fields...") {
 			@Override
 			public void run() {
@@ -217,15 +215,11 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 				runBuyCards();
 			}
 		};
-		this.actionRefresh = new Action("Refresh") {
-			@Override
-			public void run() {
-				// this should force refresh update
-				getFilteredStore().getCardStore().updateList(null, null);
-				reloadData();
-			}
-		};
-		this.actionRefresh.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/refresh.gif"));
+		this.actionRefresh = new RefreshAction(() -> {
+			// this should force refresh update
+			getFilteredStore().getCardStore().updateList(null, null);
+			reloadData();
+		});
 	}
 
 	protected void runBuyCards() {
@@ -267,13 +261,13 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 		if (!getViewSite().getPage().isPartVisible(getViewSite().getPart()))
 			return;
 		String id = getPreferencePageId();
-		if (id != null && control instanceof AbstractMagicCardsListControl) {
-			((AbstractMagicCardsListControl) control).saveColumnLayout();
+		if (id != null && getMagicControl() instanceof AbstractMagicCardsListControl) {
+			((AbstractMagicCardsListControl) getMagicControl()).saveColumnLayout();
 		}
 	}
 
 	public void refreshView() {
-		WaitUtils.syncExec(() -> control.refresh());
+		WaitUtils.syncExec(() -> getMagicControl().refresh());
 	}
 
 	protected void runLoadExtras() {
@@ -327,18 +321,18 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	 *
 	 */
 	protected void runCopy() {
-		control.runCopy();
+		getMagicControl().runCopy();
 	}
 
 	protected void runPaste() {
-		control.runPaste();
+		getMagicControl().runPaste();
 	}
 
 	protected abstract String getPreferencePageId();
 
 	@Override
 	public void dispose() {
-		control.dispose();
+		getMagicControl().dispose();
 		super.dispose();
 	}
 
@@ -351,7 +345,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	protected Control getControl() {
-		return control.getControl();
+		return getMagicControl().getControl();
 	}
 
 	protected void runDoubleClick() {
@@ -362,28 +356,28 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	public IFilteredCardStore getFilteredStore() {
-		return ((IMagicCardListControl) control).getFilteredStore();
+		return ((IMagicCardListControl) getMagicControl()).getFilteredStore();
 	}
 
 	/**
 	 * Update view in UI thread after data load is finished
 	 */
 	protected void updateViewer() {
-		control.updateViewer();
+		getMagicControl().updateViewer();
 	}
 
 	/**
 	 * @return
 	 */
 	public IPersistentPreferenceStore getLocalPreferenceStore() {
-		if (control instanceof IMagicCardListControl)
-			return ((IMagicCardListControl) control).getLocalPreferenceStore();
+		if (getMagicControl() instanceof IMagicCardListControl)
+			return ((IMagicCardListControl) getMagicControl()).getLocalPreferenceStore();
 		return null;
 	}
 
 	public IPersistentPreferenceStore getFilterPreferenceStore() {
-		if (control instanceof IMagicCardListControl)
-			return ((IMagicCardListControl) control).getFilterPreferenceStore();
+		if (getMagicControl() instanceof IMagicCardListControl)
+			return ((IMagicCardListControl) getMagicControl()).getFilterPreferenceStore();
 		return null;
 	}
 
@@ -436,7 +430,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	public void reloadData() {
-		control.reloadData();
+		getMagicControl().reloadData();
 	}
 
 	public abstract String getId();
@@ -465,5 +459,13 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	@Override
 	public ShowInContext getShowInContext() {
 		return new ShowInContext(null, getSelection());
+	}
+
+	protected IMagicControl getMagicControl() {
+		return magicControl;
+	}
+
+	protected void setMagicControl(IMagicControl magicControl) {
+		this.magicControl = magicControl;
 	}
 }

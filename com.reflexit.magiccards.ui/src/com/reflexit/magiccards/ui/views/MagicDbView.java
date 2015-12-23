@@ -82,7 +82,7 @@ public class MagicDbView extends AbstractCardsView {
 	}
 
 	@Override
-	protected AbstractMagicCardsListControl doGetViewControl() {
+	protected AbstractMagicCardsListControl createViewControl() {
 		return new MagicDbListControl(this);
 	}
 
@@ -230,7 +230,7 @@ public class MagicDbView extends AbstractCardsView {
 			if (getSelection().isEmpty()) {
 				if (MessageDialog.openQuestion(getShell(), "Error", "Cards are not visible, reset filter?")) {
 					PreferenceInitializer.setToDefault(getFilterPreferenceStore());
-					AbstractMagicCardsListControl lcon = (AbstractMagicCardsListControl) control;
+					AbstractMagicCardsListControl lcon = (AbstractMagicCardsListControl) getMagicControl();
 					lcon.syncQuickFilter();
 					lcon.setNextSelection(new StructuredSelection(l));
 					lcon.syncFilter();

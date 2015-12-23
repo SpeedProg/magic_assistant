@@ -364,8 +364,11 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 					int columnIndex = getColumnIndex(pt);
 					tcontrol.setMenu(createColumnHeaderContextMenu(columnIndex));
 				} else {
-					Menu menu = getMenuManager().createContextMenu(tcontrol);
-					tcontrol.setMenu(menu);
+					MenuManager menuManager = getMenuManager();
+					if (menuManager != null) {
+						Menu menu = menuManager.createContextMenu(tcontrol);
+						tcontrol.setMenu(menu);
+					}
 				}
 			}
 		});

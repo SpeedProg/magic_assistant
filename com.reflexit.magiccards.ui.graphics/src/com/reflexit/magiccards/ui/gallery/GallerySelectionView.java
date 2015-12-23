@@ -44,7 +44,7 @@ public class GallerySelectionView extends GalleryView {
 	}
 
 	@Override
-	protected AbstractMagicCardsListControl doGetViewControl() {
+	protected AbstractMagicCardsListControl createViewControl() {
 		return new GalleryListControl(this) {
 			@Override
 			protected String getPreferencePageId() {
@@ -125,6 +125,6 @@ public class GallerySelectionView extends GalleryView {
 			}
 		}
 		gsstore.update();
-		control.updateViewer();
+		getMagicControl().updateViewer();
 	}
 }

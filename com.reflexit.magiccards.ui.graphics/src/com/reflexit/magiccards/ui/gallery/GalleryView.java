@@ -29,7 +29,7 @@ public class GalleryView extends MagicDbView {
 	}
 
 	@Override
-	protected AbstractMagicCardsListControl doGetViewControl() {
+	protected AbstractMagicCardsListControl createViewControl() {
 		return new GalleryListControl(this) {
 			@Override
 			protected String getPreferencePageId() {

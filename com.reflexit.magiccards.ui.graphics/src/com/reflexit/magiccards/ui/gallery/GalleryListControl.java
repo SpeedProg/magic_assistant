@@ -6,12 +6,12 @@ import org.eclipse.swt.widgets.Control;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicViewer;
+import com.reflexit.magiccards.ui.views.lib.MyCardsListControl;
 
-public class GalleryListControl extends AbstractMagicCardsListControl {
+public class GalleryListControl extends MyCardsListControl {
 	public GalleryListControl(AbstractCardsView abstractCardsView) {
-		super(abstractCardsView);
+		super(abstractCardsView, Presentation.OTHER);
 	}
 
 	@Override

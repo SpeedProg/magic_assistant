@@ -6,7 +6,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
@@ -14,10 +13,22 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 public abstract class AbstractDeckListPage extends AbstractDeckPage {
 	private AbstractMagicCardsListControl listControl;
 
-	public void createCardsTree(Composite parent) {
+	public Control createListControl(Composite parent) {
 		listControl = doGetMagicCardListControl();
-		listControl.createPartControl(parent);
-		hookContextMenu();
+		Control part = listControl.createPartControl(parent);
+		return part;
+	}
+
+	@Override
+	public Composite createContents(Composite parent) {
+		Composite area = createArea(parent);
+		createListControl(area);
+		makeActions();
+		return area;
+	}
+
+	protected void makeActions() {
+		// make page specific action
 	}
 
 	public abstract AbstractMagicCardsListControl doGetMagicCardListControl();
@@ -36,9 +47,7 @@ public abstract class AbstractDeckListPage extends AbstractDeckPage {
 	@Override
 	protected MenuManager hookContextMenu() {
 		MenuManager menuMgr = super.hookContextMenu();
-		Control control = listControl.getManager().getControl();
-		Menu menu = menuMgr.createContextMenu(control);
-		control.setMenu(menu);
+		listControl.hookContextMenu(menuMgr);
 		return menuMgr;
 	}
 
@@ -62,10 +71,5 @@ public abstract class AbstractDeckListPage extends AbstractDeckPage {
 	public void dispose() {
 		getListControl().dispose();
 		super.dispose();
-	}
-
-	@Override
-	public void activate() {
-		super.activate();
 	}
 }

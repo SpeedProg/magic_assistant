@@ -713,6 +713,11 @@
   </extension>
   <extension
         point="com.reflexit.magiccards.ui.deckPage">
+     <page
+           class="com.reflexit.magiccards.ui.views.analyzers.TableDeckPage"
+           id="com.reflexit.magiccards.ui.views.analyzers.TableDeckPage"
+           name="Table">
+     </page>
         		
         <page name="Info" id="info"
         class="com.reflexit.magiccards.ui.views.analyzers.InfoPage"

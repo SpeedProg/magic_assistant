@@ -68,7 +68,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		((IMagicCardListControl) control).setStatus("Click on a card to populate the view");
+		((IMagicCardListControl) getMagicControl()).setStatus("Click on a card to populate the view");
 		loadInitial();
 	}
 
@@ -203,7 +203,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 			return;
 		this.card = cardSel;
 		// System.err.println("Printings for " + card);
-		((PrintingListControl) control).setCard(card);
+		((PrintingListControl) getMagicControl()).setCard(card);
 		new Job("Printings reload") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -215,7 +215,7 @@ public class PrintingsView extends AbstractCardsView implements ISelectionListen
 	}
 
 	@Override
-	protected PrintingListControl doGetViewControl() {
+	protected PrintingListControl createViewControl() {
 		return new PrintingListControl(this);
 	}
 

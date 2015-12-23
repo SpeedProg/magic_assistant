@@ -139,7 +139,7 @@ public class CollectorView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected CollectorListControl doGetViewControl() {
+	protected CollectorListControl createViewControl() {
 		return new CollectorListControl(this);
 	}
 
