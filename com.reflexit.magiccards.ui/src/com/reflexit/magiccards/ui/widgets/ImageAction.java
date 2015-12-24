@@ -4,6 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
+
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
@@ -21,9 +22,11 @@ public class ImageAction extends Action {
 	public ImageAction(String name, String iconPath, String tooltip, int style) {
 		this(name, iconPath, tooltip, style, null);
 	}
+
 	public ImageAction(String name, String iconPath, String tooltip, Runnable run) {
 		this(name, iconPath, tooltip, IAction.AS_PUSH_BUTTON, run);
 	}
+
 	public ImageAction(String name, String iconPath, String tooltip, int style, Runnable run) {
 		super(name, style);
 		if (tooltip != null)
@@ -44,9 +47,9 @@ public class ImageAction extends Action {
 		try {
 			run();
 		} catch (MagicException e) {
-			MessageDialog.openError(MagicUIActivator.getDefault().getShell(), "Error", e.getMessage());
+			MessageDialog.openError(MagicUIActivator.getShell(), "Error", e.getMessage());
 		} catch (Exception e) {
-			MessageDialog.openError(MagicUIActivator.getDefault().getShell(), "Error", e.getMessage());
+			MessageDialog.openError(MagicUIActivator.getShell(), "Error", e.getMessage());
 			MagicUIActivator.log(e);
 		}
 	}

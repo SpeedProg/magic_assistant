@@ -49,6 +49,8 @@ public class MagicCardTransfer extends ByteArrayTransfer {
 	}
 
 	public IMagicCard[] fromByteArray(byte[] bytes) {
+		if (bytes == null)
+			return null;
 		try {
 			CardCollectionStoreObject object = new MagicXmlStreamHandler().load(new ByteArrayInputStream(bytes));
 			return object.list.toArray(new IMagicCard[object.list.size()]);

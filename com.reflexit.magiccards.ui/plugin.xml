@@ -507,6 +507,22 @@
             parentId="org.eclipse.ui.textEditorScope">
       </context>
    </extension>
+   
+    <extension
+       point="org.eclipse.core.expressions.definitions">
+    <definition id="com.reflexit.magiccards.ui.editable">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        operator="and">
+                     <adapt
+                           type="com.reflexit.magiccards.core.model.MagicCardPhysical">
+                     </adapt>
+                  </iterate>
+               </with>
+    </definition>
+ </extension>
+ 
   <extension
         point="org.eclipse.ui.menus">
       <menuContribution
@@ -533,33 +549,34 @@
                   id="com.reflexit.magiccards.ui.menus.sendBug">
             </command>
       </menuContribution>
-
+     
      <menuContribution
-           locationURI="popup:com.reflexit.magiccards.ui.views.lib.MyCardsView">
-        <command
-              commandId="org.eclipse.ui.edit.delete"
-              mode="FORCE_TEXT"
-              style="push">
-        </command>
-     </menuContribution>     
-     <menuContribution
-           locationURI="popup:com.reflexit.magiccards.ui.views.lib.DeckView">
-        <command
-              commandId="org.eclipse.ui.edit.delete"
-              mode="FORCE_TEXT"
-              style="push">
-        </command>
-        <command
-              commandId="com.reflexit.magiccards.ui.commands.increaseCount"
-              label="Increase"
-              >
-        </command>
-        <command
-              commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
-              label="Decrease"
-              >
-        </command>
-     </menuContribution>
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="com.reflexit.magiccards.ui.commands.increaseCount"
+               label="Increase Count"
+               mnemonic="I"
+               >
+            <visibleWhen>
+  				<reference definitionId="com.reflexit.magiccards.ui.editable"/>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.reflexit.magiccards.ui.commands.decreaseCount"
+               label="Descrease Count"
+               mnemonic="C"
+               >
+            <visibleWhen>
+  				<reference definitionId="com.reflexit.magiccards.ui.editable"/>
+            </visibleWhen>
+         </command>
+         <command commandId="org.eclipse.ui.edit.delete">
+            <visibleWhen>
+  				<reference definitionId="com.reflexit.magiccards.ui.editable"/>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+         
      <menuContribution
             locationURI="menu:com.reflexit.magiccards.ui.views.MagicDbView">
             <command
@@ -636,6 +653,35 @@
              </command>
        </menuContribution>
   </extension>
+  
+     <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="com.reflexit.magicassistant.command.update"
+            name="Check for Software Updates...">
+      </command>
+
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="com.reflexit.magicassistant.command.update"
+            class="com.reflexit.magiccards.ui.commands.UpdateHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:help?after=additions">
+            <command
+                  commandId="com.reflexit.magicassistant.command.update"
+            	  mnemonic="U"
+                  id="com.reflexit.magicassistant.menu.update">
+            </command>
+      </menuContribution>
+   </extension>
+  
+  
   <extension
         point="org.eclipse.ui.newWizards">
      <category
@@ -785,32 +831,7 @@
 
 </extension>
 
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            id="com.reflexit.magicassistant.command.update"
-            name="Check for Software Updates...">
-      </command>
 
-   </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            commandId="com.reflexit.magicassistant.command.update"
-            class="com.reflexit.magiccards.ui.commands.UpdateHandler">
-      </handler>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="menu:help?after=additions">
-            <command
-                  commandId="com.reflexit.magicassistant.command.update"
-            	  mnemonic="U"
-                  id="com.reflexit.magicassistant.menu.update">
-            </command>
-      </menuContribution>
-   </extension>
    
    <extension point="org.eclipse.ui.views">
 <view

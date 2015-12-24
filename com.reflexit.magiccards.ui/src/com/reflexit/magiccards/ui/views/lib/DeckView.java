@@ -13,6 +13,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -117,6 +118,11 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
+	}
+
+	@Override
+	protected void registerContextMenu(MenuManager menuMgr) {
+		getSite().registerContextMenu(getId(), menuMgr, getSelectionProvider());
 	}
 
 	@Override
@@ -367,7 +373,6 @@ public class DeckView extends AbstractMyCardsView {
 		manager.add(this.sideboard);
 		manager.add(new Separator());
 		super.fillLocalToolBar(manager);
-		manager.add(this.actionRefresh);
 	}
 
 	/*

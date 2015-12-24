@@ -121,6 +121,10 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 			}
 		});
 		getMagicControl().hookContextMenu(menuMgr);
+		registerContextMenu(menuMgr);
+	}
+
+	protected void registerContextMenu(MenuManager menuMgr) {
 		getSite().registerContextMenu(menuMgr, getSelectionProvider());
 	}
 
@@ -141,6 +145,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	 */
 	protected void setGlobalHandlers(IActionBars bars) {
 		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), actionCopy);
+		bars.setGlobalActionHandler(actionRefresh.getId(), actionRefresh);
 		setGlobalControlHandlers(bars);
 	}
 
@@ -171,6 +176,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 
 	protected void fillLocalPullDown(IMenuManager manager) {
 		getMagicControl().fillLocalPullDown(manager);
+		manager.remove(actionRefresh.getId());
 		manager.add(this.loadExtras);
 		manager.add(this.actionRefresh);
 		// Other plug-ins can contribute there actions here
@@ -196,6 +202,8 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		getMagicControl().fillLocalToolBar(manager);
+		manager.remove(actionRefresh.getId());
+		manager.add(this.actionRefresh);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}

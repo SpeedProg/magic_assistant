@@ -109,7 +109,8 @@ public class AbstractDeckPage implements IDeckPage {
 		setGlobalControlHandlers(actionBars);
 		actionBars.updateActionBars();
 		// context menu
-		hookContextMenu();
+		MenuManager menuMgr = hookContextMenu();
+		view.getSite().registerContextMenu(view.getId(), menuMgr, getSelectionProvider());
 	}
 
 	public ISelectionProvider getSelectionProvider() {

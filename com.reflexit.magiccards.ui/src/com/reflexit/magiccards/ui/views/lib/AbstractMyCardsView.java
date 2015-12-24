@@ -41,6 +41,7 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.actions.DeleteCardAction;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardPhysicalDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
@@ -55,7 +56,7 @@ import com.reflexit.magiccards.ui.views.AbstractCardsView;
  */
 public abstract class AbstractMyCardsView extends AbstractCardsView implements ICardEventListener {
 	private final DataManager DM = DataManager.getInstance();
-	protected Action delete;
+	private Action delete;
 	private Action split;
 	private Action edit;
 	protected Action export;
@@ -67,12 +68,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	protected void makeActions() {
 		super.makeActions();
 		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
-		this.delete = new Action("Remove") {
-			@Override
-			public void run() {
-				removeSelected();
-			}
-		};
+		this.delete = new DeleteCardAction(this::removeSelected);
 		this.delete.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		this.split = new Action("Split Pile...") {
 			@Override
@@ -245,7 +241,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	protected void setGlobalHandlers(IActionBars bars) {
 		super.setGlobalHandlers(bars);
-		activateActionHandler(delete, "org.eclipse.ui.edit.delete");
+		activateActionHandler(delete, delete.getActionDefinitionId());
 	}
 
 	@Override

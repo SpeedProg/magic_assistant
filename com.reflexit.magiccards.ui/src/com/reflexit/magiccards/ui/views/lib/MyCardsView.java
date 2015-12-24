@@ -66,7 +66,7 @@ public class MyCardsView extends AbstractMyCardsView {
 
 	@Override
 	protected MyCardsListControl createViewControl() {
-		return new MyCardsListControl(this, Presentation.MIX) {
+		return new MyCardsListControl(this, Presentation.SPLITTREE) {
 			@Override
 			public IFilteredCardStore doGetFilteredStore() {
 				return DataManager.getCardHandler().getLibraryFilteredStore();
