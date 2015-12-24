@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.views.columns;
 
-import java.util.Collections;
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -12,11 +10,8 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.MagicCardField;
-import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
  * @author Alena
@@ -43,57 +38,18 @@ public class CountColumn extends GenColumn {
 
 	@Override
 	public EditingSupport getEditingSupport(final ColumnViewer viewer) {
-		return new EditingSupport(viewer) {
-			@Override
-			protected boolean canEdit(Object element) {
-				if (canEditElement(element) && viewer.getInput() instanceof IFilteredCardStore)
-					return true;
-				else
-					return false;
-			}
-
-			@Override
-			protected CellEditor getCellEditor(Object element) {
-				Composite viewerControl = (Composite) viewer.getControl();
-				return getElementCellEditor(viewerControl);
-			}
-
-			@Override
-			protected Object getValue(Object element) {
-				if (canEdit(element)) {
-					return getElementValue(element);
-				}
-				return null;
-			}
-
-			@Override
-			protected void setValue(Object element, Object value) {
-				if (canEdit(element)) {
-					setElementValue(element, value);
-				}
-			}
-		};
+		return getGenericEditingSupport(viewer);
 	}
 
+	@Override
 	protected void setElementValue(Object element, Object value) {
-		MagicCardPhysical card = (MagicCardPhysical) element;
-		int oldCount = card.getCount();
-		int count = value == null ? 0 : Integer.parseInt(value.toString());
-		if (oldCount == count)
-			return;
-		card.setCount(count);
-		// save
-		DataManager.getInstance().update(card, Collections.singleton(getDataField()));
+		if (value instanceof String) {
+			value = Integer.valueOf((String) value);
+		}
+		super.setElementValue(element, value);
 	}
 
-	protected boolean canEditElement(Object element) {
-		return element instanceof MagicCardPhysical;
-	}
-
-	protected String getElementValue(Object element) {
-		return getText(element);
-	}
-
+	@Override
 	protected CellEditor getElementCellEditor(Composite viewerControl) {
 		TextCellEditor editor = new TextCellEditor(viewerControl, SWT.NONE);
 		Text textControl = (Text) editor.getControl();

@@ -44,6 +44,7 @@ import com.reflexit.magiccards.core.model.xml.XmlCardHolder;
 
 public class DataManager {
 	public static final String ID = "com.reflexit.magiccards.core";
+	public static final Set<? extends ICardField> COUNT_FIELDSET = Collections.singleton(MagicCardField.COUNT);
 	private static DataManager instance = new DataManager();
 	private ICardHandler handler;
 	private ModelRoot root;
@@ -377,8 +378,22 @@ public class DataManager {
 		getMagicDBStore().update(mc, fieldSet);
 	}
 
-	public void update(ICardStore cardStore, MagicCardPhysical mc, Set<ICardField> fieldSet) {
-		cardStore.update(mc, fieldSet);
+	public void setField(MagicCardPhysical mc, ICardField field, Object newValue) {
+		setField(null, mc, field, newValue);
+	}
+
+	public void setField(ICardStore cardStore, MagicCardPhysical mc, ICardField field, Object newValue) {
+		Object oldValue = mc.get(field);
+		if ((newValue != null && newValue.equals(oldValue)) || (newValue == null && oldValue == null))
+			return;
+		mc.set(field, newValue);
+		if (cardStore == null) {
+			Location loc = mc.getLocation();
+			cardStore = getCardStore(loc);
+			if (cardStore == null)
+				throw new IllegalArgumentException("Cannot find store for " + cardStore);
+		}
+		cardStore.update(mc, Collections.singleton(field));
 		reconcile(mc);
 	}
 

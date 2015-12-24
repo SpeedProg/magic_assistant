@@ -63,9 +63,9 @@ import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public abstract class AbstractCardsView extends ViewPart implements IShowInTarget, IShowInSource {
-	protected Action loadExtras;
 	private IMagicControl magicControl;
 	private Composite partControl;
+	protected Action loadExtras;
 	protected Action actionRefresh;
 	protected Action actionCopy;
 	protected Action buyCards;

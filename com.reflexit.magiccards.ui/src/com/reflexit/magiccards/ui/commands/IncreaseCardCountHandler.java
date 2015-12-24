@@ -1,86 +1,56 @@
 package com.reflexit.magiccards.ui.commands;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.Predicate;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.ui.views.MagicDbView;
-import com.reflexit.magiccards.ui.views.lib.DeckView;
-import com.reflexit.magiccards.ui.views.lib.MyCardsView;
 
 /**
  * Increase card number
  */
-public class IncreaseCardCountHandler extends AbstractHandler {
-	/**
-	 * The constructor.
-	 */
-	public IncreaseCardCountHandler() {
-	}
-
-	/**
-	 * the command has been executed, so extract extract the needed information from the application
-	 * context.
-	 */
+public class IncreaseCardCountHandler extends AbstractCardCommandHandler {
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		ISelection selection = window.getSelectionService().getSelection();
-		if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
-			return null;
-		}
-		IStructuredSelection iss = (IStructuredSelection) selection;
-		IWorkbenchPart activePart = window.getPartService().getActivePart();
-		ICardStore activeDeckHandler = null;
-		DataManager dm = DataManager.getInstance();
-		if (activePart instanceof DeckView) {
-			activeDeckHandler = ((DeckView) activePart).getFilteredStore().getCardStore();
-			increase(window, iss, activeDeckHandler);
-		} else if (activePart instanceof MagicDbView) {
-			activeDeckHandler = dm.getCardHandler().getActiveStore();
-			if (activeDeckHandler != null)
-				dm.copyCards(dm.expandGroups(iss.toList()), activeDeckHandler);
-			else
-				throw new ExecutionException("No active deck");
-		} else if (activePart instanceof MyCardsView) {
-			activeDeckHandler = dm.getCardHandler().getActiveStore();
-			increase(window, iss, activeDeckHandler);
-		}
-		return null;
+	public void run(IWorkbenchWindow window, IStructuredSelection iss) {
+		increase(window, iss, getActiveDeckHandler(window));
 	}
 
 	protected void increase(IWorkbenchWindow window, IStructuredSelection iss,
-			ICardStore activeDeckHandler) {
+			ICardStore<IMagicCard> activeDeckHandler) {
 		if (activeDeckHandler != null) {
 			ArrayList<IMagicCard> toAdd = new ArrayList<IMagicCard>();
+			// increase count for all magic card physical
 			for (Iterator iterator = iss.iterator(); iterator.hasNext();) {
 				IMagicCard magicCard = (IMagicCard) iterator.next();
 				if (magicCard instanceof MagicCardPhysical) {
 					MagicCardPhysical mc = (MagicCardPhysical) magicCard;
-					int count = mc.getCount();
-					mc.setCount(count + 1);
-					DataManager.getInstance().update(activeDeckHandler, mc,
-							Collections.singleton(MagicCardField.COUNT));
+					getDataManager().setField(activeDeckHandler, mc, MagicCardField.COUNT, mc.getCount() + 1);
 				} else {
 					toAdd.add(magicCard);
 				}
 			}
-			DataManager.getInstance().add(toAdd, activeDeckHandler);
+			// find rest of magic cards and add them (count 1) to action deck
+			if (toAdd.size() > 0) {
+				ArrayList<MagicCard> in = new ArrayList<MagicCard>();
+				DataManager.expandGroups(in, toAdd, new Predicate<Object>() {
+					@Override
+					public boolean test(Object card) {
+						if (card instanceof MagicCard)
+							return true;
+						return false;
+					}
+				});
+				getDataManager().copyCards(in, activeDeckHandler);
+			}
 		} else {
 			MessageDialog.openError(window.getShell(), "Error", "No active deck/collection");
 		}

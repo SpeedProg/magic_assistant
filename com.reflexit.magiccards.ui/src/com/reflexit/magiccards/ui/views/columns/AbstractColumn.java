@@ -1,13 +1,19 @@
 package com.reflexit.magiccards.ui.views.columns;
 
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.IMagicCardPhysical;
+import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
@@ -133,5 +139,55 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		return null;
+	}
+
+	protected void setElementValue(Object element, Object value) {
+		DataManager.getInstance().setField((MagicCardPhysical) element, getDataField(), value);
+	}
+
+	protected boolean canEditElement(Object element) {
+		return element instanceof MagicCardPhysical;
+	}
+
+	protected String getElementValue(Object element) {
+		return getText(element);
+	}
+
+	public EditingSupport getGenericEditingSupport(final ColumnViewer viewer) {
+		return new EditingSupport(viewer) {
+			@Override
+			protected boolean canEdit(Object element) {
+				if (canEditElement(element))
+					return true;
+				else
+					return false;
+			}
+
+			@Override
+			protected CellEditor getCellEditor(Object element) {
+				Composite viewerControl = (Composite) viewer.getControl();
+				return getElementCellEditor(viewerControl);
+			}
+
+			@Override
+			protected Object getValue(Object element) {
+				if (canEdit(element)) {
+					return getElementValue(element);
+				}
+				return null;
+			}
+
+			@Override
+			protected void setValue(Object element, Object value) {
+				if (canEdit(element)) {
+					setElementValue(element, value);
+				}
+			}
+		};
+	}
+
+	protected CellEditor getElementCellEditor(Composite viewerControl) {
+		TextCellEditor editor = new TextCellEditor(viewerControl, SWT.NONE);
+		return editor;
 	}
 }
