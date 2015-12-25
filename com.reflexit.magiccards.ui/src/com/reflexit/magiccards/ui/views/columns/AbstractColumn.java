@@ -45,10 +45,14 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 	public String getText(Object element) {
 		if (!visible)
 			return "";
+		return getActualText(element);
+	}
+
+	protected String getActualText(Object element) {
 		if (element instanceof ICardGroup) {
 			ICardGroup group = (ICardGroup) element;
 			if (group.isTransient() && group != group.getFirstCard()) {
-				return getText(group.getFirstCard());
+				return getActualText(group.getFirstCard());
 			}
 		}
 		if (element instanceof ICard) {
@@ -63,7 +67,7 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 				return "n/a";
 			}
 		}
-		return "?";
+		return "";
 	}
 
 	public String getColumnTooltip() {
