@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 
 public abstract class AbstractImageColumn extends GenColumn implements Listener {
-	protected boolean cannotPaintImage = true;
+	protected boolean cannotPaintImage = false;
 
 	public AbstractImageColumn(ICardField field, String name) {
 		super(field, name);
@@ -71,9 +71,9 @@ public abstract class AbstractImageColumn extends GenColumn implements Listener 
 
 	@Override
 	public void handleEvent(Event event) {
-		if (event.type == SWT.PaintItem) {
-			cannotPaintImage = false;
-		}
+		// if (event.type == SWT.PaintItem) {
+		// cannotPaintImage = false;
+		// }
 		if (event.index == this.columnIndex || this.columnIndex == -1) {
 			if (event.type == SWT.EraseItem) {
 				handleEraseEvent(event);
