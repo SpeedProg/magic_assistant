@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.core.model.storage;
 
-import java.util.Comparator;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -231,11 +230,6 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 				group.add(nameGroup);
 			}
 		}
-	}
-
-	protected Comparator<ICard> getSortComparator(MagicCardFilter filter) {
-		Comparator<ICard> comp = filter.getSortOrder().getComparator();
-		return comp;
 	}
 
 	/**

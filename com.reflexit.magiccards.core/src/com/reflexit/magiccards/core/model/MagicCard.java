@@ -144,6 +144,11 @@ public class MagicCard extends AbstractMagicCard {
 	@Override
 	public synchronized String getColorType() {
 		if (colorType == null) {
+			if (cost == null || cost.isEmpty()) {
+				if (!isLand()) {
+					return "colorless";
+				}
+			}
 			colorType = Colors.getInstance().getColorType(cost);
 		}
 		return this.colorType;
@@ -638,7 +643,8 @@ public class MagicCard extends AbstractMagicCard {
 	}
 
 	/**
-	 * @return normalized id of the card, i.e. english card id of the same card in set
+	 * @return normalized id of the card, i.e. english card id of the same card
+	 *         in set
 	 */
 	public int getNormId() {
 		int x = getEnglishCardId();

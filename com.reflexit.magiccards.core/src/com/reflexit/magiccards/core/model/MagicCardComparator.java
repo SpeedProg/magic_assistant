@@ -73,81 +73,114 @@ public class MagicCardComparator implements Comparator {
 		int dir = accending ? 1 : -1;
 		if (c1.getClass() != c2.getClass())
 			return dir * c1.getClass().getName().compareTo(c2.getClass().getName());
-		ICardField sort = field;
+		int d = compare(c1, c2, field);
+		if (d != 0)
+			return dir * d;
+		return 0;
+	}
+
+	protected int compare(ICard c1, ICard c2, ICardField sort) {
 		Object a1 = c1.get(sort);
 		Object a2 = c2.get(sort);
+		if (a1 == null && a2 == null)
+			return 0;
 		int d = 0;
-		if (a1 != a2) {
-			if (a1 == null) {
-				d = 1;
-			} else if (a2 == null) {
-				d = -1;
-			} else {
-				boolean generic = true;
-				if (sort instanceof MagicCardField) {
-					generic = false;
-					switch ((MagicCardField) sort) {
-						case COST: {
-							int i1 = Colors.getColorSort((String) a1);
-							int i2 = Colors.getColorSort((String) a2);
-							d = i1 - i2;
-							break;
-						}
-						case COLOR: {
-							String co1 = (String) c1.get(MagicCardField.COST);
-							String co2 = (String) c2.get(MagicCardField.COST);
-							d = Colors.getColorType(co1).compareTo(Colors.getColorType(co2));
-							if (d == 0) {
-								int i1 = Colors.getColorSort(co1);
-								int i2 = Colors.getColorSort(co2);
-								d = i1 - i2;
-							}
-							break;
-						}
-						case COLOR_IDENTITY: {
-							String co1 = (String) c1.get(MagicCardField.COLOR_IDENTITY);
-							String co2 = (String) c2.get(MagicCardField.COLOR_IDENTITY);
-							d = Colors.getColorType(co1).compareTo(Colors.getColorType(co2));
-							if (d == 0) {
-								int i1 = Colors.getColorSort(co1);
-								int i2 = Colors.getColorSort(co2);
-								d = i1 - i2;
-							}
-							break;
-						}
-						case POWER:
-						case TOUGHNESS:
-							float f1 = AbstractMagicCard.convertFloat((String) a1);
-							float f2 = AbstractMagicCard.convertFloat((String) a2);
-							d = Float.compare(f1, f2);
-							break;
-						case RARITY:
-							d = Rarity.compare((String) a1, (String) a2);
-							break;
-						case COLLNUM:
-							d = ((IMagicCard) c1).getCollectorNumberId()
-									- ((IMagicCard) c2).getCollectorNumberId();
-							if (d != 0)
-								break;
-							generic = true;
-							break;
-						case LEGALITY:
-							Format fo1 = ((LegalityMap) a1).getFirstLegal();
-							Format fo2 = ((LegalityMap) a2).getFirstLegal();
-							if (fo1 == null && fo2 != null)
-								d = 1;
-							else if (fo2 == null && fo1 != null)
-								d = -1;
-							else if (fo1 == null && fo2 == null)
-								d = 0;
-							else if (fo2 != null && fo1 != null)
-								d = fo1.ordinal() - fo2.ordinal();
-							break;
-						default:
-							generic = true;
-							break;
-					}
+		if (a1 == null) {
+			d = 1;
+		} else if (a2 == null) {
+			d = -1;
+		} else {
+			boolean generic = true;
+			if (sort instanceof MagicCardField) {
+				generic = false;
+				switch ((MagicCardField) sort) {
+				case COST: {
+					int i1 = Colors.getColorSort((String) a1);
+					int i2 = Colors.getColorSort((String) a2);
+					d = i1 - i2;
+					break;
 				}
+				case COLOR: {
+					d = compare(c1, c2, MagicCardField.CTYPE);
+					if (d == 0) {
+						d = compare(c1, c2, MagicCardField.COST);
+					}
+					break;
+				}
+				case CMC: {
+					d = (Integer) a1 - (Integer) a2;
+					if (d == 0) {
+						d = compare(c1, c2, MagicCardField.CTYPE);
+					}
+					if (d == 0) {
+						d = compare(c1, c2, MagicCardField.COST);
+					}
+					// System.err.println("cms sort " + c1 + ":" + a1 + " vs " + c2 + ":" + a2 + " = " + d);
+					break;
+				}
+				case CTYPE: {
+					String ct1 = (String) a1;
+					String ct2 = (String) a2;
+					d = ct1.compareTo(ct2);
+					if (d != 0) {
+						if (ct1.equals("land"))
+							d = -1;
+						else if (ct2.equals("land"))
+							d = 1;
+					}
+					break;
+				}
+				case COLOR_IDENTITY: {
+					String co1 = (String) a1;
+					String co2 = (String) a2;
+					d = Colors.getColorType((String) a1).compareTo(Colors.getColorType((String) a2));
+					if (d == 0) {
+						int i1 = Colors.getColorSort(co1);
+						int i2 = Colors.getColorSort(co2);
+						d = i1 - i2;
+					}
+					break;
+				}
+				case POWER:
+				case TOUGHNESS:
+					if (a1 != a2) {
+						float f1 = AbstractMagicCard.convertFloat((String) a1);
+						float f2 = AbstractMagicCard.convertFloat((String) a2);
+						d = Float.compare(f1, f2);
+					}
+					break;
+				case RARITY:
+					if (a1 != a2) {
+						d = Rarity.compare((String) a1, (String) a2);
+					}
+					break;
+				case COLLNUM:
+					if (a1 != a2) {
+						d = ((IMagicCard) c1).getCollectorNumberId() - ((IMagicCard) c2).getCollectorNumberId();
+						if (d == 0)
+							generic = true;
+					}
+					break;
+				case LEGALITY:
+					if (a1 != a2) {
+						Format fo1 = ((LegalityMap) a1).getFirstLegal();
+						Format fo2 = ((LegalityMap) a2).getFirstLegal();
+						if (fo1 == null && fo2 != null)
+							d = 1;
+						else if (fo2 == null && fo1 != null)
+							d = -1;
+						else if (fo1 == null && fo2 == null)
+							d = 0;
+						else if (fo2 != null && fo1 != null)
+							d = fo1.ordinal() - fo2.ordinal();
+					}
+					break;
+				default:
+					generic = true;
+					break;
+				}
+			}
+			if (a1 != a2 && d == 0) {
 				if (generic) {
 					if (a1 instanceof Comparable) {
 						d = ((Comparable) a1).compareTo(a2);
@@ -156,19 +189,13 @@ public class MagicCardComparator implements Comparator {
 			}
 		}
 		if (d == 0) { // secondary key
-			if (sort == MagicCardField.CMC) {
-				int d1 = Colors.getColorSort((String) c1.get(MagicCardField.COST));
-				int d2 = Colors.getColorSort((String) c2.get(MagicCardField.COST));
-				d = d1 - d2;
-			} else if (sort == MagicCardField.OWN_COUNT) {
+			if (sort == MagicCardField.OWN_COUNT) {
 				if (c1 instanceof MagicCardPhysical && c2 instanceof MagicCardPhysical) {
 					d = ((MagicCardPhysical) c1).getOwnTotal() - ((MagicCardPhysical) c2).getOwnTotal();
 				}
 			}
 		}
-		if (d != 0)
-			return dir * d;
-		return 0;
+		return d;
 	}
 
 	@Override

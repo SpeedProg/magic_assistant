@@ -366,7 +366,8 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 				return LegalityMap.EMPTY;
 			return null;
 		}
-		if (containsKey(field)) {
+		boolean containsKey = containsKey(field);
+		if (containsKey) {
 			return super.get(field);
 		} else {
 			super.set(field, null);

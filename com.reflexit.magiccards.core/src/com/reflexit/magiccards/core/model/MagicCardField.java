@@ -142,21 +142,20 @@ public enum MagicCardField implements ICardField {
 	},
 	CTYPE(null) {
 		@Override
-		public Object aggregateValueOf(ICard card) {
-			Colors cl = Colors.getInstance();
-			return cl.getColorType(((IMagicCard) card).getCost());
-		}
-
-		@Override
 		public Object get(IMagicCard card) {
 			return card.getColorType();
 		};
 	},
 	CMC(null) {
+		// @Override
+		// public Object aggregateValueOf(ICard card) {
+		// Colors cl = Colors.getInstance();
+		// return cl.getConvertedManaCost(((IMagicCard) card).getCost());
+		// }
+
 		@Override
-		public Object aggregateValueOf(ICard card) {
-			Colors cl = Colors.getInstance();
-			return cl.getConvertedManaCost(((IMagicCard) card).getCost());
+		public ICardVisitor getAggregator() {
+			return new CollisionAggregator(this, "*");
 		}
 
 		@Override

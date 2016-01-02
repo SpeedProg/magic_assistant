@@ -106,7 +106,7 @@ public class MagicCardComparatorTest extends TestCase {
 		genMc();
 		setField(card1, field, a);
 		setField(card2, field, b);
-		checkInvariantLess(card1, card2);
+		checkInvariantLessAndGroups(card1, card2);
 		assertTrue(dec.compare(card1, card2) > 0);
 		setField(card2, field, a);
 		assertEquals(0, acc.compare(card1, card2));
@@ -134,6 +134,17 @@ public class MagicCardComparatorTest extends TestCase {
 		assertEquals(0, acc.compare(card1, card1.cloneCard()));
 	}
 
+	protected void checkInvariantLessAndGroups(IMagicCard card1, IMagicCard card2) {
+		checkInvariantLess(card1, card2);
+		CardGroup g1 = new CardGroup(field, String.valueOf(card1.get(field)));
+		g1.add(card1);
+		g1.add(card1.cloneCard());
+		CardGroup g2 = new CardGroup(field, String.valueOf(card2.get(field)));
+		g2.add(card2);
+		g2.add(card2.cloneCard());
+		assertEquals(-1, sgn(acc.compare(g1, g2)));
+	}
+
 	@Test
 	public void testName() {
 		compareMcLess(MagicCardField.NAME, "a", "b");
@@ -143,7 +154,7 @@ public class MagicCardComparatorTest extends TestCase {
 	public void testCl() {
 		card1 = generateCard();
 		card2 = generatePhyCard();
-		checkInvariantLess(card1, card2);
+		checkInvariantLessAndGroups(card1, card2);
 	}
 
 	public void testNameSame() {
@@ -233,7 +244,7 @@ public class MagicCardComparatorTest extends TestCase {
 		makeComparator(MagicCardField.CMC);
 		setField(card1, MagicCardField.COST, "{B}");
 		setField(card2, MagicCardField.COST, "{3}{W}");
-		checkInvariantLess(card1, card2);
+		checkInvariantLessAndGroups(card1, card2);
 		setField(card1, MagicCardField.COST, "{W}");
 		setField(card2, MagicCardField.COST, "{W}");
 		checkInvariantSame();
@@ -243,7 +254,27 @@ public class MagicCardComparatorTest extends TestCase {
 		makeComparator(MagicCardField.CMC);
 		setField(card1, MagicCardField.COST, "{W}");
 		setField(card2, MagicCardField.COST, "{B}");
-		checkInvariantLess(card1, card2);
+		checkInvariantLessAndGroups(card1, card2);
+	}
+
+	public void testCMC_Land() {
+		makeComparator(MagicCardField.CMC);
+		setField(card1, MagicCardField.COST, "{0}");
+		setField(card2, MagicCardField.COST, "");
+		setField(card2, MagicCardField.NAME, "Forest");
+		setField(card2, MagicCardField.TYPE, "Basic Land");
+		checkInvariantLessAndGroups(card2, card1);
+	}
+
+	public void testCMC_Land2() {
+		makeComparator(MagicCardField.CMC);
+		setField(card1, MagicCardField.COST, "");
+		setField(card1, MagicCardField.NAME, "Forest");
+		setField(card1, MagicCardField.TYPE, "Basic Land");
+		setField(card2, MagicCardField.COST, "");
+		setField(card2, MagicCardField.NAME, "Something");
+		setField(card2, MagicCardField.TYPE, "Some Type");
+		checkInvariantLessAndGroups(card1, card2);
 	}
 
 	@Test
@@ -252,9 +283,9 @@ public class MagicCardComparatorTest extends TestCase {
 		genMcp();
 		setField(card1, field, "1");
 		setField(card2, field, "2");
-		checkInvariantLess(card1, card2);
+		checkInvariantLessAndGroups(card1, card2);
 		setField(card2, field, "10");
-		checkInvariantLess(card1, card2);
+		checkInvariantLessAndGroups(card1, card2);
 	}
 
 	public void testOwnCount() {
@@ -264,9 +295,9 @@ public class MagicCardComparatorTest extends TestCase {
 		((MagicCardPhysical) card2).setOwn(true);
 		setField(card1, MagicCardField.COUNT, "1");
 		setField(card2, MagicCardField.COUNT, "2");
-		checkInvariantLess(card1, card2);
+		checkInvariantLessAndGroups(card1, card2);
 		setField(card2, MagicCardField.COUNT, "10");
-		checkInvariantLess(card1, card2);
+		checkInvariantLessAndGroups(card1, card2);
 		setField(card1, MagicCardField.COUNT, "2");
 		setField(card2, MagicCardField.COUNT, "2");
 		checkInvariantSame();

@@ -120,20 +120,22 @@ public class Colors implements ISearchableProperty {
 			return 0;
 		if (cost.length() == 0)
 			return 0;
-		int sum = 0;
+		if (cost.equals("*"))
+			return 0b111111;
+		int sum = 1;
 		int times = 0;
 		Collection<String> colorIdentity = getColorPresense(cost);
 		for (ManaColor c : ManaColor.values()) {
 			sum <<= 1;
 			if (colorIdentity.contains(c.tag())) {
 				times++;
-				sum |= 0x01;
+				sum |= 0b1;
 			}
 		}
 		if (sum == 0)
 			return 1;
 		if (times == 1)
-			sum <<= 6;
+			sum <<= 7;
 		return -sum;
 	}
 
