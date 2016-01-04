@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -78,6 +80,25 @@ public class ViewerManager implements IDisposable {
 
 	public Shell getShell() {
 		return getControl().getShell();
+	}
+
+	public interface IContextMenuFiller {
+		public void fillContextMenu(IMenuManager manager);
+	}
+
+	protected MenuManager hookContextMenu(final IContextMenuFiller filler) {
+		if (filler == null)
+			return null;
+		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				filler.fillContextMenu(manager);
+			}
+		});
+		hookContextMenu(menuMgr);
+		return menuMgr;
 	}
 
 	public void hookContextMenu(MenuManager menuMgr) {

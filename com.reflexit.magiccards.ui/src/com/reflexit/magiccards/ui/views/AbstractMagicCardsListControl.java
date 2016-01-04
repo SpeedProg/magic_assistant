@@ -286,6 +286,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			this.viewer.dispose();
 		}
 		getLocalPreferenceStore().removePropertyChangeListener(preferenceListener);
+		try {
+			columnsStore.save();
+			filterStore.save();
+		} catch (IOException e) {
+			MagicUIActivator.log(e);
+		}
 		super.dispose();
 	}
 
@@ -788,7 +794,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		updateSortColumn(-1);
 	}
 
-	protected void syncFilter() {
+	public void syncFilter() {
 		MagicCardFilter filter = getFilter();
 		if (filter == null)
 			return;

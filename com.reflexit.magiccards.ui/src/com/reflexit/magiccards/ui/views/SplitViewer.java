@@ -69,9 +69,11 @@ public class SplitViewer implements IMagicColumnViewer {
 				List root = ssel.toList();
 				if (!ssel.isEmpty()) {
 					viewer.setSelection(new StructuredSelection());
-					// ExpandContentProvider expandProvider = new ExpandContentProvider();
+					// ExpandContentProvider expandProvider = new
+					// ExpandContentProvider();
 					// expandProvider.inputChanged(viewer, null, root);
-					// ArrayCardStorage storage = new ArrayCardStorage<>(expandProvider.getElements(root),
+					// ArrayCardStorage storage = new
+					// ArrayCardStorage<>(expandProvider.getElements(root),
 					// fstore.getLocation());
 					viewer.setInput(root);
 				} else {

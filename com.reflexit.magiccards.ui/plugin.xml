@@ -762,9 +762,13 @@
      <page
            class="com.reflexit.magiccards.ui.views.analyzers.TableDeckPage"
            id="com.reflexit.magiccards.ui.views.analyzers.TableDeckPage"
-           name="Table">
+           name="List">
      </page>
-        		
+          <page
+           class="com.reflexit.magiccards.ui.views.analyzers.TreeDeckPage"
+           id="com.reflexit.magiccards.ui.views.analyzers.TreeDeckPage"
+           name="Groups">
+     </page>   		
         <page name="Info" id="info"
         class="com.reflexit.magiccards.ui.views.analyzers.InfoPage"
         />

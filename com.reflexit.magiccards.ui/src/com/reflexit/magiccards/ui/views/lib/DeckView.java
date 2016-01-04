@@ -87,6 +87,7 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	private static ArrayList<DeckPageExtension> extensionPages;
+
 	static {
 		loadExtensions();
 	}
@@ -333,7 +334,7 @@ public class DeckView extends AbstractMyCardsView {
 
 	@Override
 	protected AbstractMagicCardsListControl createViewControl() {
-		return new DeckListControl(this, Presentation.SPLITTREE);
+		return new DeckListControl(this, Presentation.TABLE);
 	}
 
 	private void createExtendedTabs() {
@@ -378,9 +379,7 @@ public class DeckView extends AbstractMyCardsView {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown(
-	 * org.eclipse.jface.action.IMenuManager)
+	 * @see com.reflexit.magiccards.ui.views.AbstractCardsView#fillLocalPullDown( org.eclipse.jface.action.IMenuManager)
 	 */
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {

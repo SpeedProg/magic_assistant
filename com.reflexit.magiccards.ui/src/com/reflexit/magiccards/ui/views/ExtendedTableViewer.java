@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.views.ViewerManager.IContextMenuFiller;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
@@ -341,6 +342,10 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		manager.hookContextMenu(menuMgr);
+	}
+
+	protected MenuManager hookContextMenu(final IContextMenuFiller filler) {
+		return manager.hookContextMenu(filler);
 	}
 
 	@Override

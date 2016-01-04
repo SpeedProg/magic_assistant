@@ -69,6 +69,10 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 		this.pres = pres;
 	}
 
+	public Presentation getPresentation() {
+		return pres;
+	}
+
 	@Override
 	public IMagicViewer createViewer(Composite parent) {
 		MagicColumnCollection columns = new MagicColumnCollection(getPreferencePageId());

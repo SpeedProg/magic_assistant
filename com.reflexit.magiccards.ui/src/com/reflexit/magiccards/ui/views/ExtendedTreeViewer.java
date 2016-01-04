@@ -37,6 +37,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
+import com.reflexit.magiccards.ui.views.ViewerManager.IContextMenuFiller;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
@@ -179,28 +180,33 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 	protected void createLabelProviders() {
 		int num = manager.getColumnsNumber();
 		for (int i = 0; i < num; i++) {
-			AbstractColumn man = manager.getColumn(i);
-			TreeViewerColumn colv = new TreeViewerColumn(getTViewer(), i);
-			TreeColumn col = colv.getColumn();
-			col.setData("man", man);
-			col.setText(man.getColumnName());
-			col.setWidth(man.getUserWidth());
-			col.setToolTipText(man.getColumnTooltip());
-			final int coln = i;
-			col.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					manager.callSortAction(coln, 0);
-				}
-			});
-			col.setMoveable(true);
-			colv.setLabelProvider(man);
-			if (man instanceof Listener) {
-				addPaintListener((Listener) man);
-			}
-			colv.setEditingSupport(man.getEditingSupport(getTViewer()));
+			createColumn(i);
 		}
 		createFillerColumn();
+	}
+
+	protected TreeViewerColumn createColumn(int i) {
+		AbstractColumn man = manager.getColumn(i);
+		TreeViewerColumn colv = new TreeViewerColumn(getTViewer(), i);
+		TreeColumn col = colv.getColumn();
+		col.setData("man", man);
+		col.setText(man.getColumnName());
+		col.setWidth(man.getUserWidth());
+		col.setToolTipText(man.getColumnTooltip());
+		final int coln = i;
+		col.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				manager.callSortAction(coln, 0);
+			}
+		});
+		col.setMoveable(true);
+		colv.setLabelProvider(man);
+		if (man instanceof Listener) {
+			addPaintListener((Listener) man);
+		}
+		colv.setEditingSupport(man.getEditingSupport(getTViewer()));
+		return colv;
 	}
 
 	public void addPaintListener(Listener man) {
@@ -338,6 +344,10 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		manager.hookContextMenu(menuMgr);
+	}
+
+	protected MenuManager hookContextMenu(final IContextMenuFiller filler) {
+		return manager.hookContextMenu(filler);
 	}
 
 	@Override
