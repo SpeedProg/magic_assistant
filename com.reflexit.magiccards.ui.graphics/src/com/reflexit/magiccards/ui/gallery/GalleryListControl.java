@@ -7,6 +7,8 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicViewer;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.lib.MyCardsListControl;
 
 public class GalleryListControl extends MyCardsListControl {
@@ -34,6 +36,11 @@ public class GalleryListControl extends MyCardsListControl {
 	@Override
 	public void saveColumnLayout() {
 		// we don't save columns here
+	}
+
+	@Override
+	public ColumnCollection getSortColumnCollection() {
+		return new MagicColumnCollection("");
 	}
 
 	@Override

@@ -145,6 +145,7 @@ public class Gallery2Viewer implements IMagicColumnViewer {
 		return viewer.getColumnsCollection();
 	}
 
+
 	@Override
 	public void hookContextMenu(MenuManager menuMgr) {
 		Control gcontrol = galleryviewer.getControl();
