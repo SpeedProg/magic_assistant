@@ -13,9 +13,9 @@ public interface IMagicCardListControl extends IMagicControl {
 
 	public abstract ISelection getSelection();
 
-	public abstract IPersistentPreferenceStore getLocalPreferenceStore();
+	public abstract IPersistentPreferenceStore getColumnsPreferenceStore();
 
-	public abstract IPersistentPreferenceStore getFilterPreferenceStore();
+	public abstract IPersistentPreferenceStore getElementPreferenceStore();
 
 	@Override
 	public abstract void reloadData();

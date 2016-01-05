@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 
@@ -16,6 +17,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.actions.CopyPasteActionGroup;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
+import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicViewer;
@@ -32,6 +34,11 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	private Presentation pres = Presentation.TABLE;
 	protected IAction actionRefresh;
 	private CopyPasteActionGroup actionGroupCopyPaste;
+
+	public MyCardsListControl(AbstractCardsView abstractCardsView, Presentation pres) {
+		super(abstractCardsView);
+		this.pres = pres;
+	}
 
 	@Override
 	protected void makeActions() {
@@ -64,9 +71,17 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 		manager.add(actionRefresh);
 	}
 
-	public MyCardsListControl(AbstractCardsView abstractCardsView, Presentation pres) {
-		super(abstractCardsView);
-		this.pres = pres;
+	protected String getPresentationPreferenceId() {
+		String id = getPreferencePageId();
+		if (id != null && getPresentation() != null) {
+			return id + "." + getPresentation().name();
+		}
+		return id;
+	}
+
+	@Override
+	public IPersistentPreferenceStore getPresentaionPreferenceStore() {
+		return PreferenceInitializer.getLocalStore(getPresentationPreferenceId());
 	}
 
 	public Presentation getPresentation() {

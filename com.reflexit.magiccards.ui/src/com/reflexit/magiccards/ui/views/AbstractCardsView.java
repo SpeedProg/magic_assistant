@@ -379,13 +379,13 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	 */
 	public IPersistentPreferenceStore getLocalPreferenceStore() {
 		if (getMagicControl() instanceof IMagicCardListControl)
-			return ((IMagicCardListControl) getMagicControl()).getLocalPreferenceStore();
+			return ((IMagicCardListControl) getMagicControl()).getColumnsPreferenceStore();
 		return null;
 	}
 
 	public IPersistentPreferenceStore getFilterPreferenceStore() {
 		if (getMagicControl() instanceof IMagicCardListControl)
-			return ((IMagicCardListControl) getMagicControl()).getFilterPreferenceStore();
+			return ((IMagicCardListControl) getMagicControl()).getElementPreferenceStore();
 		return null;
 	}
 

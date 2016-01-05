@@ -18,7 +18,7 @@ public class DeckListControl extends MyCardsListControl {
 
 	@Override
 	protected void runShowFilter() {
-		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getFilterPreferenceStore());
+		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getElementPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			reloadData(); // was null in realoadData
 	}
@@ -27,19 +27,5 @@ public class DeckListControl extends MyCardsListControl {
 	public IFilteredCardStore doGetFilteredStore() {
 		String secondaryId = abstractCardsView.getViewSite().getSecondaryId();
 		return DM.getCardHandler().getCardCollectionFilteredStore(secondaryId);
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
-	@Override
-	protected String getPreferencePageId() {
-		String id = super.getPreferencePageId();
-		if (id != null && getPresentation() != null) {
-			return id + "." + getPresentation().name();
-		}
-		return id;
 	}
 }

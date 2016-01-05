@@ -3,15 +3,13 @@ package com.reflexit.magiccards.ui.gallery;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.reflexit.magiccards.core.model.abs.ICard;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.IMagicViewer;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
-import com.reflexit.magiccards.ui.views.lib.MyCardsListControl;
+import com.reflexit.magiccards.ui.views.lib.DeckListControl;
 
-public class GalleryListControl extends MyCardsListControl {
+public class GalleryListControl extends DeckListControl {
 	public GalleryListControl(AbstractCardsView abstractCardsView) {
 		super(abstractCardsView, Presentation.OTHER);
 	}
@@ -28,10 +26,10 @@ public class GalleryListControl extends MyCardsListControl {
 		return new Gallery2Viewer(getPreferencePageId(), parent);
 	}
 
-	@Override
-	public IFilteredCardStore<ICard> doGetFilteredStore() {
-		return abstractCardsView.getFilteredStore();
-	}
+	// @Override
+	// public IFilteredCardStore<ICard> doGetFilteredStore() {
+	// return abstractCardsView.getFilteredStore();
+	// }
 
 	@Override
 	public void saveColumnLayout() {
