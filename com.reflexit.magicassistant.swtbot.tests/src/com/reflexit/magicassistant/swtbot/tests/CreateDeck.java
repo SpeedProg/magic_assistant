@@ -11,6 +11,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -71,8 +72,8 @@ public class CreateDeck extends AbstractSwtBotTest {
 		// dbRow.dragAndDrop(deckView.bot().table());
 		new DndUtil(bot.getDisplay()).dragAndDrop(dbRow, deckView);
 		bot.sleep(1000);
-		SWTBotTableItem row2 = selectFirstRowInView(deckView);
-		assertEquals(name, row2.getText(0));
+		SWTBotTreeItem row2 = selectFirstRowInView(deckView);
+		assertEquals(name, row2.cell(0));
 		// delete the card using Delete shortcut
 		assertEquals("Total 1 cards. Selected 1", bot.label().getText());
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.DELETE);
@@ -81,7 +82,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 	}
 
 	public SWTBotTableItem selectFirstRowInDb() {
-		return selectFirstRowInView(dbView);
+		return selectFirstRowInViewT(dbView);
 	}
 
 	@Test
@@ -93,7 +94,7 @@ public class CreateDeck extends AbstractSwtBotTest {
 		// add card using + shortcut (well = actually)
 		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(0, '='));
 		bot.sleep(500);
-		assertEquals(name, selectFirstRowInView(deckView).getText(0));
+		assertEquals(name, selectFirstRowInView(deckView).cell(0));
 	}
 
 	@Test
@@ -113,6 +114,6 @@ public class CreateDeck extends AbstractSwtBotTest {
 			deckView.setFocus();
 			KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(SWT.CTRL, 'v'));
 		}
-		assertEquals(name, selectFirstRowInView(deckView).getText(0));
+		assertEquals(name, selectFirstRowInView(deckView).cell(0));
 	}
 }

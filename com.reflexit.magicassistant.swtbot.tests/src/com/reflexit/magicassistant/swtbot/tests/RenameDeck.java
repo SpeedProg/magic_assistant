@@ -29,14 +29,14 @@ public class RenameDeck extends AbstractSwtBotTest {
 		// drag a drop card in the new deck
 		SWTBotView deckView = bot.viewById(DeckView.ID);
 		SWTBotView dbView = bot.viewById(MagicDbView.ID);
-		SWTBotTableItem row = selectFirstRowInView(dbView);
+		SWTBotTableItem row = selectFirstRowInViewT(dbView);
 		SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
 		String name = row.getText(0);
 		String type = row.getText(3);
 		KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance("="));
 		// new DndUtil(bot.getDisplay()).dragAndDrop(row, deckView);
-		assertEquals(name, getFirstRowInView(deckView).getText(0));
-		String ntype = getFirstRowInView(deckView).getText(3);
+		assertEquals(name, getFirstRowInView(deckView).cell(0));
+		String ntype = getFirstRowInView(deckView).cell(3);
 		assertEquals(type, ntype);
 		// rename
 		SWTBotView navView = bot.viewById(CardsNavigatorView.ID);
@@ -54,7 +54,7 @@ public class RenameDeck extends AbstractSwtBotTest {
 		bot.waitUntil(Conditions.shellCloses(sshell), 1000);
 		decks.getNode("ccc (Active)").select();
 		deckView = bot.viewById(DeckView.ID);
-		assertEquals(name, getFirstRowInView(deckView).getText(0));
-		assertEquals(type, getFirstRowInView(deckView).getText(3));
+		assertEquals(name, getFirstRowInView(deckView).cell(0));
+		assertEquals(type, getFirstRowInView(deckView).cell(3));
 	}
 }

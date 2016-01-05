@@ -46,7 +46,7 @@ public class GroupByCost extends AbstractSwtBotTest {
 		bot.sleep(1000);
 		SWTBotTree tree = bot.tree(0);
 		// System.err.println(tree.getAllItems()[0].getText());
-		tree.expandNode("All (145)", "2 (29)");
+		tree.expandNode("All (145)", "Cost 2 (29)");
 		bot.sleep(1000);
 	}
 }

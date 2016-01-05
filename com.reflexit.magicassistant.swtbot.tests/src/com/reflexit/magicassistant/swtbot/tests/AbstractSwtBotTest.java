@@ -6,15 +6,20 @@ import java.util.List;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
@@ -129,14 +134,42 @@ public abstract class AbstractSwtBotTest {
 		return deckView;
 	}
 
-	public SWTBotTableItem getFirstRowInView(SWTBotView view) {
+	public SWTBotTreeItem getFirstRowInView(SWTBotView view) {
+		SWTBot dbbot = view.bot();
+		SWTBotTree table = dbbot.tree();
+		SWTBotTreeItem row = getTreeItem(table, 0);
+		return row;
+	}
+
+	public SWTBotTreeItem getTreeItem(SWTBotTree tree, int i) {
+		return UIThreadRunnable.syncExec(tree.display, new Result<SWTBotTreeItem>() {
+			@Override
+			public SWTBotTreeItem run() {
+				TreeItem[] items = tree.widget.getItems();
+				return new SWTBotTreeItem(items[i]);
+			}
+		});
+	}
+
+	public SWTBotTreeItem selectFirstRowInView(SWTBotView view) {
+		view.setFocus();
+		SWTBot dbbot = view.bot();
+		SWTBotTree table = dbbot.tree();
+		table.setFocus();
+		SWTBotTreeItem row = getTreeItem(table, 0);
+		row.select();
+		row.setFocus();
+		return row;
+	}
+
+	public SWTBotTableItem getFirstRowInViewT(SWTBotView view) {
 		SWTBot dbbot = view.bot();
 		SWTBotTable table = dbbot.table();
 		SWTBotTableItem row = table.getTableItem(0);
 		return row;
 	}
 
-	public SWTBotTableItem selectFirstRowInView(SWTBotView view) {
+	public SWTBotTableItem selectFirstRowInViewT(SWTBotView view) {
 		view.setFocus();
 		SWTBot dbbot = view.bot();
 		SWTBotTable table = dbbot.table();
