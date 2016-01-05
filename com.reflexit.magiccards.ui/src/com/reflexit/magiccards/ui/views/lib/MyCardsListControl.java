@@ -20,9 +20,9 @@ import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicViewer;
 import com.reflexit.magiccards.ui.views.LazyTableViewer;
-import com.reflexit.magiccards.ui.views.LazyTreeViewer;
 import com.reflexit.magiccards.ui.views.SplitViewer;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
@@ -91,10 +91,17 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	@Override
 	public IMagicViewer createViewer(Composite parent) {
 		MagicColumnCollection columns = new MagicColumnCollection(getPreferencePageId());
-		if (pres == Presentation.TABLE)
-			return new LazyTableViewer(parent, columns);
-		if (pres == Presentation.TABLE)
-			return new LazyTreeViewer(parent, columns);
+		if (pres == Presentation.TABLE) {
+			LazyTableViewer v = new LazyTableViewer(parent, columns);
+			v.hookDragAndDrop();
+			return v;
+		}
+		if (pres == Presentation.TREE) {
+			ExtendedTreeViewer v = new ExtendedTreeViewer(parent, columns);
+			v.hookDragAndDrop();
+			// v.setContentProvider(new RootTreeViewerContentProvider());
+			return v;
+		}
 		if (pres == Presentation.SPLITTREE)
 			return new SplitViewer(parent, getPreferencePageId());
 		if (pres == Presentation.MIX) {

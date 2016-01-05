@@ -169,6 +169,7 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 
 	protected void createContents() {
 		setContentProvider(new TreeViewerContentProvider());
+		setAutoExpandLevel(2);
 		setUseHashlookup(true);
 		updatePresentation();
 		createLabelProviders();

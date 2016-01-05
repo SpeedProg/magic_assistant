@@ -23,6 +23,7 @@ import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.model.RootTreeViewerContentProvider;
 
 public class CollectorListControl extends AbstractMagicCardsListControl {
 	public static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG,
@@ -34,11 +35,10 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	public IMagicColumnViewer createViewer(Composite parent) {
-		return new ExtendedTreeViewer(parent, new CollectorColumnCollection()) {
-			{
-				hookDragAndDrop();
-			}
-		};
+		ExtendedTreeViewer v = new ExtendedTreeViewer(parent, new CollectorColumnCollection());
+		v.hookDragAndDrop();
+		v.setContentProvider(new RootTreeViewerContentProvider());
+		return v;
 	}
 
 	@Override
@@ -107,23 +107,31 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		return DataManager.getCardHandler().getMagicDBFilteredStoreWorkingCopy();
 	}
 	/*
-	 * @Override public IFilteredCardStore doGetFilteredStore() { MemoryFilteredCardStore<IMagicCard> fstore = new
+	 * @Override public IFilteredCardStore doGetFilteredStore() {
+	 * MemoryFilteredCardStore<IMagicCard> fstore = new
 	 * MemoryFilteredCardStore<IMagicCard>(); return fstore; }
 	 *
-	 * @Override protected void populateStore(IProgressMonitor monitor) { super.populateStore(monitor);
-	 * ((MemoryFilteredCardStore<ICard>) fstore).clear(); ICardStore lib =
-	 * DataManager.getCardHandler().getLibraryFilteredStore().getCardStore(); // ICardStore magicDB =
-	 * DataManager.getCardHandler().getMagicDBStore(); ArrayList<IMagicCard> list = new
-	 * ArrayList<IMagicCard>(lib.size()); // for (Iterator iterator = magicDB.iterator(); iterator.hasNext();) { //
-	 * IMagicCard card = (IMagicCard) iterator.next(); // list.add(card); // } HashSet<String> editions = new
-	 * HashSet<String>(); for (Iterator iterator = lib.iterator(); iterator.hasNext();) { IMagicCard card = (IMagicCard)
-	 * iterator.next(); list.add(card); editions.add(card.getSet()); } ICardStore cardStore =
-	 * getFilteredStore().getCardStore(); cardStore.addAll(list); for (Iterator iterator =
-	 * Editions.getInstance().getNames().iterator(); iterator.hasNext();) { String set = (String) iterator.next();
-	 * Location loc = Location.createLocationFromSet(set); ICardStore<IMagicCard> store =
-	 * ((AbstractMultiStore<IMagicCard>) DataManager.getCardHandler().getMagicDBStore()).getStore(loc); if (store ==
-	 * null) continue; for (Iterator iterator2 = store.iterator(); iterator2.hasNext();) { IMagicCard card =
-	 * (IMagicCard) iterator2.next(); if (!cardStore.contains(card)) { cardStore.add(card); } } }
+	 * @Override protected void populateStore(IProgressMonitor monitor) {
+	 * super.populateStore(monitor); ((MemoryFilteredCardStore<ICard>)
+	 * fstore).clear(); ICardStore lib =
+	 * DataManager.getCardHandler().getLibraryFilteredStore().getCardStore(); //
+	 * ICardStore magicDB = DataManager.getCardHandler().getMagicDBStore();
+	 * ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(lib.size()); //
+	 * for (Iterator iterator = magicDB.iterator(); iterator.hasNext();) { //
+	 * IMagicCard card = (IMagicCard) iterator.next(); // list.add(card); // }
+	 * HashSet<String> editions = new HashSet<String>(); for (Iterator iterator
+	 * = lib.iterator(); iterator.hasNext();) { IMagicCard card = (IMagicCard)
+	 * iterator.next(); list.add(card); editions.add(card.getSet()); }
+	 * ICardStore cardStore = getFilteredStore().getCardStore();
+	 * cardStore.addAll(list); for (Iterator iterator =
+	 * Editions.getInstance().getNames().iterator(); iterator.hasNext();) {
+	 * String set = (String) iterator.next(); Location loc =
+	 * Location.createLocationFromSet(set); ICardStore<IMagicCard> store =
+	 * ((AbstractMultiStore<IMagicCard>)
+	 * DataManager.getCardHandler().getMagicDBStore()).getStore(loc); if (store
+	 * == null) continue; for (Iterator iterator2 = store.iterator();
+	 * iterator2.hasNext();) { IMagicCard card = (IMagicCard) iterator2.next();
+	 * if (!cardStore.contains(card)) { cardStore.add(card); } } }
 	 * getFilteredStore().update(); }
 	 */
 

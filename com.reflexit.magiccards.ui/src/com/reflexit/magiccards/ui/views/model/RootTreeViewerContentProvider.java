@@ -20,8 +20,6 @@ public class RootTreeViewerContentProvider implements ITreeContentProvider, ISel
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (newInput instanceof ICardGroup)
-			throw new IllegalArgumentException("ICardGroup is not supported as root of RootTree content provider");
 		if (!(newInput == null || newInput instanceof IFilteredCardStore || newInput instanceof Iterable))
 			throw new IllegalArgumentException("Unknown type of input for RootTree content provider: " + newInput);
 		sub.inputChanged(viewer, oldInput, newInput);
@@ -57,7 +55,8 @@ public class RootTreeViewerContentProvider implements ITreeContentProvider, ISel
 		if (element == getInput()) {
 			if (rootChildren.length == 0)
 				return TreeViewerContentProvider.EMPTY_CHILDREN;
-			return new Object[] { root };
+			if (root != null)
+				return new Object[] { root };
 		}
 		if (element == root) {
 			return rootChildren;
