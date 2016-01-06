@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views.instances;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
@@ -98,7 +99,7 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	}
 
 	public Collection<IMagicCard> searchInStore(ICardStore<IMagicCard> store) {
-		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
+		LinkedHashSet<IMagicCard> res = new LinkedHashSet<IMagicCard>();
 		if (card == null || card == MagicCard.DEFAULT || card.getName() == null)
 			return res;
 		String englishName = card.getName();

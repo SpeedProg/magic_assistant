@@ -11,6 +11,7 @@ import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.services.IDisposable;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
+import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
@@ -18,6 +19,7 @@ import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CommentColumn;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
+import com.reflexit.magiccards.ui.views.columns.GenColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.LanguageColumn;
 import com.reflexit.magiccards.ui.views.columns.LocationColumn;
@@ -57,6 +59,9 @@ public class InstancesViewer extends ExtendedTreeViewer implements IDisposable {
 				columns.add(new StringEditorColumn(MagicCardField.SPECIAL, "Special"));
 				columns.add(new CommentColumn());
 				columns.add(new PriceColumn());
+				if (MagicUIActivator.TRACE_EXPORT) {
+					columns.add(new GenColumn(MagicCardField.HASHCODE, "HashCode"));
+				}
 			}
 		};
 	}
