@@ -59,7 +59,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	private Action delete;
 	private Action split;
 	private Action edit;
-	protected Action export;
+	protected ExportAction export;
 	private MenuManager moveToDeckMenu;
 	private MenuManager addToDeck;
 	protected IDeckAction copyToDeck;
