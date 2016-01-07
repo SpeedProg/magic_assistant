@@ -13,6 +13,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.Result;
+import org.eclipse.swtbot.swt.finder.utils.internal.Assert;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -141,12 +142,15 @@ public abstract class AbstractSwtBotTest {
 		return row;
 	}
 
-	public SWTBotTreeItem getTreeItem(SWTBotTree tree, int i) {
+	public SWTBotTreeItem getTreeItem(SWTBotTree tree, int row) {
+		int rowCount = tree.rowCount();
+		Assert.isLegal(row < rowCount,
+				"The row number (" + row + ") is more than the number of rows(" + rowCount + ") in the tree."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return UIThreadRunnable.syncExec(tree.display, new Result<SWTBotTreeItem>() {
 			@Override
 			public SWTBotTreeItem run() {
 				TreeItem[] items = tree.widget.getItems();
-				return new SWTBotTreeItem(items[i]);
+				return new SWTBotTreeItem(items[row]);
 			}
 		});
 	}
