@@ -4,8 +4,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 
-import com.reflexit.magiccards.ui.widgets.ImageAction;
-
 public class DeleteCardAction extends ImageAction {
 	public DeleteCardAction(Runnable runnable) {
 		super("Remove", null, runnable);

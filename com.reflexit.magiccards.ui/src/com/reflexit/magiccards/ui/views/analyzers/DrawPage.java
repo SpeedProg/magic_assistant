@@ -31,6 +31,7 @@ import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
+import com.reflexit.magiccards.ui.actions.ImageAction;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
@@ -44,7 +45,6 @@ import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 import com.reflexit.magiccards.ui.views.columns.StringEditingSupport;
 import com.reflexit.magiccards.ui.views.columns.TypeColumn;
-import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public class DrawPage extends AbstractDeckListPage {
 	private PlayingDeck playdeck = new PlayingDeck(new MemoryCardStore());

@@ -249,13 +249,10 @@ public class DeckView extends AbstractMyCardsView {
 				try {
 					IViewPart navView = page.showView(CardsNavigatorView.ID, null, IWorkbenchPage.VIEW_CREATE);
 					navView.getViewSite().getSelectionProvider().setSelection(new StructuredSelection(col));
-					IViewPart view = page.showView(DeckView.ID, col.getId(), IWorkbenchPage.VIEW_ACTIVATE);
-					if (view instanceof DeckView) {
-						DeckView deckView = (DeckView) view;
-						if (sel != null && !sel.isEmpty())
-							deckView.setSelection(sel);
-						deckViewRes[0] = deckView;
-					}
+					DeckView deckView = (DeckView) page.showView(DeckView.ID, col.getId(), IWorkbenchPage.VIEW_ACTIVATE);
+					if (sel != null && !sel.isEmpty())
+						deckView.setSelection(sel);
+					deckViewRes[0] = deckView;
 				} catch (PartInitException e) {
 					MessageDialog.openError(MagicUIActivator.getShell(), "Error", e.getMessage());
 				}
@@ -354,11 +351,11 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	private void createDeckTab(String name, final IDeckPage page) {
-		page.setDeckView(this);
-		page.createContents(folder);
 		final CTabItem item = new CTabItem(folder, SWT.CLOSE);
 		item.setText(name);
 		item.setShowClose(false);
+		page.setDeckView(this);
+		page.createContents(folder);
 		item.setControl(page.getControl());
 		item.setData(page);
 		pages.add(page);

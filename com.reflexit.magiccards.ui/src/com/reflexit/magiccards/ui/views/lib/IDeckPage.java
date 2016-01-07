@@ -8,10 +8,16 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 public interface IDeckPage extends IDisposable {
 	/**
-	 * Create page contents (composite). Method getControl() should return same composite as this
-	 * method returns.
+	 * Create page contents (composite). Method getControl() should return same
+	 * composite as this method returns.
 	 */
 	public Composite createContents(Composite parent);
+
+	/**
+	 * Return main page control (created by {@link #createContents(Composite)}
+	 * method)
+	 */
+	public Control getControl();
 
 	/**
 	 * Sets the deck store for the page
@@ -27,11 +33,6 @@ public interface IDeckPage extends IDisposable {
 	 * Method is called when page is activate and store is set
 	 */
 	public void activate();
-
-	/**
-	 * Return main page control (created by createComposite method)
-	 */
-	public Control getControl();
 
 	/**
 	 * This will be status message displayed at the top of the page

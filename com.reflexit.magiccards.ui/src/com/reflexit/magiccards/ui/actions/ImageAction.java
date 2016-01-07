@@ -1,4 +1,4 @@
-package com.reflexit.magiccards.ui.widgets;
+package com.reflexit.magiccards.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;

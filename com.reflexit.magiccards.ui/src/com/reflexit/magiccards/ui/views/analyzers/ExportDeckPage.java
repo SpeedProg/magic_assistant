@@ -53,6 +53,7 @@ import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.ImageAction;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.actions.SortByAction;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
@@ -61,7 +62,6 @@ import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
-import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	private Browser textBrowser;

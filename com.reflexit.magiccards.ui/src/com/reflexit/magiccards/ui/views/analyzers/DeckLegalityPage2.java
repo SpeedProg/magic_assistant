@@ -61,6 +61,7 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils.CardStats;
 import com.reflexit.magiccards.core.sync.ParseGathererLegality;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.ImageAction;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
@@ -71,7 +72,6 @@ import com.reflexit.magiccards.ui.views.columns.CountColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.LegalityColumn;
-import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private static final Format DEFAULT_FORMAT = Format.STANDARD;

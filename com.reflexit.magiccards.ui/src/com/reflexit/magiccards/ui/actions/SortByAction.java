@@ -20,7 +20,6 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
-import com.reflexit.magiccards.ui.widgets.ImageAction;
 
 public class SortByAction extends ImageAction {
 	private MagicCardFilter filter;
