@@ -2,28 +2,19 @@ package com.reflexit.magiccards.ui.views.lib;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
@@ -49,57 +40,36 @@ import com.reflexit.magiccards.ui.actions.MaterializeAction;
 import com.reflexit.magiccards.ui.actions.OpenSideboardAction;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
-import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.FolderPageGroup;
+import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.IMagicControl;
+import com.reflexit.magiccards.ui.views.IViewPage;
+import com.reflexit.magiccards.ui.views.ViewPageGroup;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
-import com.reflexit.magiccards.ui.views.lib.MyCardsListControl.Presentation;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 public class DeckView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
 	private CardCollection deck;
-	private CTabFolder folder;
-	private ArrayList<IDeckPage> pages;
+	private Composite main;
+	private ViewPageGroup pageGroup;
 	private OpenSideboardAction sideboard;
 	private MaterializeAction materialize;
-	private SelectionProviderIntermediate selProvider = new SelectionProviderIntermediate();
-
-	private static class DeckPageExtension {
-		private String name;
-		private IConfigurationElement elp;
-
-		private static DeckPageExtension parsePage(IConfigurationElement elp) {
-			DeckPageExtension page = new DeckPageExtension();
-			// page.id = elp.getAttribute("id");
-			page.name = elp.getAttribute("name");
-			page.elp = elp;
-			return page;
-		}
-	}
-
-	private static ArrayList<DeckPageExtension> extensionPages;
-
-	static {
-		loadExtensions();
-	}
 
 	/**
 	 * The constructor.
 	 */
 	public DeckView() {
-		pages = new ArrayList<IDeckPage>();
-	}
-
-	private static void loadExtensions() {
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint extensionPoint = registry.getExtensionPoint(MagicUIActivator.PLUGIN_ID + ".deckPage");
-		IConfigurationElement points[] = extensionPoint.getConfigurationElements();
-		extensionPages = new ArrayList<DeckPageExtension>();
-		for (IConfigurationElement el : points) {
-			extensionPages.add(DeckPageExtension.parsePage(el));
-		}
+		pageGroup = new FolderPageGroup() {
+			@Override
+			public void activate(IViewPage activePage) {
+				DeckView.this.activate(activePage);
+			}
+		};
+		pageGroup.init(this);
+		pageGroup.loadExtensions(null);
 	}
 
 	@Override
@@ -191,16 +161,13 @@ public class DeckView extends AbstractMyCardsView {
 	public void dispose() {
 		if (deck != null)
 			this.deck.close();
-		for (IDeckPage deckPage : pages) {
-			IDeckPage page = deckPage;
-			page.dispose();
-		}
+		pageGroup.dispose();
 		super.dispose();
 	}
 
 	@Override
-	public SelectionProviderIntermediate getSelectionProvider() {
-		return selProvider;
+	protected ISelectionProvider getSelectionProvider() {
+		return super.getSelectionProvider();
 	}
 
 	protected void updatePartName() {
@@ -229,62 +196,26 @@ public class DeckView extends AbstractMyCardsView {
 
 	@Override
 	protected void createMainControl(Composite parent) {
-		folder = new CTabFolder(parent, SWT.BOTTOM);
-		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
-		// Cards List
-		final CTabItem cardsList = new CTabItem(folder, SWT.CLOSE);
-		cardsList.setText("Cards");
-		cardsList.setShowClose(false);
-		Control control1 = getMagicControl().createPartControl(folder);
-		cardsList.setControl(control1);
+		main = new Composite(parent, SWT.NONE);
+		main.setLayoutData(new GridData(GridData.FILL_BOTH));
+		main.setLayout(GridLayoutFactory.fillDefaults().create());
+		// folder = new CTabFolder(parent, SWT.BOTTOM);
+		// folder.setLayoutData(new GridData(GridData.FILL_BOTH));
+		// // Cards List
+		// final CTabItem cardsList = new CTabItem(folder, SWT.CLOSE);
+		// cardsList.setText("Cards");
+		// cardsList.setShowClose(false);
+		// Control control1 = getMagicControl().createPartControl(folder);
+		// cardsList.setControl(control1);
 		// Pages
-		createExtendedTabs();
-		// Common
-		folder.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateActivePage();
-			}
-		});
-		folder.setSelection(0);
-		folder.setSimple(false);
-		Display display = folder.getDisplay();
-		// folder.setBackground(display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
-		folder.setBackground(new Color[] { display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
-				display.getSystemColor(SWT.COLOR_WHITE) }, new int[] { 50 });
+		pageGroup.createContent(main);
+		activate(pageGroup.getPage(0));
 		updatePartName();
 	}
 
 	@Override
 	protected AbstractMagicCardsListControl createViewControl() {
-		return new DeckListControl(this, Presentation.TREE);
-	}
-
-	private void createExtendedTabs() {
-		for (Object element : extensionPages) {
-			DeckPageExtension ex = (DeckPageExtension) element;
-			try {
-				try {
-					IDeckPage page = (IDeckPage) ex.elp.createExecutableExtension("class");
-					createDeckTab(ex.name, page);
-				} catch (CoreException e) {
-					MagicUIActivator.log(e);
-				}
-			} catch (Exception e) {
-				MagicUIActivator.log(e);
-			}
-		}
-	}
-
-	private void createDeckTab(String name, final IDeckPage page) {
-		final CTabItem item = new CTabItem(folder, SWT.CLOSE);
-		item.setText(name);
-		item.setShowClose(false);
-		page.setDeckView(this);
-		page.createContents(folder);
-		item.setControl(page.getControl());
-		item.setData(page);
-		pages.add(page);
+		return null;
 	}
 
 	@Override
@@ -309,9 +240,9 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	public void handleEvent(final CardEvent event) {
 		super.handleEvent(event);
-		if (folder == null || folder.isDisposed())
+		if (main == null || main.isDisposed())
 			return;
-		folder.getDisplay().asyncExec(new Runnable() {
+		main.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				if (deck == null)
@@ -348,7 +279,7 @@ public class DeckView extends AbstractMyCardsView {
 					}
 				} else {
 					// System.err.println(event);
-					updateActivePage();
+					pageGroup.refresh();
 				}
 			}
 		});
@@ -381,12 +312,6 @@ public class DeckView extends AbstractMyCardsView {
 	protected void setStore() {
 		WaitUtils.waitForCondition(() -> (DeckFilteredCardFileStore.getStoreForKey(getDeckId()) != null), 5000, 300);
 		IFilteredCardStore<IMagicCard> store = getFilteredStore();
-		if (store == null)
-			return;
-		for (IDeckPage deckPage : pages) {
-			IDeckPage page = deckPage;
-			page.setFilteredStore(store);
-		}
 	}
 
 	public String getDeckId() {
@@ -395,53 +320,32 @@ public class DeckView extends AbstractMyCardsView {
 
 	@Override
 	protected void updateViewer() {
-		if (folder.isDisposed())
+		if (main.isDisposed())
 			return;
 		super.updateViewer();
 		updatePartName();
 		// updateActivePage();
 	}
 
-	protected synchronized void updateActivePage() {
-		CTabItem sel = folder.getSelection();
-		if (sel.isDisposed())
-			return;
-		if (sel.getControl() == getMagicControl().getControl()) {
-			activateCardsTab();
-			return;
+	protected synchronized IMagicControl getActiveControl(IViewPage page) {
+		// System.err.println(deckPage);
+		if (page instanceof AbstractDeckListPage) {
+			return ((AbstractDeckListPage) page).getListControl();
 		}
-		// System.err.println(sel + " " + sel.getData());
-		for (IDeckPage deckPage : pages) {
-			IDeckPage page = deckPage;
-			// System.err.println(deckPage);
-			if (sel.getData() == page) {
-				page.setFilteredStore(getFilteredStore());
-				page.activate();
-			}
+		if (page instanceof IMagicControl) {
+			return (IMagicControl) page;
 		}
+		return null;
 	}
 
 	protected synchronized IMagicControl getActiveControl() {
-		CTabItem sel = folder.getSelection();
-		if (sel.isDisposed())
-			return null;
-		if (sel.getControl() == getMagicControl().getControl()) {
-			return getMagicControl();
-		}
-		// System.err.println(sel + " " + sel.getData());
-		for (IDeckPage deckPage : pages) {
-			IDeckPage page = deckPage;
-			// System.err.println(deckPage);
-			if (sel.getData() == page) {
-				if (page instanceof AbstractDeckListPage) {
-					return ((AbstractDeckListPage) page).getListControl();
-				}
-				if (page instanceof IMagicControl) {
-					return (IMagicControl) page;
-				}
-			}
-		}
-		return null;
+		IDeckPage page = (IDeckPage) pageGroup.getActivePage();
+		return getActiveControl(page);
+	}
+
+	@Override
+	public IFilteredCardStore getFilteredStore() {
+		return ((IMagicCardListControl) getActiveControl(pageGroup.getPage(0))).getFilteredStore();
 	}
 
 	@Override
@@ -462,28 +366,24 @@ public class DeckView extends AbstractMyCardsView {
 			MagicUIActivator.log("No paste control");
 	}
 
-	protected void activateCardsTab() {
-		contributeToActionBars();
-	}
-
 	@Override
 	protected void contributeToActionBars() {
 		// toolbar
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager toolBarManager = bars.getToolBarManager();
-		toolBarManager.removeAll();
+		// toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
 		toolBarManager.update(true);
 		// local view menu
 		IMenuManager viewMenuManager = bars.getMenuManager();
-		viewMenuManager.removeAll();
+		// viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
 		// global
 		setGlobalHandlers(bars);
 		bars.updateActionBars();
-		getSelectionProvider().setSelectionProviderDelegate(getMagicControl().getSelectionProvider());
-		hookContextMenu();
+		// getViewSite().setSelectionProvider(getSelectionProvider());
+		// hookContextMenu();
 	}
 
 	@Override
@@ -502,16 +402,6 @@ public class DeckView extends AbstractMyCardsView {
 		return ((AbstractMagicCardsListControl) getMagicControl()).getGroupAction();
 	}
 
-	@Override
-	protected void saveColumnLayout() {
-		CTabItem sel = folder.getSelection();
-		if (sel.isDisposed())
-			return;
-		if (sel.getControl() == getMagicControl().getControl()) {
-			super.saveColumnLayout();
-		}
-	}
-
 	public void setSelection(IStructuredSelection structuredSelection) {
 		ArrayList<Object> l = new ArrayList<Object>();
 		for (Object o : structuredSelection.toList()) {
@@ -523,5 +413,14 @@ public class DeckView extends AbstractMyCardsView {
 			}
 		}
 		getSelectionProvider().setSelection(new StructuredSelection(l));
+	}
+
+	protected void activate(IViewPage activePage) {
+		setMagicControl(getActiveControl(activePage));
+		((IDeckPage) activePage).setFilteredStore(getFilteredStore());
+		int i = pageGroup.getPageIndex(activePage);
+		if (i >= 0)
+			pageGroup.activate(i);
+		contributeToActionBars();
 	}
 }

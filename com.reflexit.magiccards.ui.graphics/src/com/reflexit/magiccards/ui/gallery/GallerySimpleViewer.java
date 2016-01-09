@@ -110,8 +110,8 @@ public class GallerySimpleViewer extends LazyGalleryTreeViewer implements IMagic
 	}
 
 	@Override
-	public void hookContextMenu(MenuManager menuMgr) {
-		manager.hookContextMenu(menuMgr);
+	public boolean hookContextMenu(MenuManager menuMgr) {
+		return manager.hookContextMenu(menuMgr);
 	}
 
 	@Override

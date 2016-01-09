@@ -78,7 +78,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 
 	@Override
 	public GroupListControl doGetMagicCardListControl() {
-		return new GroupListControl(view) {
+		return new GroupListControl(getDeckView()) {
 			@Override
 			public IMagicColumnViewer createViewer(Composite parent) {
 				return new GroupTreeViewer(AbstractDeckStatsPage.this.getPreferencePageId(), parent) {

@@ -277,7 +277,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 			return;
 		MemoryFilteredCardStore<IMagicCard> mstore = new MemoryFilteredCardStore<IMagicCard>();
 		Location loc = store.getLocation();
-		MagicCardFilter filter = (MagicCardFilter) view.getFilter().clone();
+		MagicCardFilter filter = (MagicCardFilter) getDeckView().getFilter().clone();
 		ICardStore mainStore = DataManager.getInstance().getCardStore(loc.toMainDeck());
 		ICardStore sideStore = DataManager.getInstance().getCardStore(loc.toSideboard());
 		if (mainStore != null)
@@ -315,7 +315,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 
 	@Override
 	public GroupListControl doGetMagicCardListControl() {
-		return new GroupListControl(view) {
+		return new GroupListControl(getDeckView()) {
 			@Override
 			public IMagicColumnViewer createViewer(Composite parent) {
 				return new GroupTreeViewer(getPreferencePageId(), parent) {

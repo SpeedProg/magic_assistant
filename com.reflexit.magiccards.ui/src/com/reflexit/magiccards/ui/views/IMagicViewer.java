@@ -17,8 +17,9 @@ public interface IMagicViewer extends IDisposable {
 	public abstract Viewer getViewer();
 	/**
 	 * @param menuMgr
+	 * @return TODO
 	 */
-	void hookContextMenu(MenuManager menuMgr);
+	boolean hookContextMenu(MenuManager menuMgr);
 
 	void hookSortAction(IColumnSortAction sortAction);
 

@@ -14,7 +14,7 @@ public interface IMagicControl {
 
 	public abstract void dispose();
 
-	public abstract void hookContextMenu(MenuManager menuMgr);
+	public abstract boolean hookContextMenu(MenuManager menuMgr);
 
 	public abstract void init(IViewSite site);
 

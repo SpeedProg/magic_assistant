@@ -10,18 +10,11 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.analyzers;
 
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IActionBars;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
@@ -30,36 +23,15 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
+import com.reflexit.magiccards.ui.views.AbstractViewPage;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
 /**
  * AbstractDeckPage class
  */
-public class AbstractDeckPage implements IDeckPage {
-	protected DeckView view;
+public class AbstractDeckPage extends AbstractViewPage implements IDeckPage {
 	protected ICardStore store;
-	private Composite area;
-
-	@Override
-	public Composite createContents(Composite parent) {
-		return createArea(parent);
-	}
-
-	protected Composite createArea(Composite parent) {
-		area = new Composite(parent, SWT.NONE);
-		area.setLayout(GridLayoutFactory.fillDefaults().create());
-		return area;
-	}
-
-	@Override
-	public Control getControl() {
-		return getArea();
-	}
-
-	public Composite getArea() {
-		return area;
-	}
 
 	@Override
 	public String getStatusMessage() {
@@ -80,81 +52,21 @@ public class AbstractDeckPage implements IDeckPage {
 		return null;
 	}
 
-	@Override
-	public void setDeckView(DeckView view) {
-		this.view = view;
+	public DeckView getDeckView() {
+		return (DeckView) getViewPart();
 	}
 
 	@Override
 	public void activate() {
-		IActionBars bars = view.getViewSite().getActionBars();
-		contributeToActionBars(bars);
+		super.activate();
 		// selection provider
-		view.getSelectionProvider().setSelectionProviderDelegate(getSelectionProvider());
+		// XXX
 		getCardStore();
 	}
 
-	public void contributeToActionBars(IActionBars actionBars) {
-		// toolbar
-		IToolBarManager toolBarManager = actionBars.getToolBarManager();
-		toolBarManager.removeAll();
-		fillLocalToolBar(toolBarManager);
-		toolBarManager.update(true);
-		// local view menu
-		IMenuManager viewMenuManager = actionBars.getMenuManager();
-		viewMenuManager.removeAll();
-		fillLocalPullDown(viewMenuManager);
-		viewMenuManager.updateAll(true);
-		// global handlers
-		setGlobalControlHandlers(actionBars);
-		actionBars.updateActionBars();
-		// context menu
-		MenuManager menuMgr = hookContextMenu();
-		view.getSite().registerContextMenu(view.getId(), menuMgr, getSelectionProvider());
-	}
-
+	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return null;
-	}
-
-	/**
-	 * @param bars
-	 */
-	public void setGlobalControlHandlers(IActionBars bars) {
-		// override if needed
-	}
-
-	protected MenuManager hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				fillContextMenu(manager);
-			}
-		});
-		return menuMgr;
-	}
-
-	/**
-	 * @param viewMenuManager
-	 */
-	public void fillContextMenu(IMenuManager viewMenuManager) {
-		// override if need view menu
-	}
-
-	/**
-	 * @param viewMenuManager
-	 */
-	public void fillLocalPullDown(IMenuManager viewMenuManager) {
-		// override if need view menu
-	}
-
-	/**
-	 * @param toolBarManager
-	 */
-	public void fillLocalToolBar(IToolBarManager toolBarManager) {
-		// override if need toolbar
 	}
 
 	@Override
@@ -163,8 +75,8 @@ public class AbstractDeckPage implements IDeckPage {
 	}
 
 	public ICardStore<IMagicCard> getCardStore() {
-		if (store == null && view != null && view.getCardCollection() != null)
-			store = view.getCardCollection().getStore();
+		if (store == null && getViewPart() != null && getDeckView().getCardCollection() != null)
+			store = getDeckView().getCardCollection().getStore();
 		return store;
 	}
 
@@ -182,10 +94,5 @@ public class AbstractDeckPage implements IDeckPage {
 			return 0;
 		int count = ((element instanceof ICardCountable) ? ((ICardCountable) element).getCount() : 1);
 		return count;
-	}
-
-	@Override
-	public void dispose() {
-		area.dispose();
 	}
 }

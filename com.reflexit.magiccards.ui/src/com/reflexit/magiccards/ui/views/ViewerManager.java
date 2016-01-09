@@ -101,12 +101,15 @@ public class ViewerManager implements IDisposable {
 		return menuMgr;
 	}
 
-	public void hookContextMenu(MenuManager menuMgr) {
+	public boolean hookContextMenu(MenuManager menuMgr) {
 		this.menuManager = menuMgr;
 		createContentMenu();
+		return true;
 	}
 
 	protected void createContentMenu() {
+		if (getControl().isDisposed())
+			return;
 		Menu menu = getMenuManager().createContextMenu(getControl());
 		getControl().setMenu(menu);
 	}

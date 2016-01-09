@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
@@ -331,7 +332,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			return "";
 		ByteArrayOutputStream byteSt = new ByteArrayOutputStream();
 		IExportDelegate ex = reportType.getExportDelegate();
-		String selcolumns = view.getLocalPreferenceStore().getString(PreferenceConstants.LOCAL_COLUMNS);
+		String selcolumns = getDeckView().getLocalPreferenceStore().getString(PreferenceConstants.LOCAL_COLUMNS);
 		MagicColumnCollection magicColumnCollection = new MagicColumnCollection(null);
 		magicColumnCollection.updateColumnsFromPropery(selcolumns);
 		if (includeSideboard) {
@@ -349,7 +350,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	 */
 	public static final String CANCEL = "CANCEL"; //$NON-NLS-1$
 	/**
-	 * Return code indicating the entity should not be overwritten, but operation should not be canceled.
+	 * Return code indicating the entity should not be overwritten, but
+	 * operation should not be canceled.
 	 */
 	public static final String NO = "NO"; //$NON-NLS-1$
 	/**
@@ -430,8 +432,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	@Override
-	public void hookContextMenu(MenuManager menuMgr) {
-		// TODO Auto-generated method stub
+	public boolean hookContextMenu(MenuManager menuMgr) {
+		return false;
 	}
 
 	@Override

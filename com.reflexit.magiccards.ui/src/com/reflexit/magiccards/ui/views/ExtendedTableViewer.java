@@ -340,8 +340,8 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 	}
 
 	@Override
-	public void hookContextMenu(MenuManager menuMgr) {
-		manager.hookContextMenu(menuMgr);
+	public boolean hookContextMenu(MenuManager menuMgr) {
+		return manager.hookContextMenu(menuMgr);
 	}
 
 	protected MenuManager hookContextMenu(final IContextMenuFiller filler) {

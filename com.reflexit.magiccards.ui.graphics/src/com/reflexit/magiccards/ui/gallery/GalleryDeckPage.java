@@ -6,7 +6,7 @@ import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
 public class GalleryDeckPage extends AbstractDeckListPage {
 	@Override
 	public AbstractMagicCardsListControl doGetMagicCardListControl() {
-		return new GalleryListControl(view);
+		return new GalleryListControl(getDeckView());
 	}
 
 	@Override

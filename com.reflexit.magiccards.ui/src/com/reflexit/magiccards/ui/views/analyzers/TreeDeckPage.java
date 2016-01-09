@@ -7,7 +7,7 @@ import com.reflexit.magiccards.ui.views.lib.MyCardsListControl.Presentation;
 public class TreeDeckPage extends AbstractDeckListPage {
 	@Override
 	public AbstractMagicCardsListControl doGetMagicCardListControl() {
-		return new DeckListControl(view, Presentation.SPLITTREE);
+		return new DeckListControl(getDeckView(), Presentation.SPLITTREE);
 	}
 
 	@Override

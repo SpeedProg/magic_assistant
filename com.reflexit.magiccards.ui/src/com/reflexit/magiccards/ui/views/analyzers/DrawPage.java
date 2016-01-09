@@ -382,7 +382,7 @@ public class DrawPage extends AbstractDeckListPage {
 
 	@Override
 	public DrawListControl doGetMagicCardListControl() {
-		return new DrawListControl(view);
+		return new DrawListControl(getDeckView());
 	}
 
 	@Override

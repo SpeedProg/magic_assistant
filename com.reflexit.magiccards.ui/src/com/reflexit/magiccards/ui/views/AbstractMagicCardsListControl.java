@@ -271,8 +271,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	@Override
-	public void hookContextMenu(MenuManager menuMgr) {
-		viewer.hookContextMenu(menuMgr);
+	public boolean hookContextMenu(MenuManager menuMgr) {
+		return viewer.hookContextMenu(menuMgr);
 	}
 
 	@Override
@@ -852,7 +852,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		final String key = "updateViewer " + object;
 		try {
 			MagicLogger.traceStart(key);
-			if (viewer.getControl() == null || viewer.getControl().isDisposed())
+			if (viewer == null || viewer.getControl() == null || viewer.getControl().isDisposed())
 				return;
 			ISelection selection = getSelection();
 			getSelectionProvider().setSelection(new StructuredSelection());

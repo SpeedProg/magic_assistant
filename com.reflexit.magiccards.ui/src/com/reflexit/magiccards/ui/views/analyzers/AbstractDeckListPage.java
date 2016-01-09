@@ -45,10 +45,9 @@ public abstract class AbstractDeckListPage extends AbstractDeckPage {
 	}
 
 	@Override
-	protected MenuManager hookContextMenu() {
-		MenuManager menuMgr = super.hookContextMenu();
+	protected boolean hookContextMenu(MenuManager menuMgr) {
 		listControl.hookContextMenu(menuMgr);
-		return menuMgr;
+		return true;
 	}
 
 	@Override

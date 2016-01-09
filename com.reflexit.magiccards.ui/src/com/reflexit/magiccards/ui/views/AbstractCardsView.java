@@ -108,7 +108,8 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		getMagicControl().init(site);
+		if (getMagicControl() != null)
+			getMagicControl().init(site);
 	}
 
 	protected void hookContextMenu() {
@@ -161,16 +162,19 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 		action.setActionDefinitionId(actionId);
 		ActionHandler handler = new ActionHandler(action);
 		IHandlerService service = (getSite()).getService(IHandlerService.class);
-		activation = service.activateHandler(actionId, handler);
-		// System.err.println("activating " + activation.getCommandId());
-		activations.put(actionId, activation);
+		if (service != null) {
+			activation = service.activateHandler(actionId, handler);
+			// System.err.println("activating " + activation.getCommandId());
+			activations.put(actionId, activation);
+		}
 		return activation;
 	}
 
 	public void deactivateActionHandler(String actionId, IHandlerActivation activation) {
 		// stem.err.println("deactivating " + activation.getCommandId());
 		IHandlerService service = (getSite()).getService(IHandlerService.class);
-		service.deactivateHandler(activation);
+		if (service != null)
+			service.deactivateHandler(activation);
 		activations.remove(actionId);
 	}
 

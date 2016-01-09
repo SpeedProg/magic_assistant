@@ -194,8 +194,8 @@ public class SplitViewer implements IMagicColumnViewer {
 	}
 
 	@Override
-	public void hookContextMenu(MenuManager menuMgr) {
-		viewer.hookContextMenu(menuMgr);
+	public boolean hookContextMenu(MenuManager menuMgr) {
+		return viewer.hookContextMenu(menuMgr);
 	}
 
 	@Override

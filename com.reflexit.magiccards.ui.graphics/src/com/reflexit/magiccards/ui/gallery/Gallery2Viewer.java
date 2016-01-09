@@ -147,10 +147,11 @@ public class Gallery2Viewer implements IMagicColumnViewer {
 
 
 	@Override
-	public void hookContextMenu(MenuManager menuMgr) {
+	public boolean hookContextMenu(MenuManager menuMgr) {
 		Control gcontrol = galleryviewer.getControl();
 		Menu menu = menuMgr.createContextMenu(gcontrol);
 		gcontrol.setMenu(menu);
+		return true;
 	}
 
 	@Override
