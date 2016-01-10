@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
@@ -488,5 +489,10 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	@Override
 	public void setStatus(String string) {
 		// no status line
+	}
+
+	@Override
+	public void setGlobalHandlers(IActionBars bars) {
+		// TODO Auto-generated method stub
 	}
 }

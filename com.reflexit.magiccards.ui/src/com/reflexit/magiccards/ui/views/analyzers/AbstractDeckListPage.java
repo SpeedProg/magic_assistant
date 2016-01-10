@@ -39,13 +39,13 @@ public abstract class AbstractDeckListPage extends AbstractDeckPage {
 	}
 
 	@Override
-	public void setGlobalControlHandlers(IActionBars bars) {
-		super.setGlobalControlHandlers(bars);
-		listControl.setGlobalControlHandlers(bars);
+	public void setGlobalHandlers(IActionBars bars) {
+		super.setGlobalHandlers(bars);
+		listControl.setGlobalHandlers(bars);
 	}
 
 	@Override
-	protected boolean hookContextMenu(MenuManager menuMgr) {
+	public boolean hookContextMenu(MenuManager menuMgr) {
 		listControl.hookContextMenu(menuMgr);
 		return true;
 	}

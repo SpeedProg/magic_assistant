@@ -53,38 +53,38 @@ public abstract class AbstractViewPage implements IViewPage {
 
 	@Override
 	public void activate() {
-		IActionBars bars = getViewSite().getActionBars();
-		contributeToActionBars(bars);
+		contributeToActionBars();
+		// selection provider
+		// getViewSite().setSelectionProvider(getSelectionProvider());
 	}
 
-	public MenuManager getContextMenuManager() {
-		return menuMgr;
-	}
-
-	public void contributeToActionBars(IActionBars actionBars) {
+	public void contributeToActionBars() {
+		IActionBars actionBars = getViewSite().getActionBars();
 		// toolbar
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
-		toolBarManager.removeAll();
+		//toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
 		toolBarManager.update(true);
 		// local view menu
 		IMenuManager viewMenuManager = actionBars.getMenuManager();
-		viewMenuManager.removeAll();
+		//viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
 		// global handlers
-		setGlobalControlHandlers(actionBars);
+		setGlobalHandlers(actionBars);
 		actionBars.updateActionBars();
 		// context menu
-		menuMgr = createContextMenuManager();
-		if (hookContextMenu(menuMgr)) {
-			getViewSite().registerContextMenu(getViewSite().getId(), menuMgr, getSelectionProvider());
-		}
-		// selection provider
-		getViewSite().setSelectionProvider(getSelectionProvider());
+		hookContextMenu();
 	}
 
-	protected boolean hookContextMenu(MenuManager menuMgr) {
+	protected void hookContextMenu() {
+		// context menu
+		if (menuMgr == null)
+			menuMgr = createContextMenuManager();
+		hookContextMenu(menuMgr);
+	}
+
+	public boolean hookContextMenu(MenuManager menuMgr) {
 		return false;
 	}
 
@@ -92,12 +92,13 @@ public abstract class AbstractViewPage implements IViewPage {
 		return view.getViewSite();
 	}
 
+	@Override
 	public abstract ISelectionProvider getSelectionProvider();
 
 	/**
 	 * @param bars
 	 */
-	public void setGlobalControlHandlers(IActionBars bars) {
+	public void setGlobalHandlers(IActionBars bars) {
 		// override if needed
 	}
 
@@ -111,6 +112,23 @@ public abstract class AbstractViewPage implements IViewPage {
 			}
 		});
 		return menuMgr;
+	}
+
+	@Override
+	public MenuManager getContextMenuManager() {
+		return menuMgr;
+	}
+
+	@Override
+	public void setContextMenuManager(MenuManager menuMgr) {
+		this.menuMgr = menuMgr;
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				fillContextMenu(manager);
+			}
+		});
 	}
 
 	/**

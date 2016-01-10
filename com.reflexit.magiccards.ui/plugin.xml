@@ -759,14 +759,19 @@
   </extension>
   <extension
         point="com.reflexit.magiccards.ui.deckPage">
+                  <page
+           class="com.reflexit.magiccards.ui.views.analyzers.TreeDeckPage"
+           id="com.reflexit.magiccards.ui.views.analyzers.TreeDeckPage"
+           name="Cards">
+     </page>   		
      <page
            class="com.reflexit.magiccards.ui.views.analyzers.TableDeckPage"
            id="com.reflexit.magiccards.ui.views.analyzers.TableDeckPage"
            name="List">
      </page>
           <page
-           class="com.reflexit.magiccards.ui.views.analyzers.TreeDeckPage"
-           id="com.reflexit.magiccards.ui.views.analyzers.TreeDeckPage"
+           class="com.reflexit.magiccards.ui.views.analyzers.SplitTreeDeckPage"
+           id="com.reflexit.magiccards.ui.views.analyzers.SplitTreeDeckPage"
            name="Groups">
      </page>   		
         <page name="Info" id="info"

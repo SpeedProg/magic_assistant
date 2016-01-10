@@ -780,7 +780,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	 * @param bars
 	 */
 	@Override
-	public void setGlobalControlHandlers(IActionBars bars) {
+	public void setGlobalHandlers(IActionBars bars) {
 		if (abstractCardsView != null) {
 			abstractCardsView.activateActionHandler(actionShowFind, FIND);
 		}

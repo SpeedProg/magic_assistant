@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IViewPart;
@@ -53,7 +55,13 @@ public interface IViewPage extends IDisposable {
 	 */
 	@Override
 	public void dispose();
+
+	public MenuManager getContextMenuManager();
+
+	public void setContextMenuManager(MenuManager menuMgr);
 	// public String getName();
 	//
 	// public Image getImage();
+
+	public ISelectionProvider getSelectionProvider();
 }

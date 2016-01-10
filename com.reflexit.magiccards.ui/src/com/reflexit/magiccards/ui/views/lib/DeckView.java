@@ -9,6 +9,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -38,9 +39,10 @@ import com.reflexit.magiccards.core.model.xml.DeckFilteredCardFileStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.actions.MaterializeAction;
 import com.reflexit.magiccards.ui.actions.OpenSideboardAction;
-import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
+import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
+import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.FolderPageGroup;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
@@ -50,13 +52,16 @@ import com.reflexit.magiccards.ui.views.ViewPageGroup;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckListPage;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
-public class DeckView extends AbstractMyCardsView {
+public class DeckView extends AbstractCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.DeckView";
 	private CardCollection deck;
 	private Composite main;
 	private ViewPageGroup pageGroup;
 	private OpenSideboardAction sideboard;
 	private MaterializeAction materialize;
+	private SelectionProviderIntermediate selectionProviderBridge = new SelectionProviderIntermediate();
+	private LibraryEventListener eventListener = new LibraryEventListener();
+	private MenuManager menuMgr;
 
 	/**
 	 * The constructor.
@@ -64,8 +69,11 @@ public class DeckView extends AbstractMyCardsView {
 	public DeckView() {
 		pageGroup = new FolderPageGroup() {
 			@Override
-			public void activate(IViewPage activePage) {
-				DeckView.this.activate(activePage);
+			public void activate() {
+				IViewPage activePage = pageGroup.getActivePage();
+				preActivate(activePage);
+				super.activate();
+				postActivate(activePage);
 			}
 		};
 		pageGroup.init(this);
@@ -73,20 +81,9 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected ExportAction createExportAction() {
-		CardCollection col = getCardCollection();
-		return new ExportAction(col == null ? new StructuredSelection() : new StructuredSelection(col),
-				getPreferencePageId());
-	}
-
-	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-	}
-
-	@Override
-	protected void registerContextMenu(MenuManager menuMgr) {
-		getSite().registerContextMenu(getId(), menuMgr, getSelectionProvider());
+		eventListener.init(getViewSite(), this::loadInitialInBackground);
 	}
 
 	@Override
@@ -94,13 +91,12 @@ public class DeckView extends AbstractMyCardsView {
 		return MagicUIActivator.helpId("viewdeck");
 	}
 
-	@Override
 	protected void loadInitialInBackground() {
-		super.loadInitialInBackground();
 		String secondaryId = getDeckId();
 		this.deck = DataManager.getInstance().getModelRoot().findCardCollectionById(secondaryId);
-		if (export != null && deck != null) {
-			export.selectionChanged(new StructuredSelection(getCardCollection()));
+		if (deck != null) {
+			// if (export!=null) export.selectionChanged(new
+			// StructuredSelection(getCardCollection()));
 			sideboard.setDeck(getCardCollection());
 		}
 		refreshView();
@@ -109,7 +105,17 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
+		eventListener.setEventHandler(this::handleEvent);
 		site.getPage().addPartListener(PartListener.getInstance());
+	}
+
+	@Override
+	public void dispose() {
+		if (deck != null)
+			this.deck.close();
+		pageGroup.dispose();
+		eventListener.dispose();
+		super.dispose();
 	}
 
 	@Override
@@ -119,6 +125,13 @@ public class DeckView extends AbstractMyCardsView {
 		this.materialize = new MaterializeAction(getFilteredStore().getCardStore());
 	}
 
+	// @Override
+	// protected ExportAction createExportAction() {
+	// CardCollection col = getCardCollection();
+	// return new ExportAction(col == null ? new StructuredSelection() : new
+	// StructuredSelection(col),
+	// getPreferencePageId());
+	// }
 	protected IStorageInfo getStorageInfo() {
 		IStorage<IMagicCard> storage = getFilteredStore().getCardStore().getStorage();
 		if (storage instanceof IStorageInfo) {
@@ -158,16 +171,8 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	@Override
-	public void dispose() {
-		if (deck != null)
-			this.deck.close();
-		pageGroup.dispose();
-		super.dispose();
-	}
-
-	@Override
 	protected ISelectionProvider getSelectionProvider() {
-		return super.getSelectionProvider();
+		return selectionProviderBridge;
 	}
 
 	protected void updatePartName() {
@@ -177,7 +182,7 @@ public class DeckView extends AbstractMyCardsView {
 		setPartName(name);
 		setTitleToolTip(deckId);
 		if (deck == null) {
-			IMagicControl c = getActiveControl();
+			IMagicControl c = getMagicControl();
 			c.setStatus("Loading " + deckId + "...");
 			return;
 		}
@@ -199,28 +204,15 @@ public class DeckView extends AbstractMyCardsView {
 		main = new Composite(parent, SWT.NONE);
 		main.setLayoutData(new GridData(GridData.FILL_BOTH));
 		main.setLayout(GridLayoutFactory.fillDefaults().create());
-		// folder = new CTabFolder(parent, SWT.BOTTOM);
-		// folder.setLayoutData(new GridData(GridData.FILL_BOTH));
-		// // Cards List
-		// final CTabItem cardsList = new CTabItem(folder, SWT.CLOSE);
-		// cardsList.setText("Cards");
-		// cardsList.setShowClose(false);
-		// Control control1 = getMagicControl().createPartControl(folder);
-		// cardsList.setControl(control1);
 		// Pages
 		pageGroup.createContent(main);
-		activate(pageGroup.getPage(0));
+	}
+
+	@Override
+	protected void activate() {
+		pageGroup.setActivePageIndex(0);
+		pageGroup.activate();
 		updatePartName();
-	}
-
-	@Override
-	protected AbstractMagicCardsListControl createViewControl() {
-		return null;
-	}
-
-	@Override
-	protected void fillContextMenu(IMenuManager manager) {
-		super.fillContextMenu(manager);
 	}
 
 	@Override
@@ -237,9 +229,7 @@ public class DeckView extends AbstractMyCardsView {
 		manager.add(this.materialize);
 	}
 
-	@Override
 	public void handleEvent(final CardEvent event) {
-		super.handleEvent(event);
 		if (main == null || main.isDisposed())
 			return;
 		main.getDisplay().asyncExec(new Runnable() {
@@ -280,6 +270,7 @@ public class DeckView extends AbstractMyCardsView {
 				} else {
 					// System.err.println(event);
 					pageGroup.refresh();
+					reloadData();// XXX
 				}
 			}
 		});
@@ -318,16 +309,14 @@ public class DeckView extends AbstractMyCardsView {
 		return getViewSite().getSecondaryId();
 	}
 
-	@Override
 	protected void updateViewer() {
 		if (main.isDisposed())
 			return;
-		super.updateViewer();
 		updatePartName();
 		// updateActivePage();
 	}
 
-	protected synchronized IMagicControl getActiveControl(IViewPage page) {
+	protected synchronized IMagicControl getMagicControl(IViewPage page) {
 		// System.err.println(deckPage);
 		if (page instanceof AbstractDeckListPage) {
 			return ((AbstractDeckListPage) page).getListControl();
@@ -338,59 +327,34 @@ public class DeckView extends AbstractMyCardsView {
 		return null;
 	}
 
-	protected synchronized IMagicControl getActiveControl() {
+	protected synchronized IMagicControl getMagicControl() {
 		IDeckPage page = (IDeckPage) pageGroup.getActivePage();
-		return getActiveControl(page);
+		return getMagicControl(page);
 	}
 
 	@Override
 	public IFilteredCardStore getFilteredStore() {
-		return ((IMagicCardListControl) getActiveControl(pageGroup.getPage(0))).getFilteredStore();
+		return ((IMagicCardListControl) getMainMagicControl()).getFilteredStore();
 	}
 
 	@Override
-	protected void runCopy() {
-		IMagicControl active = getActiveControl();
+	protected void hookContextMenu() {
+		// register view menu
+		registerContextMenu(getContextMenuManager());
+	}
+
+	@Override
+	protected boolean hookContextMenu(MenuManager menuMgr) {
+		// do nothing active page hooks it
+		return true;
+	}
+
+	@Override
+	protected void setGlobalHandlers(IActionBars bars) {
+		super.setGlobalHandlers(bars);
+		IMagicControl active = getMagicControl();
 		if (active != null)
-			active.runCopy();
-		else
-			MagicUIActivator.log("No copy control");
-	}
-
-	@Override
-	protected void runPaste() {
-		IMagicControl active = getActiveControl();
-		if (active != null)
-			active.runPaste();
-		else
-			MagicUIActivator.log("No paste control");
-	}
-
-	@Override
-	protected void contributeToActionBars() {
-		// toolbar
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager toolBarManager = bars.getToolBarManager();
-		// toolBarManager.removeAll();
-		fillLocalToolBar(toolBarManager);
-		toolBarManager.update(true);
-		// local view menu
-		IMenuManager viewMenuManager = bars.getMenuManager();
-		// viewMenuManager.removeAll();
-		fillLocalPullDown(viewMenuManager);
-		viewMenuManager.updateAll(true);
-		// global
-		setGlobalHandlers(bars);
-		bars.updateActionBars();
-		// getViewSite().setSelectionProvider(getSelectionProvider());
-		// hookContextMenu();
-	}
-
-	@Override
-	protected void setGlobalControlHandlers(IActionBars bars) {
-		IMagicControl active = getActiveControl();
-		if (active != null)
-			active.setGlobalControlHandlers(bars);
+			active.setGlobalHandlers(bars);
 	}
 
 	@Override
@@ -415,12 +379,59 @@ public class DeckView extends AbstractMyCardsView {
 		getSelectionProvider().setSelection(new StructuredSelection(l));
 	}
 
-	protected void activate(IViewPage activePage) {
-		setMagicControl(getActiveControl(activePage));
+	protected void preActivate(IViewPage activePage) {
+		// clean toolbar
+		IActionBars bars = getViewSite().getActionBars();
+		IToolBarManager toolBarManager = bars.getToolBarManager();
+		toolBarManager.removeAll();
+		toolBarManager.update(true);
+		// clean local view menu
+		IMenuManager viewMenuManager = bars.getMenuManager();
+		viewMenuManager.removeAll();
+		viewMenuManager.updateAll(true);
+		bars.updateActionBars();
+		// reset context menu
+		menuMgr = createContentMenuManager();
+		pageGroup.getActivePage().setContextMenuManager(menuMgr);
+		// set fstore
 		((IDeckPage) activePage).setFilteredStore(getFilteredStore());
-		int i = pageGroup.getPageIndex(activePage);
-		if (i >= 0)
-			pageGroup.activate(i);
+	}
+
+	protected void postActivate(IViewPage activePage) {
+		// contribute this view extra actions
 		contributeToActionBars();
+		selectionProviderBridge.setSelectionProviderDelegate(activePage.getSelectionProvider());
+		getSite().setSelectionProvider(selectionProviderBridge);
+	}
+
+	private MenuManager getContextMenuManager() {
+		return menuMgr;
+	}
+
+	@Override
+	public void reloadData() {
+		if (getMagicControl() != null)
+			getMagicControl().reloadData();
+	}
+
+	public IPersistentPreferenceStore getLocalPreferenceStore() {
+		IMagicControl magicControl = getMagicControl();
+		if (magicControl instanceof IMagicCardListControl)
+			return ((IMagicCardListControl) magicControl).getColumnsPreferenceStore();
+		magicControl = getMainMagicControl();
+		if (magicControl instanceof IMagicCardListControl)
+			return ((IMagicCardListControl) magicControl).getColumnsPreferenceStore();
+		return null;
+	}
+
+	protected IMagicControl getMainMagicControl() {
+		return getMagicControl(pageGroup.getPage(0));
+	}
+
+	@Override
+	public IPersistentPreferenceStore getFilterPreferenceStore() {
+		if (getMagicControl() instanceof IMagicCardListControl)
+			return ((IMagicCardListControl) getMagicControl()).getElementPreferenceStore();
+		return null;
 	}
 }

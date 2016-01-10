@@ -83,7 +83,7 @@ public abstract class MagicControl implements IMagicControl {
 	 * @param bars
 	 */
 	@Override
-	public void setGlobalControlHandlers(IActionBars bars) {
+	public void setGlobalHandlers(IActionBars bars) {
 		// override
 	}
 

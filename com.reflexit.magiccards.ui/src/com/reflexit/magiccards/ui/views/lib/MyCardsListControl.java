@@ -48,8 +48,8 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	public void setGlobalControlHandlers(IActionBars bars) {
-		super.setGlobalControlHandlers(bars);
+	public void setGlobalHandlers(IActionBars bars) {
+		super.setGlobalHandlers(bars);
 		actionGroupCopyPaste.setGlobalControlHandlers(bars);
 	}
 

@@ -20,7 +20,7 @@ public interface IMagicControl {
 
 	public abstract ISelectionProvider getSelectionProvider();
 
-	public abstract void setGlobalControlHandlers(IActionBars bars);
+	public abstract void setGlobalHandlers(IActionBars bars);
 
 	public abstract void fillLocalPullDown(IMenuManager manager);
 

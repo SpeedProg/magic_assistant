@@ -34,7 +34,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.events.CardEvent;
@@ -45,8 +44,7 @@ import com.reflexit.magiccards.ui.actions.DeleteCardAction;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardPhysicalDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
-import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
+import com.reflexit.magiccards.ui.views.AbstractSingleControlCardsView;
 
 /**
  * Cards view for personal cards (decks and collections)
@@ -54,7 +52,7 @@ import com.reflexit.magiccards.ui.views.AbstractCardsView;
  * @author Alena
  *
  */
-public abstract class AbstractMyCardsView extends AbstractCardsView implements ICardEventListener {
+public abstract class AbstractMyCardsView extends AbstractSingleControlCardsView implements ICardEventListener {
 	private final DataManager DM = DataManager.getInstance();
 	private Action delete;
 	private Action split;
@@ -63,6 +61,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	private MenuManager moveToDeckMenu;
 	private MenuManager addToDeck;
 	protected IDeckAction copyToDeck;
+	protected LibraryEventListener eventListener = new LibraryEventListener();
 
 	@Override
 	protected void makeActions() {
@@ -281,15 +280,7 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		WaitUtils.scheduleJob("Initializing " + getPartName(), () -> {
-			if (WaitUtils.waitForLibrary()) {
-				DM.getLibraryCardStore().addListener(AbstractMyCardsView.this);
-				DM.getModelRoot().addListener(AbstractMyCardsView.this);
-			} else {
-				MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
-			}
-			loadInitialInBackground();
-		});
+		eventListener.init(getViewSite(), this::loadInitialInBackground);
 	}
 
 	protected void loadInitialInBackground() {
@@ -299,12 +290,12 @@ public abstract class AbstractMyCardsView extends AbstractCardsView implements I
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
+		eventListener.setEventHandler(this::handleEvent);
 	}
 
 	@Override
 	public void dispose() {
-		DM.getLibraryCardStore().removeListener(this);
-		DM.getModelRoot().removeListener(this);
+		eventListener.dispose();
 		super.dispose();
 	}
 

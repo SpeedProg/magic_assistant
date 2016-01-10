@@ -60,10 +60,30 @@ public class ViewPageGroup {
 	}
 
 	public boolean activate(int page) {
-		if (view == null)
-			throw new NullPointerException();
 		if (activePageIndex == page)
 			return false;
+		deactivate();
+		setActivePageIndex(page);
+		activate();
+		return true;
+	}
+
+	public void activate() {
+		if (view == null)
+			throw new NullPointerException();
+		ViewPageContribution vc = pages.get(activePageIndex);
+		if (!vc.isInitialized()) {
+			vc.init(view);
+			createPageContent(vc.getViewPage());
+		}
+		vc.getViewPage().activate();
+	}
+
+	public void setActivePageIndex(int page) {
+		activePageIndex = page;
+	}
+
+	public void deactivate() {
 		if (activePageIndex < 0 || activePageIndex >= size()) {
 			// no prev page
 		} else {
@@ -72,14 +92,6 @@ public class ViewPageGroup {
 				safeRun(() -> vcOld.getViewPage().deactivate());
 			}
 		}
-		activePageIndex = page;
-		ViewPageContribution vc = pages.get(page);
-		if (!vc.isInitialized()) {
-			vc.init(view);
-			createPageContent(vc.getViewPage());
-		}
-		vc.getViewPage().activate();
-		return true;
 	}
 
 	private void safeRun(Runnable run) {
@@ -132,7 +144,7 @@ public class ViewPageGroup {
 	}
 
 	public void refresh() {
-		getActivePage().activate();// XXX
+		//getActivePage().activate();// XXX
 	}
 
 	public IViewPage getPage(int i) {

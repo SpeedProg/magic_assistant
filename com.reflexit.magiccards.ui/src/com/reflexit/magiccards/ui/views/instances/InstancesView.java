@@ -51,6 +51,7 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
+import com.reflexit.magiccards.ui.views.AbstractSingleControlCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.printings.PrintingsView;
 
@@ -58,7 +59,7 @@ import com.reflexit.magiccards.ui.views.printings.PrintingsView;
  * Shows different prints of the same card in different sets and per collection
  *
  */
-public class InstancesView extends AbstractCardsView implements ISelectionListener {
+public class InstancesView extends AbstractSingleControlCardsView implements ISelectionListener {
 	public static final String ID = InstancesView.class.getName();
 	private Action delete;
 	private Action refresh;
@@ -171,9 +172,8 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 					return Status.CANCEL_STATUS;
 				try {
 					ICardStore store = DataManager.getCardHandler().getMagicDBStore();
-					new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store, new CoreMonitorAdapter(
-							new SubProgressMonitor(
-									monitor, 90)));
+					new UpdateCardsFromWeb().updateStore(card, fieldMap, null, store,
+							new CoreMonitorAdapter(new SubProgressMonitor(monitor, 90)));
 					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
 					reloadData();
@@ -253,9 +253,7 @@ public class InstancesView extends AbstractCardsView implements ISelectionListen
 		return new InstancesListControl(this);
 	}
 
-	@Override
 	protected void updateViewer() {
-		super.updateViewer();
 		if (card != null)
 			getSelectionProvider().setSelection(new StructuredSelection(card));
 	}
