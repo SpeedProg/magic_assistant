@@ -44,7 +44,9 @@ import com.reflexit.magiccards.ui.actions.DeleteCardAction;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardPhysicalDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
-import com.reflexit.magiccards.ui.views.AbstractSingleControlCardsView;
+import com.reflexit.magiccards.ui.views.AbstractGroupPageCardsView;
+import com.reflexit.magiccards.ui.views.IViewPage;
+import com.reflexit.magiccards.ui.views.ViewPageGroup;
 
 /**
  * Cards view for personal cards (decks and collections)
@@ -52,16 +54,29 @@ import com.reflexit.magiccards.ui.views.AbstractSingleControlCardsView;
  * @author Alena
  *
  */
-public abstract class AbstractMyCardsView extends AbstractSingleControlCardsView implements ICardEventListener {
+public abstract class AbstractMyCardsView extends AbstractGroupPageCardsView implements ICardEventListener {
 	private final DataManager DM = DataManager.getInstance();
 	private Action delete;
 	private Action split;
 	private Action edit;
-	protected ExportAction export;
+	private ExportAction export;
 	private MenuManager moveToDeckMenu;
 	private MenuManager addToDeck;
-	protected IDeckAction copyToDeck;
-	protected LibraryEventListener eventListener = new LibraryEventListener();
+	private IDeckAction copyToDeck;
+	private LibraryEventListener eventListener = new LibraryEventListener();
+
+	@Override
+	protected ViewPageGroup createPageGroup() {
+		return new ViewPageGroup() {
+			@Override
+			public void activate() {
+				IViewPage activePage = getPageGroup().getActivePage();
+				preActivate(activePage);
+				super.activate();
+				postActivate(activePage);
+			}
+		};
+	}
 
 	@Override
 	protected void makeActions() {

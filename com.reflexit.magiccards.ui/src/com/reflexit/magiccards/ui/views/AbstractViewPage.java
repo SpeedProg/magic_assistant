@@ -32,14 +32,21 @@ public abstract class AbstractViewPage implements IViewPage {
 	private MenuManager menuMgr;
 
 	@Override
-	public Composite createContents(Composite parent) {
+	public Control createContents(Composite parent) {
 		return createArea(parent);
 	}
 
-	protected Composite createArea(Composite parent) {
-		area = new Composite(parent, SWT.NONE);
-		area.setLayout(GridLayoutFactory.fillDefaults().create());
+	public final Composite createArea(Composite parent) {
+		if (area == null || !area.isDisposed()) {
+			area = new Composite(parent, SWT.NONE);
+			area.setLayout(GridLayoutFactory.fillDefaults().create());
+		}
 		return area;
+	}
+
+	public void setPlaceholder(Control placeholder) {
+		if (placeholder instanceof Composite)
+			area = (Composite) placeholder;
 	}
 
 	@Override
@@ -62,12 +69,12 @@ public abstract class AbstractViewPage implements IViewPage {
 		IActionBars actionBars = getViewSite().getActionBars();
 		// toolbar
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
-		//toolBarManager.removeAll();
+		// toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
 		toolBarManager.update(true);
 		// local view menu
 		IMenuManager viewMenuManager = actionBars.getMenuManager();
-		//viewMenuManager.removeAll();
+		// viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
 		// global handlers

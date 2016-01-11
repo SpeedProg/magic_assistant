@@ -298,12 +298,12 @@ public class DrawPage extends AbstractDeckListPage {
 	protected void makeActions() {
 		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7", () -> {
 			playdeck.newGame();
-			getListControl().unsort();
+			getMagicControl().unsort();
 			spinner.setValue(20);
 			fullReload();
 		});
 		this.unsort = new ImageAction("Unsort", null, "Remove sort by column", () -> {
-			getListControl().unsort();
+			getMagicControl().unsort();
 			fullReload();
 		});
 		this.draw = new ImageAction("Draw", "icons/obj16/one_card16.png", "Draw One", () -> {
@@ -399,6 +399,6 @@ public class DrawPage extends AbstractDeckListPage {
 
 	private void fullReload() {
 		playdeck.setRefreshRequired(true);
-		getListControl().reloadData();
+		getMagicControl().reloadData();
 	}
 }

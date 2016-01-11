@@ -13,7 +13,7 @@ public class TreeDeckPage extends AbstractDeckListPage {
 	@Override
 	public void activate() {
 		super.activate();
-		getListControl().syncFilter();
-		getListControl().loadData(null);
+		getMagicControl().syncFilter();
+		getMagicControl().loadData(null);
 	}
 }

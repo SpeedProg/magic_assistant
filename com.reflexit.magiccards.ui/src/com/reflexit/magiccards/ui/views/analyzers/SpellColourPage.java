@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views.analyzers;
 import java.util.HashMap;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -14,10 +15,9 @@ import com.reflexit.magiccards.ui.chart.SpellColorChart;
 public class SpellColourPage extends AbstractDeckStatsPage {
 	@Override
 	public IChartGenerator createChartGenerator() {
-		HashMap<String, Integer> colorStats = CardStoreUtils.countStats((ICardGroup) buildTree()
-				.getChildAtIndex(0));
-		IChartGenerator gen = new SpellColorChart(colorStats.values().toArray(new Integer[0]), colorStats
-				.keySet().toArray(new String[0]));
+		HashMap<String, Integer> colorStats = CardStoreUtils.countStats((ICardGroup) buildTree().getChildAtIndex(0));
+		IChartGenerator gen = new SpellColorChart(colorStats.values().toArray(new Integer[0]),
+				colorStats.keySet().toArray(new String[0]));
 		return gen;
 	}
 
@@ -27,8 +27,8 @@ public class SpellColourPage extends AbstractDeckStatsPage {
 	}
 
 	@Override
-	public Composite createContents(Composite parent) {
-		Composite area = super.createContents(parent);
+	public Control createContents(Composite parent) {
+		Control area = super.createContents(parent);
 		stats.setAutoExpandLevel(2);
 		return area;
 	}

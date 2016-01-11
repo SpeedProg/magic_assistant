@@ -38,7 +38,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public Composite createContents(Composite parent) {
+	public Control createContents(Composite parent) {
 		Composite area = createArea(parent);
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
@@ -59,7 +59,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	@Override
 	public Control createListControl(Composite parent) {
 		Control part = super.createListControl(parent);
-		stats = (TreeViewer) getListControl().getManager().getViewer();
+		stats = (TreeViewer) getMagicControl().getManager().getViewer();
 		stats.setAutoExpandLevel(3);
 		return part;
 	}

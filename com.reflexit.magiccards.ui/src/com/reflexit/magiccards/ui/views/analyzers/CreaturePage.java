@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
@@ -33,8 +34,8 @@ public class CreaturePage extends AbstractDeckStatsPage {
 	}
 
 	@Override
-	public Composite createContents(Composite parent) {
-		Composite area = super.createContents(parent);
+	public Control createContents(Composite parent) {
+		Control area = super.createContents(parent);
 		SashForm sashForm = (SashForm) canvas.getParent();
 		sashForm.setWeights(new int[] { 50, 50 });
 		return area;
@@ -42,11 +43,9 @@ public class CreaturePage extends AbstractDeckStatsPage {
 
 	@Override
 	protected IChartGenerator createChartGenerator() {
-		Map<String, Integer> creatureStatsCount = CardStoreUtils.top(10,
-				CardStoreUtils.buildCreatureStats(store));
+		Map<String, Integer> creatureStatsCount = CardStoreUtils.top(10, CardStoreUtils.buildCreatureStats(store));
 		IChartGenerator gen = new CreatureChart(creatureStatsCount.values().toArray(new Integer[0]),
-				creatureStatsCount.keySet().toArray(
-						new String[0]));
+				creatureStatsCount.keySet().toArray(new String[0]));
 		return gen;
 	}
 

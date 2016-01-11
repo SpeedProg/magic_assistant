@@ -17,7 +17,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
@@ -25,6 +24,10 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
+import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.IMagicControl;
+import com.reflexit.magiccards.ui.views.ViewPageContribution;
+import com.reflexit.magiccards.ui.views.analyzers.AbstractMagicControlViewPage;
 import com.reflexit.magiccards.ui.views.lib.AbstractMyCardsView;
 
 /**
@@ -36,6 +39,7 @@ public class CollectorView extends AbstractMyCardsView {
 	private Action refresh;
 	private Action onlyOwn;
 	private boolean onlyOwnFiltred;
+	private AbstractMagicControlViewPage page;
 
 	/**
 	 * The constructor.
@@ -44,13 +48,28 @@ public class CollectorView extends AbstractMyCardsView {
 	}
 
 	@Override
-	public String getHelpId() {
-		return MagicUIActivator.helpId("viewcollector");
+	protected void createPages() {
+		page = new AbstractMagicControlViewPage() {
+			@Override
+			public AbstractMagicCardsListControl doGetMagicCardListControl() {
+				return createViewControl();
+			}
+		};
+		getPageGroup().add(new ViewPageContribution("", "Main", null, page));
+	}
+
+	protected CollectorListControl createViewControl() {
+		return new CollectorListControl(this);
 	}
 
 	@Override
-	protected void setGlobalHandlers(IActionBars bars) {
-		super.setGlobalHandlers(bars);
+	protected IMagicControl getMagicControl() {
+		return page.getMagicControl();
+	}
+
+	@Override
+	public String getHelpId() {
+		return MagicUIActivator.helpId("viewcollector");
 	}
 
 	@Override
@@ -136,11 +155,6 @@ public class CollectorView extends AbstractMyCardsView {
 	@Override
 	protected void loadInitialInBackground() {
 		reloadData();
-	}
-
-	@Override
-	protected CollectorListControl createViewControl() {
-		return new CollectorListControl(this);
 	}
 
 	@Override

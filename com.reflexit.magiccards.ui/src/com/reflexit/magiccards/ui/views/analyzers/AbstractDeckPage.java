@@ -11,14 +11,9 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
-import com.reflexit.magiccards.core.model.storage.ICardEventManager;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
@@ -32,16 +27,6 @@ import com.reflexit.magiccards.ui.views.lib.IDeckPage;
  */
 public class AbstractDeckPage extends AbstractViewPage implements IDeckPage {
 	protected ICardStore store;
-
-	@Override
-	public String getStatusMessage() {
-		ICardEventManager cardStore = store;
-		String cardCountTotal = "";
-		if (cardStore instanceof ICardCountable) {
-			cardCountTotal = "Total cards: " + ((ICardCountable) cardStore).getCount();
-		}
-		return cardCountTotal;
-	}
 
 	protected IStorageInfo getStorageInfo() {
 		IStorage storage = getCardStore().getStorage();
@@ -78,15 +63,6 @@ public class AbstractDeckPage extends AbstractViewPage implements IDeckPage {
 		if (store == null && getViewPart() != null && getDeckView().getCardCollection() != null)
 			store = getDeckView().getCardCollection().getStore();
 		return store;
-	}
-
-	protected Label createStatusLine(Composite composite) {
-		Label statusLine = new Label(composite, SWT.BORDER);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalIndent = 3;
-		statusLine.setLayoutData(gd);
-		statusLine.setText("Status");
-		return statusLine;
 	}
 
 	protected int getCount(Object element) {

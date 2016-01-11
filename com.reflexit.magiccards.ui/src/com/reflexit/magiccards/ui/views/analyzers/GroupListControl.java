@@ -5,8 +5,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
+
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
@@ -76,7 +78,7 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 
 	@Override
 	protected IFilteredCardStore<ICard> doGetFilteredStore() {
-		return null;// new MemoryFilteredCardStore<ICard>();
+		return new MemoryFilteredCardStore<ICard>();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -27,8 +28,8 @@ public class TypePage extends AbstractDeckStatsPage {
 	}
 
 	@Override
-	public Composite createContents(Composite parent) {
-		Composite area = super.createContents(parent);
+	public Control createContents(Composite parent) {
+		Control area = super.createContents(parent);
 		stats.setAutoExpandLevel(4);
 		return area;
 	}

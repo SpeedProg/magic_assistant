@@ -125,7 +125,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	@Override
-	public Composite createContents(Composite parent) {
+	public Control createContents(Composite parent) {
 		super.createContents(parent);
 		makeActions();
 		Composite area = getArea();

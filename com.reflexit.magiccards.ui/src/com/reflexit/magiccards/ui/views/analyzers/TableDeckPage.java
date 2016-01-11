@@ -13,6 +13,6 @@ public class TableDeckPage extends AbstractDeckListPage {
 	@Override
 	public void activate() {
 		super.activate();
-		getListControl().loadData(null);
+		getMagicControl().loadData(null);
 	}
 }

@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewPart;
 
 public class ViewPageContribution {
@@ -12,6 +13,7 @@ public class ViewPageContribution {
 	private IViewPage instance;
 	private boolean initialized;
 	private IConfigurationElement conf;
+	private Composite placeholder;
 
 	public ViewPageContribution(String id, String name, Image image, IViewPage instance) {
 		super();
@@ -62,5 +64,13 @@ public class ViewPageContribution {
 
 	public String getName() {
 		return name;
+	}
+
+	public Composite getPlaceholder() {
+		return placeholder;
+	}
+
+	public void setPlaceholder(Composite parent) {
+		this.placeholder = parent;
 	}
 }

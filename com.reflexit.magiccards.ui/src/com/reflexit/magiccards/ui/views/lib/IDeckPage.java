@@ -10,9 +10,4 @@ public interface IDeckPage extends IDisposable, IViewPage {
 	 * Sets the deck store for the page
 	 */
 	public void setFilteredStore(IFilteredCardStore store);
-
-	/**
-	 * This will be status message displayed at the top of the page
-	 */
-	public String getStatusMessage();
 }

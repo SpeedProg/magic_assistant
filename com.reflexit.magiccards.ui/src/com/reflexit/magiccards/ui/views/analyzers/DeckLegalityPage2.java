@@ -94,7 +94,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private CheckControlDecoration maxRepeastDeco;
 
 	@Override
-	public Composite createContents(Composite parent) {
+	public Control createContents(Composite parent) {
 		Composite area = createArea(parent);
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
@@ -238,7 +238,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		ICardGroup root = fstore.getCardGroupRoot();
 		tree.setInput(root);
 		tree.refresh(true);
-		getListControl().updateViewer();
+		getMagicControl().updateViewer();
 	}
 
 	@Override
@@ -308,7 +308,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	@Override
 	public Control createListControl(Composite parent) {
 		Control part = super.createListControl(parent);
-		tree = (TreeViewer) getListControl().getManager().getViewer();
+		tree = (TreeViewer) getMagicControl().getManager().getViewer();
 		tree.setAutoExpandLevel(2);
 		return part;
 	}
@@ -453,7 +453,6 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		return f.name() + " - " + legality.getLabel();
 	}
 
-	@Override
 	public String getStatusMessage() {
 		if (fstore == null || format == null || stats == null)
 			return "";

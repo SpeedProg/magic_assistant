@@ -8,6 +8,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 public class FolderPageGroup extends ViewPageGroup {
@@ -17,12 +18,6 @@ public class FolderPageGroup extends ViewPageGroup {
 	public void createContent(Composite parent) {
 		folder = new CTabFolder(parent, SWT.BOTTOM);
 		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
-		// Cards List
-		// final CTabItem cardsList = new CTabItem(folder, SWT.CLOSE);
-		// cardsList.setText("Cards");
-		// cardsList.setShowClose(false);
-		// Control control1 = getMagicControl().createPartControl(folder);
-		// cardsList.setControl(control1);
 		// Pages
 		super.createContent(folder);
 		// Common
@@ -64,8 +59,8 @@ public class FolderPageGroup extends ViewPageGroup {
 	}
 
 	@Override
-	protected void createPageContent(IViewPage viewPage) {
-		// TODO Auto-generated method stub
-		// super.createPageContent(viewPage);
+	protected Control createPageContent(IViewPage viewPage, Composite parent) {
+		// page is already created in PagePlaceholder method
+		return viewPage.getControl();
 	}
 }

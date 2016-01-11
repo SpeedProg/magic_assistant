@@ -5,11 +5,13 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -29,7 +31,7 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	private Action refresh;
 
 	@Override
-	public Composite createContents(Composite parent) {
+	public Control createContents(Composite parent) {
 		super.createContents(parent);
 		status = createStatusLine(getArea());
 		panel = new DesktopCanvas(getArea());
@@ -38,6 +40,15 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 		hookDragAndDrop();
 		fstore.getFilter().setGroupFields(MagicCardField.CMC);
 		return getArea();
+	}
+
+	protected Label createStatusLine(Composite composite) {
+		Label statusLine = new Label(composite, SWT.BORDER);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalIndent = 3;
+		statusLine.setLayoutData(gd);
+		statusLine.setText("Status");
+		return statusLine;
 	}
 
 	@Override
@@ -87,7 +98,6 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 		super.setFilteredStore(nfstore);
 	}
 
-	@Override
 	public String getStatusMessage() {
 		if (fstore.getSize() > 100) {
 			return "Cannot show graphics for " + fstore.getSize() + " cards";

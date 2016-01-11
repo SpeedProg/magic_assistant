@@ -3,11 +3,7 @@ package com.reflexit.magiccards.ui.views.lib;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
@@ -16,55 +12,30 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
+import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.IMagicControl;
+import com.reflexit.magiccards.ui.views.ViewPageContribution;
+import com.reflexit.magiccards.ui.views.analyzers.AbstractMagicControlViewPage;
 import com.reflexit.magiccards.ui.views.lib.MyCardsListControl.Presentation;
 
 public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
+	private AbstractMagicControlViewPage page;
 
-	/**
-	 * The constructor.
-	 */
 	public MyCardsView() {
 	}
 
 	@Override
-	protected void makeActions() {
-		super.makeActions();
+	protected void createPages() {
+		page = new AbstractMagicControlViewPage() {
+			@Override
+			public AbstractMagicCardsListControl doGetMagicCardListControl() {
+				return createViewControl();
+			}
+		};
+		getPageGroup().add(new ViewPageContribution("", "Groups", null, page));
 	}
 
-	@Override
-	public String getHelpId() {
-		return MagicUIActivator.helpId("viewcol");
-	}
-
-	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-	}
-
-	@Override
-	protected void createMainControl(Composite parent) {
-		super.createMainControl(parent);
-		getMagicControl().setStatus("Loading ...");
-	}
-
-	@Override
-	public void init(IViewSite site) throws PartInitException {
-		super.init(site);
-	}
-
-	@Override
-	protected void loadInitialInBackground() {
-		super.loadInitialInBackground();
-		reloadData();
-	}
-
-	@Override
-	protected void fillContextMenu(IMenuManager manager) {
-		super.fillContextMenu(manager);
-	}
-
-	@Override
 	protected MyCardsListControl createViewControl() {
 		return new MyCardsListControl(this, Presentation.SPLITTREE) {
 			@Override
@@ -77,6 +48,22 @@ public class MyCardsView extends AbstractMyCardsView {
 				MyCardsView.this.runDoubleClick();
 			}
 		};
+	}
+
+	@Override
+	protected IMagicControl getMagicControl() {
+		return page.getMagicControl();
+	}
+
+	@Override
+	public String getHelpId() {
+		return MagicUIActivator.helpId("viewcol");
+	}
+
+	@Override
+	protected void loadInitialInBackground() {
+		super.loadInitialInBackground();
+		reloadData();
 	}
 
 	@Override
@@ -106,13 +93,5 @@ public class MyCardsView extends AbstractMyCardsView {
 	@Override
 	public String getId() {
 		return ID;
-	}
-
-	@Override
-	protected void runDoubleClick() {
-		super.runDoubleClick();
-		// IViewPart showView =
-		// getViewSite().getWorkbenchWindow().getActivePage().showView(GallerySelectionView.ID);
-		// ((GallerySelectionView) showView).setDetails(getSelection());
 	}
 }

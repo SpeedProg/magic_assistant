@@ -1,74 +1,45 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IActionBars;
+import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.abs.ICardCountable;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.core.model.storage.IStorage;
+import com.reflexit.magiccards.core.model.storage.IStorageInfo;
+import com.reflexit.magiccards.ui.views.lib.DeckView;
+import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
-
-public abstract class AbstractDeckListPage extends AbstractDeckPage {
-	private AbstractMagicCardsListControl listControl;
-
-	public Control createListControl(Composite parent) {
-		listControl = doGetMagicCardListControl();
-		Control part = listControl.createPartControl(parent);
-		return part;
-	}
+public abstract class AbstractDeckListPage extends AbstractMagicControlViewPage implements IDeckPage {
+	protected ICardStore store;
 
 	@Override
-	public Composite createContents(Composite parent) {
-		Composite area = createArea(parent);
-		createListControl(area);
-		makeActions();
-		return area;
+	public void setFilteredStore(IFilteredCardStore store) {
+		this.store = store.getCardStore();
 	}
 
-	protected void makeActions() {
-		// make page specific action
+	public ICardStore<IMagicCard> getCardStore() {
+		if (store == null && getViewPart() != null && getDeckView().getCardCollection() != null)
+			store = getDeckView().getCardCollection().getStore();
+		return store;
 	}
 
-	public abstract AbstractMagicCardsListControl doGetMagicCardListControl();
-
-	@Override
-	public ISelectionProvider getSelectionProvider() {
-		return listControl.getSelectionProvider();
+	public DeckView getDeckView() {
+		return (DeckView) getViewPart();
 	}
 
-	@Override
-	public void setGlobalHandlers(IActionBars bars) {
-		super.setGlobalHandlers(bars);
-		listControl.setGlobalHandlers(bars);
+	protected int getCount(Object element) {
+		if (element == null)
+			return 0;
+		int count = ((element instanceof ICardCountable) ? ((ICardCountable) element).getCount() : 1);
+		return count;
 	}
 
-	@Override
-	public boolean hookContextMenu(MenuManager menuMgr) {
-		listControl.hookContextMenu(menuMgr);
-		return true;
-	}
-
-	@Override
-	public void fillLocalToolBar(IToolBarManager manager) {
-		super.fillLocalToolBar(manager);
-		listControl.fillLocalToolBar(manager);
-	}
-
-	@Override
-	public void fillContextMenu(IMenuManager manager) {
-		super.fillContextMenu(manager);
-		listControl.fillContextMenu(manager);
-	}
-
-	public AbstractMagicCardsListControl getListControl() {
-		return listControl;
-	}
-
-	@Override
-	public void dispose() {
-		getListControl().dispose();
-		super.dispose();
+	protected IStorageInfo getStorageInfo() {
+		IStorage storage = getCardStore().getStorage();
+		if (storage instanceof IStorageInfo) {
+			IStorageInfo si = ((IStorageInfo) storage);
+			return si;
+		}
+		return null;
 	}
 }
