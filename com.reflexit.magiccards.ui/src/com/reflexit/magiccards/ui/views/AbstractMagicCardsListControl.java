@@ -320,18 +320,18 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	public void reGroup() {
-		boolean changed = isGroupped == getFilter().isGroupped();
-		if (changed) {
-			createTableControl(partControl);
-			partControl.layout(true, true);
-		}
 		reloadData();
+	}
+
+	protected void grouppingChanged(boolean oldGroupped, boolean newGroupped) {
+		// override to change presentation
 	}
 
 	@Override
 	public void reloadData() {
 		MagicLogger.trace("reload data " + getClass());
 		setNextSelection(getSelection());
+		grouppingChanged(isGroupped, getFilter().isGroupped());
 		syncFilter();
 		WaitUtils.asyncExec(this::syncSortColumnIndicator);
 		loadData(null);

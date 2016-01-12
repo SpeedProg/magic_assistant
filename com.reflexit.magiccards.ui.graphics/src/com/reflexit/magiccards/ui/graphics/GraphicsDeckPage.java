@@ -11,7 +11,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -31,15 +30,13 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	private Action refresh;
 
 	@Override
-	public Control createContents(Composite parent) {
-		super.createContents(parent);
+	protected void createPageContents(Composite area) {
 		status = createStatusLine(getArea());
 		panel = new DesktopCanvas(getArea());
 		panel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		this.refresh = new RefreshAction(this::activate);
 		hookDragAndDrop();
 		fstore.getFilter().setGroupFields(MagicCardField.CMC);
-		return getArea();
 	}
 
 	protected Label createStatusLine(Composite composite) {

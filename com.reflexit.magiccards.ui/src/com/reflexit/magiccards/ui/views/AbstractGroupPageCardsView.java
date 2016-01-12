@@ -35,8 +35,8 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 	 */
 	public AbstractGroupPageCardsView() {
 		pageGroup = createPageGroup();
-		pageGroup.init(this);
 		createPages();
+		pageGroup.init(this);
 	}
 
 	protected ViewPageGroup createPageGroup() {

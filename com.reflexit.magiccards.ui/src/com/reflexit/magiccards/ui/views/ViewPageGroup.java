@@ -7,8 +7,6 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IViewPart;
@@ -19,7 +17,6 @@ public class ViewPageGroup {
 	private ArrayList<ViewPageContribution> pages = new ArrayList<>();
 	private int activePageIndex = -1;
 	private IViewPart view;
-	private Composite parent;
 
 	public ViewPageGroup() {
 	}
@@ -29,18 +26,17 @@ public class ViewPageGroup {
 	}
 
 	public void createContent(Composite parent) {
-		this.parent = parent;
 		for (ViewPageContribution page : pages) {
-			safeRun(() -> createPagePlaceholder(page, parent));
+			safeRun(() -> {
+				if (page.isInstantiated()) {
+					Control control = page.getViewPage().getControl();
+					if (control != null)
+						control.dispose();
+				}
+			});
 		}
-		// instantiate one page
-		if (pages.size() > 0) {
-			int index;
-			if (activePageIndex > 0)
-				index = activePageIndex;
-			else
-				index = 0;
-			safeRun(() -> createPageContent(pages.get(index).getViewPage(), parent));
+		for (ViewPageContribution page : pages) {
+			safeRun(() -> createPageContent(page, parent));
 		}
 	}
 
@@ -68,23 +64,9 @@ public class ViewPageGroup {
 		return -1;
 	}
 
-	protected void createPagePlaceholder(ViewPageContribution page, Composite parent) {
-		// this method may be overriden to create placeholder without
-		// instantiating a page,
-		// i.e. ctab with page name
-		Composite placeholder = new Composite(parent, SWT.NONE);
-		placeholder.setLayout(GridLayoutFactory.fillDefaults().create());
-		page.setPlaceholder(placeholder);
-		placeholder.setLayoutData(GridDataFactory.fillDefaults().create());// XXX
-	}
-
-	private void createPageContent(ViewPageContribution vc) {
-		Control con = createPageContent(vc.getViewPage(), parent);
+	protected void createPageContent(ViewPageContribution vc, Composite parent) {
+		Control con = vc.getViewPage().createContents(parent);
 		con.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-	}
-
-	protected Control createPageContent(IViewPage viewPage, Composite parent) {
-		return viewPage.createContents(parent);
 	}
 
 	public int size() {
@@ -93,10 +75,13 @@ public class ViewPageGroup {
 
 	public void init(IViewPart view) {
 		this.view = view;
+		for (ViewPageContribution page : pages) {
+			safeRun(() -> page.getViewPage().init(view));
+		}
 	}
 
 	public boolean activate(int page) {
-		if (activePageIndex == page)
+		if (activePageIndex == page && pages.get(activePageIndex).isInitialized())
 			return false;
 		deactivate();
 		setActivePageIndex(page);
@@ -108,10 +93,6 @@ public class ViewPageGroup {
 		if (view == null)
 			throw new NullPointerException();
 		ViewPageContribution vc = pages.get(activePageIndex);
-		if (!vc.isInitialized()) {
-			vc.init(view);
-			createPageContent(vc);
-		}
 		vc.getViewPage().activate();
 	}
 

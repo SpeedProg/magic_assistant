@@ -32,29 +32,34 @@ public abstract class AbstractViewPage implements IViewPage {
 	private MenuManager menuMgr;
 
 	@Override
-	public Control createContents(Composite parent) {
-		return createArea(parent);
+	public final Control createContents(Composite parent) {
+		createArea(parent);
+		createPageContents(area);
+		return area;
 	}
 
+	protected abstract void createPageContents(Composite area);
+
 	public final Composite createArea(Composite parent) {
-		if (area == null || !area.isDisposed()) {
-			area = new Composite(parent, SWT.NONE);
+		if (area == null || area.isDisposed()) {
+			area = new Composite(parent == area ? parent.getParent() : parent, SWT.NONE);
 			area.setLayout(GridLayoutFactory.fillDefaults().create());
 		}
 		return area;
 	}
 
+	@Override
 	public void setPlaceholder(Control placeholder) {
 		if (placeholder instanceof Composite)
 			area = (Composite) placeholder;
 	}
 
 	@Override
-	public Control getControl() {
+	public final Control getControl() {
 		return getArea();
 	}
 
-	public Composite getArea() {
+	public final Composite getArea() {
 		return area;
 	}
 

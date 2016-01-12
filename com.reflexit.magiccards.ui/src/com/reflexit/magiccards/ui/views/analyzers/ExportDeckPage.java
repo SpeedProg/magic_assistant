@@ -125,10 +125,8 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	@Override
-	public Control createContents(Composite parent) {
-		super.createContents(parent);
+	public void createPageContents(Composite area) {
 		makeActions();
-		Composite area = getArea();
 		stackLayout = new StackLayout();
 		area.setLayout(stackLayout);
 		try {
@@ -172,7 +170,6 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		textArea = new Text(area, SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		initReportTypes();
 		setTopControl();
-		return getArea();
 	}
 
 	protected void initReportTypes() {

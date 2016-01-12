@@ -15,14 +15,18 @@ public class StackPageGroup extends ViewPageGroup {
 		stack.setLayoutData(new GridData(GridData.FILL_BOTH));
 		layout = new StackLayout();
 		stack.setLayout(layout);
+		// stack.setBackground(stack.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 		// Pages
 		super.createContent(stack);
+		setActivePageIndex(0);
 		layout.topControl = getActivePage().getControl();
+		stack.layout(true, true);
 	}
 
 	@Override
 	public void activate() {
-		super.activate();
 		layout.topControl = getActivePage().getControl();
+		super.activate();
+		stack.layout(true, true);
 	}
 }

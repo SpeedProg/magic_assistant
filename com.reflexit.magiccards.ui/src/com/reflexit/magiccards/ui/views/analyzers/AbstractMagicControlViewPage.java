@@ -27,11 +27,9 @@ public abstract class AbstractMagicControlViewPage extends AbstractViewPage {
 	}
 
 	@Override
-	public Control createContents(Composite parent) {
-		Composite area = createArea(parent);
+	protected void createPageContents(Composite area) {
 		createListControl(area);
 		makeActions();
-		return area;
 	}
 
 	protected void makeActions() {

@@ -14,45 +14,77 @@ import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicControl;
+import com.reflexit.magiccards.ui.views.IViewPage;
+import com.reflexit.magiccards.ui.views.StackPageGroup;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
+import com.reflexit.magiccards.ui.views.ViewPageGroup;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractMagicControlViewPage;
 import com.reflexit.magiccards.ui.views.lib.MyCardsListControl.Presentation;
 
 public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
-	private AbstractMagicControlViewPage page;
+	private AbstractMagicControlViewPage pageSplit;
+	private MyCardPresentation pageFlat;
 
 	public MyCardsView() {
 	}
 
-	@Override
-	protected void createPages() {
-		page = new AbstractMagicControlViewPage() {
-			@Override
-			public AbstractMagicCardsListControl doGetMagicCardListControl() {
-				return createViewControl();
-			}
-		};
-		getPageGroup().add(new ViewPageContribution("", "Groups", null, page));
+	class MyCardPresentation extends AbstractMagicControlViewPage {
+		private Presentation presentation;
+
+		public MyCardPresentation(Presentation type) {
+			this.presentation = type;
+		}
+
+		@Override
+		public AbstractMagicCardsListControl doGetMagicCardListControl() {
+			return new MyCardsListControl(MyCardsView.this, presentation) {
+				@Override
+				public IFilteredCardStore doGetFilteredStore() {
+					return DataManager.getCardHandler().getLibraryFilteredStore();
+				}
+
+				@Override
+				protected void runDoubleClick() {
+					MyCardsView.this.runDoubleClick();
+				}
+
+				@Override
+				public void updateViewer() {
+					boolean newGroupped = getFilter().isGroupped();
+					int newActive = newGroupped ? 0 : 1;
+					getPageGroup().activate(newActive);
+					super.updateViewer();
+				}
+			};
+		}
 	}
 
-	protected MyCardsListControl createViewControl() {
-		return new MyCardsListControl(this, Presentation.SPLITTREE) {
+	@Override
+	protected ViewPageGroup createPageGroup() {
+		return new StackPageGroup() {
 			@Override
-			public IFilteredCardStore doGetFilteredStore() {
-				return DataManager.getCardHandler().getLibraryFilteredStore();
-			}
-
-			@Override
-			protected void runDoubleClick() {
-				MyCardsView.this.runDoubleClick();
+			public void activate() {
+				IViewPage activePage = getPageGroup().getActivePage();
+				preActivate(activePage);
+				super.activate();
+				postActivate(activePage);
 			}
 		};
+	}
+
+	@Override
+	protected void createPages() {
+		pageSplit = new MyCardPresentation(Presentation.SPLITTREE);
+		getPageGroup().add(new ViewPageContribution("", "Groups", null, pageSplit));
+		pageFlat = new MyCardPresentation(Presentation.TABLE);
+		getPageGroup().add(new ViewPageContribution("", "List", null, pageFlat));
+		getPageGroup().setActivePageIndex(0);
 	}
 
 	@Override
 	protected IMagicControl getMagicControl() {
-		return page.getMagicControl();
+		return pageSplit.getMagicControl();
 	}
 
 	@Override

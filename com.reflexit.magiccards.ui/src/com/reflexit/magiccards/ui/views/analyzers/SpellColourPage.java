@@ -27,10 +27,9 @@ public class SpellColourPage extends AbstractDeckStatsPage {
 	}
 
 	@Override
-	public Control createContents(Composite parent) {
+	public void createPageContents(Composite parent) {
 		Control area = super.createContents(parent);
 		stats.setAutoExpandLevel(2);
-		return area;
 	}
 
 	@Override

@@ -38,8 +38,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public Control createContents(Composite parent) {
-		Composite area = createArea(parent);
+	public void createPageContents(Composite area) {
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
 		canvas = new ChartCanvas(sashForm, SWT.BORDER);
@@ -47,7 +46,6 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		createListControl(sashForm);
 		sashForm.setWeights(new int[] { 60, 40 });
 		makeActions();
-		return area;
 	}
 
 	@Override

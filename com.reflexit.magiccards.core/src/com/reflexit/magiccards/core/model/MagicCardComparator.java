@@ -108,14 +108,21 @@ public class MagicCardComparator implements Comparator {
 					break;
 				}
 				case CMC: {
-					d = (Integer) a1 - (Integer) a2;
+					if (a1 instanceof Integer && a2 instanceof Integer) {
+						d = (Integer) a1 - (Integer) a2;
+					} else {
+						a1 = String.valueOf(a1);
+						a2 = String.valueOf(a2);
+						d = ((Comparable) a1).compareTo(a2);
+					}
 					if (d == 0) {
 						d = compare(c1, c2, MagicCardField.CTYPE);
 					}
 					if (d == 0) {
 						d = compare(c1, c2, MagicCardField.COST);
 					}
-					// System.err.println("cms sort " + c1 + ":" + a1 + " vs " + c2 + ":" + a2 + " = " + d);
+					// System.err.println("cms sort " + c1 + ":" + a1 + " vs " +
+					// c2 + ":" + a2 + " = " + d);
 					break;
 				}
 				case CTYPE: {

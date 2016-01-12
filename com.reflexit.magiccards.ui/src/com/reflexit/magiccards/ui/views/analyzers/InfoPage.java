@@ -57,15 +57,12 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 	private IStorageInfo storageInfo;
 
 	@Override
-	public Control createContents(Composite parent) {
-		super.createContents(parent);
-		getArea().setLayout(new GridLayout(1, false));
+	public void createPageContents(Composite parent) {
 		createTextArea().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).minSize(-1, 40).create());
 		createEditButton(getArea())
 				.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.END).create());
 		createStatsArea(getArea())
 				.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
-		return getArea();
 	}
 
 	protected Control createEditButton(Composite parent) {

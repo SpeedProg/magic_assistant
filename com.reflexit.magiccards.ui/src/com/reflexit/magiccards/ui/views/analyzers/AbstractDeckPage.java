@@ -25,7 +25,7 @@ import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 /**
  * AbstractDeckPage class
  */
-public class AbstractDeckPage extends AbstractViewPage implements IDeckPage {
+public abstract class AbstractDeckPage extends AbstractViewPage implements IDeckPage {
 	protected ICardStore store;
 
 	protected IStorageInfo getStorageInfo() {

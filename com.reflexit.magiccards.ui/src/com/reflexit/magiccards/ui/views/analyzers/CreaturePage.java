@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
@@ -34,11 +33,10 @@ public class CreaturePage extends AbstractDeckStatsPage {
 	}
 
 	@Override
-	public Control createContents(Composite parent) {
-		Control area = super.createContents(parent);
+	public void createPageContents(Composite area) {
+		super.createPageContents(area);
 		SashForm sashForm = (SashForm) canvas.getParent();
 		sashForm.setWeights(new int[] { 50, 50 });
-		return area;
 	}
 
 	@Override

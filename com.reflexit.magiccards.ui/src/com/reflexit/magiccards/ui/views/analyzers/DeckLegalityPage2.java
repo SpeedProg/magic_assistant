@@ -94,15 +94,13 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private CheckControlDecoration maxRepeastDeco;
 
 	@Override
-	public Control createContents(Composite parent) {
-		Composite area = createArea(parent);
+	public void createPageContents(Composite area) {
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
 		createInfoPanel(sashForm);
 		createListControl(sashForm);
 		sashForm.setWeights(new int[] { 25, 75 });
 		makeActions();
-		return area;
 	}
 
 	abstract class CheckControlDecoration extends ControlDecoration {

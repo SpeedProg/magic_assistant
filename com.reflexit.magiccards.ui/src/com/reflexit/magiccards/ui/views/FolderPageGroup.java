@@ -8,7 +8,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 public class FolderPageGroup extends ViewPageGroup {
@@ -44,23 +43,20 @@ public class FolderPageGroup extends ViewPageGroup {
 	}
 
 	@Override
-	protected void createPagePlaceholder(ViewPageContribution page, Composite parent) {
-		createDeckTab(page.getName(), page.getViewPage());
+	public boolean activate(int page) {
+		folder.setSelection(page);
+		return super.activate(page);
 	}
 
-	private void createDeckTab(String name, final IViewPage page) {
+	@Override
+	protected void createPageContent(ViewPageContribution vc, Composite parent) {
+		final IViewPage page = vc.getViewPage();
 		final CTabItem item = new CTabItem(folder, SWT.CLOSE);
-		item.setText(name);
+		item.setText(vc.getName());
 		item.setShowClose(false);
 		page.init(getViewPart());
 		page.createContents(folder);
 		item.setControl(page.getControl());
 		item.setData(page);
-	}
-
-	@Override
-	protected Control createPageContent(IViewPage viewPage, Composite parent) {
-		// page is already created in PagePlaceholder method
-		return viewPage.getControl();
 	}
 }
