@@ -323,17 +323,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		reloadData();
 	}
 
-	protected void grouppingChanged(boolean oldGroupped, boolean newGroupped) {
-		// override to change presentation
-	}
-
 	@Override
 	public void reloadData() {
 		MagicLogger.trace("reload data " + getClass());
 		setNextSelection(getSelection());
-		grouppingChanged(isGroupped, getFilter().isGroupped());
 		syncFilter();
-		WaitUtils.asyncExec(this::syncSortColumnIndicator);
 		loadData(null);
 	}
 
@@ -815,6 +809,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		isGroupped = filter.isGroupped();
 	}
 
+	public boolean isGroupped() {
+		return isGroupped;
+	}
+
 	protected void updateStatus() {
 		new Job("Status update") {
 			@Override
@@ -857,9 +855,9 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			ISelection selection = getSelection();
 			getSelectionProvider().setSelection(new StructuredSelection());
 			viewer.setInput(filteredStore);
-			if (!selection.isEmpty())
-				restoreSelection(selection);
+			restoreSelection(selection);
 			updateStatus();
+			syncSortColumnIndicator();
 		} catch (Exception e) {
 			MagicLogger.log(e);
 		} finally {
@@ -876,7 +874,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}
 		// System.err.println("set selection " + selection + " in " +
 		// getFilteredStore().getLocation());
-		getSelectionProvider().setSelection(selection);
+		if (!selection.isEmpty())
+			getSelectionProvider().setSelection(selection);
 		// MagicLogger.traceEnd("restoreSelection");
 	}
 

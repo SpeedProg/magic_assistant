@@ -58,7 +58,7 @@ public class SplitViewer implements IMagicColumnViewer {
 		viewer = new SimpleTableViewer(comp, doGetColumnCollection(id));
 		viewer.getTable().setLayoutData(null);
 		viewer.setSorter(null);
-		viewer.setContentProvider(new ExpandContentProvider());
+		viewer.setContentProvider(new ExpandContentProvider(true));
 		viewer.hookDragAndDrop();
 		viewer.getControl().setLayoutData(null);
 		treeviewer.addSelectionChangedListener(new ISelectionChangedListener() {

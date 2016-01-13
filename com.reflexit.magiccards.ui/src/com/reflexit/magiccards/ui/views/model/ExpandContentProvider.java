@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.viewers.Viewer;
+
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
@@ -21,9 +22,13 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  * @author elaskavaia
  *
  */
-public class ExpandContentProvider extends TableViewerContentProvider
- implements ISizeContentProvider {
+public class ExpandContentProvider extends TableViewerContentProvider implements ISizeContentProvider {
 	private Object[] topChildren = new Object[0];
+	private boolean expandLeaf;
+
+	public ExpandContentProvider(boolean expandLeaf) {
+		this.expandLeaf = expandLeaf;
+	}
 
 	@Override
 	public void dispose() {
@@ -37,7 +42,6 @@ public class ExpandContentProvider extends TableViewerContentProvider
 		super.inputChanged(viewer, oldInput, newInput);
 		this.topChildren = getFlatChildren(newInput);
 	}
-
 
 	public Object[] getFlatChildren(Object element) {
 		Object[] res = null;
@@ -92,6 +96,8 @@ public class ExpandContentProvider extends TableViewerContentProvider
 	}
 
 	protected boolean isLeafGroup(CardGroup group) {
+		if (expandLeaf)
+			return false;
 		return group.getFieldIndex() == MagicCardField.NAME;
 	}
 

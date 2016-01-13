@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.lib;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -13,7 +14,6 @@ public class DeckListControl extends MyCardsListControl {
 	public DeckListControl(AbstractCardsView abstractCardsView, Presentation pres) {
 		super(abstractCardsView, pres);
 		filterStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, getPreferencePageId() + ".deck." + getName());
-		columnsStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
 	}
 
 	@Override
@@ -27,5 +27,10 @@ public class DeckListControl extends MyCardsListControl {
 	public IFilteredCardStore doGetFilteredStore() {
 		String secondaryId = abstractCardsView.getViewSite().getSecondaryId();
 		return DM.getCardHandler().getCardCollectionFilteredStore(secondaryId);
+	}
+
+	@Override
+	public IPersistentPreferenceStore getPresentaionPreferenceStore() {
+		return PreferenceInitializer.getLocalStore(getPresentationPreferenceId());
 	}
 }

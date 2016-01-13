@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ISelection;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -23,8 +25,9 @@ import com.reflexit.magiccards.ui.views.lib.MyCardsListControl.Presentation;
 
 public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
-	private AbstractMagicControlViewPage pageSplit;
+	private MyCardPresentation pageSplit;
 	private MyCardPresentation pageFlat;
+	private IFilteredCardStore mystore;
 
 	public MyCardsView() {
 	}
@@ -41,7 +44,7 @@ public class MyCardsView extends AbstractMyCardsView {
 			return new MyCardsListControl(MyCardsView.this, presentation) {
 				@Override
 				public IFilteredCardStore doGetFilteredStore() {
-					return DataManager.getCardHandler().getLibraryFilteredStore();
+					return mystore;
 				}
 
 				@Override
@@ -50,11 +53,27 @@ public class MyCardsView extends AbstractMyCardsView {
 				}
 
 				@Override
-				public void updateViewer() {
+				public void reloadData() {
+					MagicLogger.trace("reload data switch" + getClass());
+					ISelection selection = getSelection();
+					syncFilter();
+					WaitUtils.syncExec(this::switchPages);
+					IMagicControl magicControl = MyCardsView.this.getMagicControl();
+					if (magicControl == this) {
+						setNextSelection(selection);
+						super.loadData(null);
+					} else if (magicControl instanceof AbstractMagicCardsListControl) {
+						AbstractMagicCardsListControl ima = (AbstractMagicCardsListControl) magicControl;
+						ima.setNextSelection(selection);
+						ima.syncFilter();
+						ima.loadData(null);
+					}
+				}
+
+				protected void switchPages() {
 					boolean newGroupped = getFilter().isGroupped();
 					int newActive = newGroupped ? 0 : 1;
 					getPageGroup().activate(newActive);
-					super.updateViewer();
 				}
 			};
 		}
@@ -83,8 +102,21 @@ public class MyCardsView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected IMagicControl getMagicControl() {
-		return pageSplit.getMagicControl();
+	protected synchronized IMagicControl getMagicControl(IViewPage page) {
+		// System.err.println(deckPage);
+		if (page instanceof AbstractMagicControlViewPage) {
+			return ((AbstractMagicControlViewPage) page).getMagicControl();
+		}
+		if (page instanceof IMagicControl) {
+			return (IMagicControl) page;
+		}
+		return null;
+	}
+
+	@Override
+	protected synchronized IMagicControl getMagicControl() {
+		IViewPage page = getPageGroup().getActivePage();
+		return getMagicControl(page);
 	}
 
 	@Override
@@ -95,6 +127,7 @@ public class MyCardsView extends AbstractMyCardsView {
 	@Override
 	protected void loadInitialInBackground() {
 		super.loadInitialInBackground();
+		mystore = DataManager.getCardHandler().getLibraryFilteredStore();
 		reloadData();
 	}
 
