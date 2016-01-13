@@ -23,14 +23,6 @@ public interface IViewPage extends IDisposable {
 	public Control createContents(Composite parent);
 
 	/**
-	 * Before control is created it may create placeholder to avoid loading
-	 * plugin contributing page, view page can re-use place holder or dispose it
-	 * 
-	 * @param placeholder
-	 */
-	public void setPlaceholder(Control placeholder);
-
-	/**
 	 * Return main page control (created by {@link #createContents(Composite)}
 	 * method)
 	 */

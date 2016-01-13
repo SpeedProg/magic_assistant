@@ -3,7 +3,6 @@ package com.reflexit.magiccards.ui.views.analyzers;
 import java.util.HashMap;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -28,7 +27,7 @@ public class SpellColourPage extends AbstractDeckStatsPage {
 
 	@Override
 	public void createPageContents(Composite parent) {
-		Control area = super.createContents(parent);
+		super.createPageContents(parent);
 		stats.setAutoExpandLevel(2);
 	}
 

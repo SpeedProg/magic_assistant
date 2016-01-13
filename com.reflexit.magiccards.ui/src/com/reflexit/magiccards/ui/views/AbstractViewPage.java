@@ -49,12 +49,6 @@ public abstract class AbstractViewPage implements IViewPage {
 	}
 
 	@Override
-	public void setPlaceholder(Control placeholder) {
-		if (placeholder instanceof Composite)
-			area = (Composite) placeholder;
-	}
-
-	@Override
 	public final Control getControl() {
 		return getArea();
 	}

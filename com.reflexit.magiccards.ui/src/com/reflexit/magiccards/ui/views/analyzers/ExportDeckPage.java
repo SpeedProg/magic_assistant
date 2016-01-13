@@ -294,8 +294,13 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	public void setFStore() {
-		if (getCardStore() == null || fstore == null)
+		if (getCardStore() == null)
 			return;
+		if (fstore == null) {
+			fstore = new MemoryFilteredCardStore<IMagicCard>();
+			filter = fstore.getFilter();
+			actionSort.setFilter(filter);
+		}
 		Location loc = store.getLocation();
 		fstore.clear();
 		// filter = (MagicCardFilter) view.getFilter().clone();
