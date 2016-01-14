@@ -36,7 +36,6 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	@Override
 	public IMagicColumnViewer createViewer(Composite parent) {
 		ExtendedTreeViewer v = new ExtendedTreeViewer(parent, new CollectorColumnCollection());
-		v.hookDragAndDrop();
 		v.setContentProvider(new RootTreeViewerContentProvider());
 		return v;
 	}
