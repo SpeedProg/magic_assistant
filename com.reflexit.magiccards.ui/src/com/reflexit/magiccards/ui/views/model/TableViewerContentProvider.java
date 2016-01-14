@@ -5,6 +5,7 @@ package com.reflexit.magiccards.ui.views.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -28,7 +29,6 @@ public class TableViewerContentProvider<T> implements IStructuredContentProvider
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// ignore
 		this.input = newInput;
 	}
 
@@ -48,13 +48,6 @@ public class TableViewerContentProvider<T> implements IStructuredContentProvider
 		return ind;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.reflexit.magiccards.ui.views.ISelectionTranslator#translateSelection(
-	 * org.eclipse.jface.viewers.IStructuredSelection)
-	 */
 	@Override
 	public IStructuredSelection translateSelection(IStructuredSelection selection, int level) {
 		if (selection.isEmpty())
@@ -103,15 +96,12 @@ public class TableViewerContentProvider<T> implements IStructuredContentProvider
 			return children.toArray(new Object[children.size()]);
 		} else if (element instanceof IFilteredCardStore) {
 			IFilteredCardStore<T> fstore = (IFilteredCardStore<T>) element;
-			if (isFlat(fstore)) {
-				return fstore.getElements();
-			} else
-				return fstore.getCardGroupRoot().getChildren();
+			return fstore.getCardGroupRoot().getChildren();
 		}
 		return new Object[0];
 	}
 
-	private boolean isFlat(IFilteredCardStore<T> fstore) {
+	protected boolean isFlat(IFilteredCardStore<T> fstore) {
 		return fstore.getFilter().getGroupField() == null;
 	}
 

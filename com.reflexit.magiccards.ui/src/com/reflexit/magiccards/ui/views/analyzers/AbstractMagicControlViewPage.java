@@ -36,6 +36,16 @@ public abstract class AbstractMagicControlViewPage extends AbstractViewPage {
 		// make page specific action
 	}
 
+	@Override
+	public void activate() {
+		super.activate();
+		refresh();
+	}
+
+	protected void refresh() {
+		listControl.reloadData();
+	}
+
 	public abstract AbstractMagicCardsListControl doGetMagicCardListControl();
 
 	@Override

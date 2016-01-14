@@ -175,6 +175,7 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 		ColumnViewerToolTipSupport.enableFor(this, ToolTip.NO_RECREATE);
 		getTControl().setHeaderVisible(true);
 		hookMenuDetect(getTControl());
+		hookDragAndDrop();
 	}
 
 	protected void createLabelProviders() {

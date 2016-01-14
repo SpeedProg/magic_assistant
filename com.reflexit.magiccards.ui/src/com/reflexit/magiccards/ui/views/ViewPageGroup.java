@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -162,5 +163,25 @@ public class ViewPageGroup {
 
 	public IViewPage getPage(int i) {
 		return pages.get(i).getViewPage();
+	}
+
+	public List<ViewPageContribution> getPages() {
+		return pages;
+	}
+
+	public void activate(String text) {
+		int i = getPageIndex(text);
+		if (i >= 0)
+			activate(i);
+	}
+
+	public int getPageIndex(String text) {
+		int i = 0;
+		for (ViewPageContribution page : pages) {
+			if (page.getName().equals(text))
+				return i;
+			i++;
+		}
+		return -1;
 	}
 }

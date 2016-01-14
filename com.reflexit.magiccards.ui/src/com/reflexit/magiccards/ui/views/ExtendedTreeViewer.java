@@ -176,6 +176,7 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 		ColumnViewerToolTipSupport.enableFor(getTViewer(), ToolTip.NO_RECREATE);
 		getTControl().setHeaderVisible(true);
 		hookMenuDetect(getTControl());
+		hookDragAndDrop();
 	}
 
 	protected void createLabelProviders() {

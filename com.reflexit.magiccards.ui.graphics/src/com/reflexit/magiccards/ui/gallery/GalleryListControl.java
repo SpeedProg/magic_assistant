@@ -11,7 +11,7 @@ import com.reflexit.magiccards.ui.views.lib.DeckListControl;
 
 public class GalleryListControl extends DeckListControl {
 	public GalleryListControl(AbstractCardsView abstractCardsView) {
-		super(abstractCardsView, Presentation.OTHER);
+		super(abstractCardsView, Presentation.GALLERY);
 	}
 
 	@Override

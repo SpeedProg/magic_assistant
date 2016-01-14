@@ -95,6 +95,14 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
  */
 public abstract class AbstractMagicCardsListControl extends MagicControl
 		implements IMagicCardListControl, ICardEventListener {
+	public enum Presentation {
+		TABLE, TREE, SPLITTREE, GALLERY;
+		public String getLabel() {
+			return name();
+		}
+	}
+
+	private Presentation presentation = Presentation.TABLE;
 	protected static final DataManager DM = DataManager.getInstance();
 	private static final String FIND = "org.eclipse.ui.edit.findReplace";
 	protected final AbstractCardsView abstractCardsView;
@@ -127,14 +135,25 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	/**
 	 * The constructor.
+	 * 
+	 * @param pres2
 	 */
-	public AbstractMagicCardsListControl(AbstractCardsView abstractCardsView) {
+	public AbstractMagicCardsListControl(AbstractCardsView abstractCardsView, Presentation pres) {
 		this.abstractCardsView = abstractCardsView;
 		columnsStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
 		filterStore = PreferenceInitializer.getFilterStore(getPreferencePageId());
 		this.viewer = null;
 		if (abstractCardsView != null)
 			setSite(abstractCardsView.getViewSite());
+		this.presentation = pres;
+	}
+
+	public AbstractMagicCardsListControl(AbstractCardsView abstractCardsView) {
+		this(abstractCardsView, null);
+	}
+
+	public Presentation getPresentation() {
+		return presentation;
 	}
 
 	@Override
@@ -145,7 +164,21 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		getSelectionProvider().addSelectionChangedListener(selectionListener);
 	}
 
-	public abstract IMagicViewer createViewer(Composite parent);
+	public IMagicViewer createViewer(Composite parent) {
+		MagicColumnCollection columns = new MagicColumnCollection(getPreferencePageId());
+		if (presentation == Presentation.TABLE) {
+			LazyTableViewer v = new LazyTableViewer(parent, columns);
+			return v;
+		}
+		if (presentation == Presentation.TREE) {
+			ExtendedTreeViewer v = new ExtendedTreeViewer(parent, columns);
+			// v.setContentProvider(new RootTreeViewerContentProvider());
+			return v;
+		}
+		if (presentation == Presentation.SPLITTREE)
+			return new SplitViewer(parent, getPreferencePageId());
+		throw new IllegalArgumentException(presentation.name());
+	}
 
 	@Override
 	public MagicCardFilter getFilter() {

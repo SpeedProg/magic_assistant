@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 
 import com.reflexit.magiccards.core.model.GroupOrder;
@@ -17,24 +16,13 @@ import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
-import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
-import com.reflexit.magiccards.ui.views.IMagicViewer;
-import com.reflexit.magiccards.ui.views.LazyTableViewer;
-import com.reflexit.magiccards.ui.views.SplitViewer;
-import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
-	public enum Presentation {
-		TABLE, TREE, SPLITTREE, OTHER
-	};
-
-	private Presentation pres = Presentation.TABLE;
 	protected IAction actionRefresh;
 	private CopyPasteActionGroup actionGroupCopyPaste;
 
 	public MyCardsListControl(AbstractCardsView abstractCardsView, Presentation pres) {
-		super(abstractCardsView);
-		this.pres = pres;
+		super(abstractCardsView, pres);
 	}
 
 	@Override
@@ -74,29 +62,6 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 			return id + "." + getPresentation().name();
 		}
 		return id;
-	}
-
-	public Presentation getPresentation() {
-		return pres;
-	}
-
-	@Override
-	public IMagicViewer createViewer(Composite parent) {
-		MagicColumnCollection columns = new MagicColumnCollection(getPreferencePageId());
-		if (pres == Presentation.TABLE) {
-			LazyTableViewer v = new LazyTableViewer(parent, columns);
-			v.hookDragAndDrop();
-			return v;
-		}
-		if (pres == Presentation.TREE) {
-			ExtendedTreeViewer v = new ExtendedTreeViewer(parent, columns);
-			v.hookDragAndDrop();
-			// v.setContentProvider(new RootTreeViewerContentProvider());
-			return v;
-		}
-		if (pres == Presentation.SPLITTREE)
-			return new SplitViewer(parent, getPreferencePageId());
-		throw new IllegalArgumentException(pres.name());
 	}
 
 	@Override

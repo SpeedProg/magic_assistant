@@ -84,12 +84,6 @@ public class DrawPage extends AbstractDeckListPage {
 			return value;
 		}
 
-		@Override
-		protected int computeWidth(Control control) {
-			control.pack();
-			return control.getSize().x;
-		}
-
 		protected SpinnerContributionItem(String id) {
 			super(id);
 		}

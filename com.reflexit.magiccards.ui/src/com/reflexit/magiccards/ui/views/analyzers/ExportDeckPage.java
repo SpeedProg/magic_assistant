@@ -4,11 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -26,9 +26,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
@@ -64,6 +61,7 @@ import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
+import com.reflexit.magiccards.ui.widgets.ComboContributionItem;
 
 public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	private Browser textBrowser;
@@ -73,7 +71,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	private String textResult;
 	protected ReportType reportType;
 	private Text textArea;
-	private ComboContributionItem typeSelector;
+	private TypeComboContributionItem typeSelector;
 	StatusLineContributionItem a;
 	private ImageAction sideboard;
 	private ImageAction header;
@@ -84,43 +82,20 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	private SortByAction actionSort;
 	private ImageAction actionRefresh;
 
-	class ComboContributionItem extends ControlContribution {
-		private Combo control;
-
-		@Override
-		protected int computeWidth(Control control) {
-			return 200;
-		}
-
-		protected ComboContributionItem(String id) {
-			super(id);
-		}
-
-		@Override
-		public boolean isSeparator() {
-			return false;
-		}
-
-		@Override
-		protected Control createControl(Composite parent) {
-			control = new Combo(parent, SWT.READ_ONLY);
-			control.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					setReportType(ImportExportFactory.getByLabel(control.getText()));
-				}
-			});
+	class TypeComboContributionItem extends ComboContributionItem {
+		protected TypeComboContributionItem() {
+			super("type_id");
 			Collection<ReportType> types = ImportExportFactory.getExportTypes();
+			ArrayList<String> list = new ArrayList<>();
 			for (final ReportType rt : types) {
-				control.add(rt.getLabel());
+				list.add(rt.getLabel());
 			}
-			control.setText(reportType.getLabel());
-			control.setSize(200, 16);
-			return control;
+			setLabels(list);
 		}
 
-		public Combo getControl() {
-			return control;
+		@Override
+		protected void onSelect(String text) {
+			setReportType(ImportExportFactory.getByLabel(text));
 		}
 	}
 
@@ -216,7 +191,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 				saveAs();
 			}
 		};
-		this.typeSelector = new ComboContributionItem("xxx");
+		this.typeSelector = new TypeComboContributionItem();
 		this.sideboard = new ImageAction("Include Sideboard", "icons/obj16/sideboard16.png", IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {

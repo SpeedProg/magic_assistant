@@ -98,7 +98,8 @@ public class ImageCreator {
 					Image image = MagicUIActivator.getDefault().getImageRegistry().get(key);
 					if (image == null && url != null) {
 						image = ImageCreator.createNewSetImage(url);
-						MagicUIActivator.getDefault().getImageRegistry().put(key, image);
+						if (image != null)
+							MagicUIActivator.getDefault().getImageRegistry().put(key, image);
 					}
 				} catch (Exception e) {
 					// no image, skip
@@ -226,15 +227,16 @@ public class ImageCreator {
 	}
 
 	/**
-	 * Get card image from local cache. This image is not managed - to be disposed by called.
+	 * Get card image from local cache. This image is not managed - to be
+	 * disposed by called.
 	 *
 	 * @param card
 	 * @param remote
 	 *            - attempt to load from web
 	 * @param forceUpdate
 	 *            - force update from web
-	 * @return returns image or throws FileNotFoundException if image is mot found locally or cannot be downloaded
-	 *         remotely
+	 * @return returns image or throws FileNotFoundException if image is mot
+	 *         found locally or cannot be downloaded remotely
 	 * @throws IOException
 	 */
 	public String createCardPath(IMagicCard card, boolean remote, boolean forceUpdate) throws IOException {
@@ -393,7 +395,7 @@ public class ImageCreator {
 			gc.drawText(card.getName(), 20, 17, true);
 			Image costImage = SymbolConverter.buildCostImage(card.getCost());
 			if (costImage != null)
-			gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
+				gc.drawImage(costImage, 204 - costImage.getBounds().width, 18);
 			gc.setFont(getFont(TYPE_FONT_KEY));
 			gc.drawText(card.getType() == null ? "Uknown Type" : card.getType(), 20, 175, true);
 			gc.setFont(getFont(TEXT_FONT_KEY));

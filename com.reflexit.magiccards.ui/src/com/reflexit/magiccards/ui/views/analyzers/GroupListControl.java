@@ -23,7 +23,7 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 	public class GroupTreeViewer extends ExtendedTreeViewer {
 		protected GroupTreeViewer(String id, Composite parent) {
 			super(parent, id);
-			hookDragAndDrop();
+			// hookDragAndDrop();
 		}
 
 		@Override

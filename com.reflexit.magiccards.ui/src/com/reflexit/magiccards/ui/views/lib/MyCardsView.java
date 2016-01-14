@@ -1,13 +1,14 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
@@ -15,21 +16,43 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl.Presentation;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.StackPageGroup;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractMagicControlViewPage;
-import com.reflexit.magiccards.ui.views.lib.MyCardsListControl.Presentation;
+import com.reflexit.magiccards.ui.widgets.ComboContributionItem;
 
 public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
-	private MyCardPresentation pageSplit;
-	private MyCardPresentation pageFlat;
 	private IFilteredCardStore mystore;
+	private PresentationComboContributionItem switchPres;
 
 	public MyCardsView() {
+	}
+
+	class PresentationComboContributionItem extends ComboContributionItem {
+		protected PresentationComboContributionItem(String string) {
+			super("pres_id");
+			ArrayList<String> list = new ArrayList<>();
+			for (final Presentation rt : Presentation.values()) {
+				list.add(rt.getLabel());
+			}
+			setLabels(list);
+			setSelection(string);
+		}
+
+		@Override
+		protected int computeWidth(Control control) {
+			return 110;
+		}
+
+		@Override
+		protected void onSelect(String text) {
+			getPageGroup().activate(text);
+		}
 	}
 
 	class MyCardPresentation extends AbstractMagicControlViewPage {
@@ -37,6 +60,10 @@ public class MyCardsView extends AbstractMyCardsView {
 
 		public MyCardPresentation(Presentation type) {
 			this.presentation = type;
+		}
+
+		public Presentation getPresentation() {
+			return presentation;
 		}
 
 		@Override
@@ -53,28 +80,43 @@ public class MyCardsView extends AbstractMyCardsView {
 				}
 
 				@Override
-				public void reloadData() {
-					MagicLogger.trace("reload data switch" + getClass());
-					ISelection selection = getSelection();
-					syncFilter();
-					WaitUtils.syncExec(this::switchPages);
-					IMagicControl magicControl = MyCardsView.this.getMagicControl();
-					if (magicControl == this) {
-						setNextSelection(selection);
-						super.loadData(null);
-					} else if (magicControl instanceof AbstractMagicCardsListControl) {
-						AbstractMagicCardsListControl ima = (AbstractMagicCardsListControl) magicControl;
-						ima.setNextSelection(selection);
-						ima.syncFilter();
-						ima.loadData(null);
-					}
+				public void fillLocalToolBar(IToolBarManager manager) {
+					manager.add(new PresentationComboContributionItem(getPresentation().getLabel()));
+					super.fillLocalToolBar(manager);
 				}
 
-				protected void switchPages() {
-					boolean newGroupped = getFilter().isGroupped();
-					int newActive = newGroupped ? 0 : 1;
-					getPageGroup().activate(newActive);
+				@Override
+				protected void makeActions() {
+					super.makeActions();
+					if (getPresentation() == Presentation.TABLE)
+						getGroupAction().setEnabled(false);
 				}
+				// @Override
+				// public void reloadData() {
+				// MagicLogger.trace("reload data switch" + getClass());
+				// ISelection selection = getSelection();
+				// syncFilter();
+				// WaitUtils.syncExec(this::switchPages);
+				// IMagicControl magicControl =
+				// MyCardsView.this.getMagicControl();
+				// if (magicControl == this) {
+				// setNextSelection(selection);
+				// super.loadData(null);
+				// } else if (magicControl instanceof
+				// AbstractMagicCardsListControl) {
+				// AbstractMagicCardsListControl ima =
+				// (AbstractMagicCardsListControl) magicControl;
+				// ima.setNextSelection(selection);
+				// ima.syncFilter();
+				// ima.loadData(null);
+				// }
+				// }
+				//
+				// protected void switchPages() {
+				// boolean newGroupped = getFilter().isGroupped();
+				// int newActive = newGroupped ? 0 : 1;
+				// getPageGroup().activate(newActive);
+				// }
 			};
 		}
 	}
@@ -94,11 +136,23 @@ public class MyCardsView extends AbstractMyCardsView {
 
 	@Override
 	protected void createPages() {
-		pageSplit = new MyCardPresentation(Presentation.SPLITTREE);
-		getPageGroup().add(new ViewPageContribution("", "Groups", null, pageSplit));
-		pageFlat = new MyCardPresentation(Presentation.TABLE);
-		getPageGroup().add(new ViewPageContribution("", "List", null, pageFlat));
-		getPageGroup().setActivePageIndex(0);
+		addPage(Presentation.TABLE);
+		addPage(Presentation.SPLITTREE);
+		addPage(Presentation.TREE);
+	}
+
+	protected void addPage(Presentation pres) {
+		getPageGroup().add(new ViewPageContribution("", pres.getLabel(), null, new MyCardPresentation(pres)));
+	}
+
+	@Override
+	protected void makeActions() {
+		super.makeActions();
+	}
+
+	@Override
+	protected void fillLocalToolBar(IToolBarManager manager) {
+		super.fillLocalToolBar(manager);
 	}
 
 	@Override
