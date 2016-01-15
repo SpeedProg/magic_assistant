@@ -34,7 +34,6 @@ public class InstancesViewer extends ExtendedTreeViewer implements IDisposable {
 	protected InstancesViewer(String id, Composite parent) {
 		super(parent, id);
 		setComparator(null);
-		hookDragAndDrop(getStructuredViewer());
 	}
 
 	@Override

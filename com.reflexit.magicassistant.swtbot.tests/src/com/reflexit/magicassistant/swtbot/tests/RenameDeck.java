@@ -35,6 +35,8 @@ public class RenameDeck extends AbstractSwtBotTest {
 		String type = row.getText(3);
 		KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance("="));
 		// new DndUtil(bot.getDisplay()).dragAndDrop(row, deckView);
+		bot.sleep(200);
+		deckView.setFocus();
 		assertEquals(name, getFirstRowInView(deckView).cell(0));
 		String ntype = getFirstRowInView(deckView).cell(3);
 		assertEquals(type, ntype);

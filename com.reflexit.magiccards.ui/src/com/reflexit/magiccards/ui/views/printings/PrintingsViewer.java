@@ -21,7 +21,6 @@ import com.reflexit.magiccards.ui.views.columns.SetColumn;
 public class PrintingsViewer extends ExtendedTreeViewer implements IDisposable {
 	protected PrintingsViewer(String id, Composite parent) {
 		super(parent, id);
-		hookDragAndDrop(this);
 	}
 
 	@Override
