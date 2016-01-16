@@ -107,6 +107,7 @@ public class DeckImportPreviewPage extends WizardPage {
 	}
 
 	public void validate() {
+		setErrorMessage(null);
 		int errorCount = previewResult.getErrorCount();
 		Throwable e = previewResult.getError();
 		if (e != null) {

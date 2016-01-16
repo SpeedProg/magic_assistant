@@ -20,6 +20,18 @@ public class DeckImportWizard extends Wizard implements IImportWizard {
 	}
 
 	@Override
+	public boolean canFinish() {
+		// Default implementation is to check if all pages are complete.
+		for (int i = 0; i < getPageCount(); i++) {
+			if (!getPages()[i].isPageComplete()) {
+				System.err.println("page " + i);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
 	public boolean performFinish() {
 		mainPage.saveWidgetValues();
 		mainPage.performImport(false);

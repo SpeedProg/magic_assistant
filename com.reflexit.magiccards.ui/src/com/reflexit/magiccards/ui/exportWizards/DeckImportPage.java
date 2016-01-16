@@ -444,7 +444,7 @@ public class DeckImportPage extends WizardDataTransferPage {
 		updateWidgetEnablements();
 		defaultPrompt();
 		setPageComplete(determinePageCompletion());
-		setErrorMessage(null); // should not initially have error message
+		// setErrorMessage(null); // should not initially have error message
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, MagicUIActivator.PLUGIN_ID + ".export");
 	}
 
@@ -718,8 +718,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 
 	@Override
 	protected boolean validateDestinationGroup() {
-		if (!importData.isOk()) {
-			setErrorMessage(null);
+		if (!importData.isOk() && importData.getError() != null) {
+			setErrorMessage(importData.getError().getMessage());
 			return false;
 		}
 		return true;

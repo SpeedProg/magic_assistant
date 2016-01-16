@@ -27,6 +27,7 @@ import org.junit.BeforeClass;
 import com.reflexit.magicassistant.swtbot.utils.SWTAutomationUtils;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
@@ -39,6 +40,7 @@ public abstract class AbstractSwtBotTest {
 	public static void beforeClass() throws Exception {
 		bot = new SWTWorkbenchBot();
 		System.setProperty("junit.testing", "true");
+		WebUtils.setWorkOffline(true);
 	}
 
 	@Before
@@ -50,11 +52,11 @@ public abstract class AbstractSwtBotTest {
 		IPreferenceStore deckStore = PreferenceInitializer.getDeckStore();
 		PreferenceInitializer.setToDefault(deckStore);
 		deckStore.setValue(PreferenceConstants.GROUP_FIELD, "");
-		// try {
-		// bot.resetWorkbench();
-		// } catch (Exception e) {
-		// // ignore
-		// }
+		try {
+			bot.resetWorkbench();
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	protected void editionsFilter(String setName) {

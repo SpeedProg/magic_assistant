@@ -21,6 +21,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 		FilterTest.class, //
 		CreateDeck.class, //
 		RenameDeck.class, //
+		ImportDeck.class, //
 		GroupByCost.class, //
 		OverwriteDeckCheck.class, //
 		EnterDeck.class,//
