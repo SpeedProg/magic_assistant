@@ -49,7 +49,7 @@ public class ImportDeckTest extends AbstractSwtBotTest {
 		return res;
 	}
 
-	// @Test
+	@Test
 	public void testImportFromClipboard() {
 		syncExec(() -> CopySupport.runCopy(getImportData()));
 		bot.menu("File").menu("Import...").click();
