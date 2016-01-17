@@ -2,21 +2,26 @@ package com.reflexit.magicassistant.swtbot.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
-import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ImportDeck extends AbstractSwtBotTest {
+public class ImportDeckTest extends AbstractSwtBotTest {
 	private LinkedHashMap<String, Integer> deck = new LinkedHashMap<>();
+	public @Rule TemporaryFolder folder = new TemporaryFolder();
 
 	@Before
 	public void deck() {
@@ -27,6 +32,7 @@ public class ImportDeck extends AbstractSwtBotTest {
 		add("Bant Sureblade", 1);
 		add("Swamp", 10);
 		add("Forest", 10);
+		removeAllDecks();
 	}
 
 	private void add(String string, int count) {
@@ -34,7 +40,7 @@ public class ImportDeck extends AbstractSwtBotTest {
 	}
 
 	protected static String getImportData() {
-		ImportDeck test = new ImportDeck();
+		ImportDeckTest test = new ImportDeckTest();
 		test.deck();
 		String res = "";
 		for (String string : test.deck.keySet()) {
@@ -43,8 +49,8 @@ public class ImportDeck extends AbstractSwtBotTest {
 		return res;
 	}
 
-	@Test
-	public void testImport() {
+	// @Test
+	public void testImportFromClipboard() {
 		syncExec(() -> CopySupport.runCopy(getImportData()));
 		bot.menu("File").menu("Import...").click();
 		SWTBotShell sshell = bot.shell("Import");
@@ -56,8 +62,29 @@ public class ImportDeck extends AbstractSwtBotTest {
 		bot.radio("Clipboard").click();
 		bot.button("Next >").click();
 		bot.button("Finish").click();
-		bot.viewByTitle("imported").show();
-		SWTBotView deckView = bot.viewById(DeckView.ID);
-		assertEquals("Grixis Sojourners", getFirstRowInView(deckView).cell(0));
+		SWTBotView deckView = bot.viewByTitle("imported");
+		deckView.show();
+		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
+	}
+
+	@Test
+	public void testImportFromFile() throws IOException {
+		File newFile = folder.newFile("im1.txt");
+		FileUtils.saveString(getImportData(), newFile);
+		bot.menu("File").menu("Import...").click();
+		SWTBotShell sshell = bot.shell("Import");
+		sshell.activate();
+		bot.text().setText("Import Dec");
+		bot.sleep(300);
+		bot.tree().getTreeItem("Other").getNode("Import Deck or Collection").select();
+		bot.button("Next >").click();
+		bot.radio("File").click();
+		bot.text(1).setText(newFile.getPath());
+		bot.sleep(100);
+		bot.button("Next >").click();
+		bot.button("Finish").click();
+		SWTBotView deckView = bot.viewByTitle("im1");
+		deckView.show();
+		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
 	}
 }

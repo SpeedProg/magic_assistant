@@ -1,6 +1,7 @@
 package com.reflexit.magiccards.ui.exportWizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -21,9 +22,16 @@ public class DeckImportWizard extends Wizard implements IImportWizard {
 
 	@Override
 	public boolean canFinish() {
-		// Default implementation is to check if all pages are complete.
-		for (int i = 0; i < getPageCount(); i++) {
-			if (!getPages()[i].isPageComplete()) {
+		IWizardPage[] pages = getPages();
+		int i = 0;
+		for (i = 0; i < pages.length; i++) {
+			IWizardPage page = pages[i];
+			if (page.getControl().isVisible())
+				break;
+		}
+		for (; i < pages.length; i++) {
+			IWizardPage page = pages[i];
+			if (!page.isPageComplete()) {
 				System.err.println("page " + i);
 				return false;
 			}

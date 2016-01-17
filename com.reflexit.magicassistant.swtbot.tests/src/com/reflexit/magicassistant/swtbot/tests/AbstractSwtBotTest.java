@@ -1,5 +1,6 @@
 package com.reflexit.magicassistant.swtbot.tests;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.junit.BeforeClass;
 import com.reflexit.magicassistant.swtbot.utils.SWTAutomationUtils;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
@@ -56,6 +58,14 @@ public abstract class AbstractSwtBotTest {
 			bot.resetWorkbench();
 		} catch (Exception e) {
 			// ignore
+		}
+	}
+
+	protected void removeAllDecks() {
+		Collection<CardCollection> allDecks = DataManager.getInstance().getModelRoot().getDeckContainer()
+				.getAllElements();
+		for (CardCollection cardCollection : allDecks) {
+			cardCollection.remove();
 		}
 	}
 
@@ -137,7 +147,7 @@ public abstract class AbstractSwtBotTest {
 		return deckView;
 	}
 
-	public SWTBotTreeItem getFirstRowInView(SWTBotView view) {
+	public SWTBotTreeItem getFirstRowInViewTree(SWTBotView view) {
 		SWTBot dbbot = view.bot();
 		SWTBotTree table = dbbot.tree();
 		SWTBotTreeItem row = getTreeItem(table, 0);

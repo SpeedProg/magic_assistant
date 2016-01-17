@@ -37,8 +37,8 @@ public class RenameDeck extends AbstractSwtBotTest {
 		// new DndUtil(bot.getDisplay()).dragAndDrop(row, deckView);
 		bot.sleep(200);
 		deckView.setFocus();
-		assertEquals(name, getFirstRowInView(deckView).cell(0));
-		String ntype = getFirstRowInView(deckView).cell(3);
+		assertEquals(name, getFirstRowInViewTree(deckView).cell(0));
+		String ntype = getFirstRowInViewTree(deckView).cell(3);
 		assertEquals(type, ntype);
 		// rename
 		SWTBotView navView = bot.viewById(CardsNavigatorView.ID);
@@ -56,7 +56,7 @@ public class RenameDeck extends AbstractSwtBotTest {
 		bot.waitUntil(Conditions.shellCloses(sshell), 1000);
 		decks.getNode("ccc (Active)").select();
 		deckView = bot.viewById(DeckView.ID);
-		assertEquals(name, getFirstRowInView(deckView).cell(0));
-		assertEquals(type, getFirstRowInView(deckView).cell(3));
+		assertEquals(name, getFirstRowInViewTree(deckView).cell(0));
+		assertEquals(type, getFirstRowInViewTree(deckView).cell(3));
 	}
 }
