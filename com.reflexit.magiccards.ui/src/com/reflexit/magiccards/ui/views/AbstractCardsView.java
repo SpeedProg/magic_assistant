@@ -80,13 +80,12 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 		partControl.setLayout(GridLayoutFactory.fillDefaults().create());
 		createMainControl(partControl);
 		makeActions();
-		activate();
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, getHelpId());
+		activate();
 	}
 
 	protected void activate() {
 		contributeToActionBars();
-
 		getSite().setSelectionProvider(getSelectionProvider());
 	}
 
@@ -123,8 +122,10 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 
 	protected void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
+		bars.getMenuManager().removeAll();
 		fillLocalPullDown(bars.getMenuManager());
 		bars.getMenuManager().updateAll(true);
+		bars.getToolBarManager().removeAll();
 		fillLocalToolBar(bars.getToolBarManager());
 		bars.getToolBarManager().update(true);
 		setGlobalHandlers(bars);

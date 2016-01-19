@@ -216,7 +216,7 @@ public class PrintingsView extends AbstractSingleControlCardsView implements ISe
 
 	@Override
 	protected PrintingListControl createViewControl() {
-		return new PrintingListControl(this);
+		return new PrintingListControl();
 	}
 
 	@Override

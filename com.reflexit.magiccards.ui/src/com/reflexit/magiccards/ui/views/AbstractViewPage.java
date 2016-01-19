@@ -14,6 +14,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
@@ -35,7 +36,12 @@ public abstract class AbstractViewPage implements IViewPage {
 	public final Control createContents(Composite parent) {
 		createArea(parent);
 		createPageContents(area);
+		makeActions();
 		return area;
+	}
+
+	protected void makeActions() {
+		// make view actions if any
 	}
 
 	protected abstract void createPageContents(Composite area);
@@ -44,6 +50,7 @@ public abstract class AbstractViewPage implements IViewPage {
 		if (area == null || area.isDisposed()) {
 			area = new Composite(parent == area ? parent.getParent() : parent, SWT.NONE);
 			area.setLayout(GridLayoutFactory.fillDefaults().create());
+			area.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		}
 		return area;
 	}
@@ -85,11 +92,10 @@ public abstract class AbstractViewPage implements IViewPage {
 
 	protected void hookContextMenu() {
 		// context menu
-		if (menuMgr == null)
-			menuMgr = createContextMenuManager();
-		hookContextMenu(menuMgr);
+		hookContextMenu(getContextMenuManager());
 	}
 
+	@Override
 	public boolean hookContextMenu(MenuManager menuMgr) {
 		return false;
 	}
@@ -104,6 +110,7 @@ public abstract class AbstractViewPage implements IViewPage {
 	/**
 	 * @param bars
 	 */
+	@Override
 	public void setGlobalHandlers(IActionBars bars) {
 		// override if needed
 	}
@@ -121,7 +128,9 @@ public abstract class AbstractViewPage implements IViewPage {
 	}
 
 	@Override
-	public MenuManager getContextMenuManager() {
+	public synchronized MenuManager getContextMenuManager() {
+		if (menuMgr == null)
+			menuMgr = createContextMenuManager();
 		return menuMgr;
 	}
 
@@ -140,6 +149,7 @@ public abstract class AbstractViewPage implements IViewPage {
 	/**
 	 * @param viewMenuManager
 	 */
+	@Override
 	public void fillContextMenu(IMenuManager viewMenuManager) {
 		// override if need view menu
 	}
@@ -147,6 +157,7 @@ public abstract class AbstractViewPage implements IViewPage {
 	/**
 	 * @param viewMenuManager
 	 */
+	@Override
 	public void fillLocalPullDown(IMenuManager viewMenuManager) {
 		// override if need view menu
 	}
@@ -154,6 +165,7 @@ public abstract class AbstractViewPage implements IViewPage {
 	/**
 	 * @param toolBarManager
 	 */
+	@Override
 	public void fillLocalToolBar(IToolBarManager toolBarManager) {
 		// override if need toolbar
 	}

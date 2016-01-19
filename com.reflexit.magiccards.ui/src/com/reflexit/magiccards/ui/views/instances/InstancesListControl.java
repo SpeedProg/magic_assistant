@@ -19,15 +19,13 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class InstancesListControl extends AbstractMagicCardsListControl {
 	private IMagicCard card;
 
-	public InstancesListControl(AbstractCardsView abstractCardsView) {
-		super(abstractCardsView);
+	public InstancesListControl() {
 	}
 
 	@Override
@@ -155,5 +153,10 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
 		return new MemoryFilteredCardStore();
+	}
+
+	@Override
+	public void saveColumnLayout() {
+		// ignore?
 	}
 }

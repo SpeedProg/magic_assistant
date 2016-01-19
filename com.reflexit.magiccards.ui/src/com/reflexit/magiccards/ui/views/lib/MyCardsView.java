@@ -15,20 +15,17 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl.Presentation;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.StackPageGroup;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
-import com.reflexit.magiccards.ui.views.analyzers.AbstractMagicControlViewPage;
 import com.reflexit.magiccards.ui.widgets.ComboContributionItem;
 
 public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
 	private IFilteredCardStore mystore;
-	private PresentationComboContributionItem switchPres;
 
 	public MyCardsView() {
 	}
@@ -55,69 +52,32 @@ public class MyCardsView extends AbstractMyCardsView {
 		}
 	}
 
-	class MyCardPresentation extends AbstractMagicControlViewPage {
-		private Presentation presentation;
-
+	class MyCardPresentation extends MyCardsListControl {
 		public MyCardPresentation(Presentation type) {
-			this.presentation = type;
-		}
-
-		public Presentation getPresentation() {
-			return presentation;
+			super(type);
 		}
 
 		@Override
-		public AbstractMagicCardsListControl doGetMagicCardListControl() {
-			return new MyCardsListControl(MyCardsView.this, presentation) {
-				@Override
-				public IFilteredCardStore doGetFilteredStore() {
-					return mystore;
-				}
+		public IFilteredCardStore doGetFilteredStore() {
+			return mystore;
+		}
 
-				@Override
-				protected void runDoubleClick() {
-					MyCardsView.this.runDoubleClick();
-				}
+		@Override
+		protected void runDoubleClick() {
+			MyCardsView.this.runDoubleClick();
+		}
 
-				@Override
-				public void fillLocalToolBar(IToolBarManager manager) {
-					manager.add(new PresentationComboContributionItem(getPresentation().getLabel()));
-					super.fillLocalToolBar(manager);
-				}
+		@Override
+		public void fillLocalToolBar(IToolBarManager manager) {
+			manager.add(new PresentationComboContributionItem(getPresentation().getLabel()));
+			super.fillLocalToolBar(manager);
+		}
 
-				@Override
-				protected void makeActions() {
-					super.makeActions();
-					if (getPresentation() == Presentation.TABLE)
-						getGroupAction().setEnabled(false);
-				}
-				// @Override
-				// public void reloadData() {
-				// MagicLogger.trace("reload data switch" + getClass());
-				// ISelection selection = getSelection();
-				// syncFilter();
-				// WaitUtils.syncExec(this::switchPages);
-				// IMagicControl magicControl =
-				// MyCardsView.this.getMagicControl();
-				// if (magicControl == this) {
-				// setNextSelection(selection);
-				// super.loadData(null);
-				// } else if (magicControl instanceof
-				// AbstractMagicCardsListControl) {
-				// AbstractMagicCardsListControl ima =
-				// (AbstractMagicCardsListControl) magicControl;
-				// ima.setNextSelection(selection);
-				// ima.syncFilter();
-				// ima.loadData(null);
-				// }
-				// }
-				//
-				// protected void switchPages() {
-				// boolean newGroupped = getFilter().isGroupped();
-				// int newActive = newGroupped ? 0 : 1;
-				// getPageGroup().activate(newActive);
-				// }
-			};
+		@Override
+		protected void makeActions() {
+			super.makeActions();
+			if (getPresentation() == Presentation.TABLE)
+				getGroupAction().setEnabled(false);
 		}
 	}
 
@@ -139,6 +99,7 @@ public class MyCardsView extends AbstractMyCardsView {
 		addPage(Presentation.TABLE);
 		addPage(Presentation.SPLITTREE);
 		addPage(Presentation.TREE);
+		addPage(Presentation.GALLERY);
 	}
 
 	protected void addPage(Presentation pres) {
@@ -158,9 +119,6 @@ public class MyCardsView extends AbstractMyCardsView {
 	@Override
 	protected synchronized IMagicControl getMagicControl(IViewPage page) {
 		// System.err.println(deckPage);
-		if (page instanceof AbstractMagicControlViewPage) {
-			return ((AbstractMagicControlViewPage) page).getMagicControl();
-		}
 		if (page instanceof IMagicControl) {
 			return (IMagicControl) page;
 		}
@@ -191,7 +149,7 @@ public class MyCardsView extends AbstractMyCardsView {
 	}
 
 	public void setLocationFilter(Location loc) {
-		getMagicControl().setStatus("Loading " + loc + "...");
+		// getMagicControl().setStatus("Loading " + loc + "...");
 		WaitUtils.scheduleJob("Updating location", () -> {
 			IPreferenceStore preferenceStore = getLocalPreferenceStore();
 			Collection ids = Locations.getInstance().getIds();

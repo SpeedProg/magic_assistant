@@ -27,11 +27,9 @@ import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -55,7 +53,6 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.actions.ImageAction;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.actions.SortByAction;
-import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
@@ -257,17 +254,6 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			this.textBrowser.setText(textResult);
 	}
 
-	@Override
-	public void setFilteredStore(IFilteredCardStore parentfstore) {
-		super.setFilteredStore(parentfstore);
-		if (fstore == null) {
-			fstore = new MemoryFilteredCardStore<IMagicCard>();
-			filter = this.fstore.getFilter();
-			actionSort.setFilter(filter);
-		}
-		filter.getSortOrder().setFrom(parentfstore.getFilter().getSortOrder());
-	}
-
 	public void setFStore() {
 		if (getCardStore() == null)
 			return;
@@ -405,30 +391,19 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	}
 
 	@Override
-	public Control createPartControl(Composite parent) {
-		return createContents(parent);
-	}
-
-	@Override
 	public boolean hookContextMenu(MenuManager menuMgr) {
 		return false;
 	}
 
-	@Override
-	public void init(IViewSite site) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void runCopy() {
-		CopySupport.runCopy(getArea().getDisplay().getFocusControl());
-	}
-
-	@Override
-	public void runPaste() {
-		CopySupport.runPaste(getArea().getDisplay().getFocusControl());
-	}
-
+	// @Override
+	// public void runCopy() {
+	// CopySupport.runCopy(getArea().getDisplay().getFocusControl());
+	// }
+	//
+	// @Override
+	// public void runPaste() {
+	// CopySupport.runPaste(getArea().getDisplay().getFocusControl());
+	// }
 	@Override
 	public void updateViewer() {
 		textResult = null;
@@ -461,11 +436,6 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	@Override
 	public void refresh() {
 		reloadData();
-	}
-
-	@Override
-	public void setStatus(String string) {
-		// no status line
 	}
 
 	@Override

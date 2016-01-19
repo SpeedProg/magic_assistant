@@ -22,7 +22,7 @@ public class SpellColourPage extends AbstractDeckStatsPage {
 
 	@Override
 	protected ICardGroup buildTree() {
-		return CardStoreUtils.buildSpellColorGroups(store);
+		return CardStoreUtils.buildSpellColorGroups(getCardStore());
 	}
 
 	@Override

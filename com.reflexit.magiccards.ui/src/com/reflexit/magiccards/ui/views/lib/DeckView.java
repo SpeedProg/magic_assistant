@@ -30,7 +30,6 @@ import com.reflexit.magiccards.ui.actions.OpenSideboardAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.FolderPageGroup;
-import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
@@ -154,8 +153,8 @@ public class DeckView extends AbstractMyCardsView {
 		setPartName(name);
 		setTitleToolTip(deckId);
 		if (deck == null) {
-			IMagicControl c = getMagicControl();
-			c.setStatus("Loading " + deckId + "...");
+			// IMagicControl c = getMagicControl();
+			// c.setStatus("Loading " + deckId + "...");
 			return;
 		}
 		// setPartProperty(name, name);

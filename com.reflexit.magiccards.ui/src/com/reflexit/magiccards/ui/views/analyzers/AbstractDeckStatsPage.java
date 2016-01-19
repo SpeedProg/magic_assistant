@@ -12,7 +12,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -22,6 +21,7 @@ import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.chart.ChartCanvas;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.analyzers.GroupListControl.GroupTreeViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.GenColumn;
 
@@ -43,23 +43,16 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
 		canvas = new ChartCanvas(sashForm, SWT.BORDER);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
-		createListControl(sashForm);
+		createMainControl(sashForm);
 		sashForm.setWeights(new int[] { 60, 40 });
 		makeActions();
+		loadInitial();
 	}
 
 	@Override
 	protected void makeActions() {
 		super.makeActions();
 		actionRefresh = new RefreshAction(this::activate);
-	}
-
-	@Override
-	public Control createListControl(Composite parent) {
-		Control part = super.createListControl(parent);
-		stats = (TreeViewer) getMagicControl().getManager().getViewer();
-		stats.setAutoExpandLevel(3);
-		return part;
 	}
 
 	@Override
@@ -75,46 +68,28 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public GroupListControl doGetMagicCardListControl() {
-		return new GroupListControl(getDeckView()) {
+	public IMagicColumnViewer createViewer(Composite parent) {
+		stats = new GroupTreeViewer(AbstractDeckStatsPage.this.getPreferencePageId(), parent) {
 			@Override
-			public IMagicColumnViewer createViewer(Composite parent) {
-				return new GroupTreeViewer(AbstractDeckStatsPage.this.getPreferencePageId(), parent) {
-					@Override
-					protected void createCustomColumns(List<AbstractColumn> columns) {
-						super.createCustomColumns(columns);
-						AbstractDeckStatsPage.this.createCustomColumns(columns);
-					}
-				};
-			}
-
-			@Override
-			protected String getPreferencePageId() {
-				return AbstractDeckStatsPage.this.getPreferencePageId();
-			}
-
-			@Override
-			public void fillLocalToolBar(IToolBarManager mm) {
-				// mm.add(actionShowPrefs);
-				// mm.add(actionShowFind);
-			}
-
-			@Override
-			public void fillLocalPullDown(IMenuManager mm) {
-				// nothing
-			}
-
-			@Override
-			protected Composite createTopBar(Composite composite) {
-				Composite bar = super.createTopBar(composite);
-				bar.setVisible(false);
-				((GridData) bar.getLayoutData()).heightHint = 0;
-				bar.getParent().layout(true, true);
-				return bar;
+			protected void createCustomColumns(List<AbstractColumn> columns) {
+				super.createCustomColumns(columns);
+				AbstractDeckStatsPage.this.createCustomColumns(columns);
 			}
 		};
+		stats.setAutoExpandLevel(3);
+		return (IMagicColumnViewer) stats;
 	}
 
+	@Override
+	protected Composite createTopBar(Composite composite) {
+		Composite bar = super.createTopBar(composite);
+		bar.setVisible(false);
+		((GridData) bar.getLayoutData()).heightHint = 0;
+		bar.getParent().layout(true, true);
+		return bar;
+	}
+
+	@Override
 	protected String getPreferencePageId() {
 		return null;
 	}
@@ -139,14 +114,16 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	@Override
 	public void activate() {
 		super.activate();
+	}
+
+	@Override
+	public void reloadData() {
+		getCardStore();
 		IChartGenerator gen = createChartGenerator();
 		canvas.setChartGenerator(gen);
 		canvas.redraw();
 		ICardGroup root = buildTree();
 		stats.setInput(root);
-		// listControl.getFilteredStore().clear();
-		// listControl.getFilteredStore().addAll(store);
-		// listControl.reloadData();
 	}
 
 	@Override

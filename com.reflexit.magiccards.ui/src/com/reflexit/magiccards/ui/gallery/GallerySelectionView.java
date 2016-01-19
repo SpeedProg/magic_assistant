@@ -45,7 +45,7 @@ public class GallerySelectionView extends GalleryView {
 
 	@Override
 	protected AbstractMagicCardsListControl createViewControl() {
-		return new GalleryListControl(this) {
+		return new GalleryListControl() {
 			@Override
 			protected String getPreferencePageId() {
 				return getViewPreferencePageId();
@@ -108,7 +108,6 @@ public class GallerySelectionView extends GalleryView {
 		ISelection selection = s.getSelection();
 		setDetails(selection);
 	}
-
 
 	public void setDetails(ISelection selection) {
 		if (!(selection instanceof IStructuredSelection))

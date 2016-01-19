@@ -1,21 +1,19 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
+import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
+import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
-public abstract class AbstractDeckListPage extends AbstractMagicControlViewPage implements IDeckPage {
-	protected ICardStore store;
-
-	@Override
-	public void setFilteredStore(IFilteredCardStore store) {
-		this.store = store.getCardStore();
-	}
+public abstract class AbstractDeckListPage extends AbstractMagicCardsListControl implements IDeckPage {
+	private ICardStore store;
 
 	public ICardStore<IMagicCard> getCardStore() {
 		if (store == null && getViewPart() != null && getDeckView().getCardCollection() != null)
@@ -23,10 +21,16 @@ public abstract class AbstractDeckListPage extends AbstractMagicControlViewPage 
 		return store;
 	}
 
+	@Override
+	protected IFilteredCardStore<ICard> doGetFilteredStore() {
+		return new MemoryFilteredCardStore<>();
+	}
+
 	public DeckView getDeckView() {
 		return (DeckView) getViewPart();
 	}
 
+	@Override
 	protected int getCount(Object element) {
 		if (element == null)
 			return 0;

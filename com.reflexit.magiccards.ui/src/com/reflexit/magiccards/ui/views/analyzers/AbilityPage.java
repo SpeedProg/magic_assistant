@@ -11,15 +11,14 @@ public class AbilityPage extends AbstractDeckStatsPage {
 	@Override
 	protected IChartGenerator createChartGenerator() {
 		Map<String, Integer> affinityStatsCount = CardStoreUtils.top(10,
-				CardStoreUtils.buildAbilityStats(store));
+				CardStoreUtils.buildAbilityStats(getCardStore()));
 		IChartGenerator gen = new AbilityChart(affinityStatsCount.values().toArray(new Integer[0]),
-				affinityStatsCount.keySet().toArray(
-						new String[0]));
+				affinityStatsCount.keySet().toArray(new String[0]));
 		return gen;
 	}
 
 	@Override
 	protected ICardGroup buildTree() {
-		return CardStoreUtils.buildAbilityGroups(store);
+		return CardStoreUtils.buildAbilityGroups(getCardStore());
 	}
 }

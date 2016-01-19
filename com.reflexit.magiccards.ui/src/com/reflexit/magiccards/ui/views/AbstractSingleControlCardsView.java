@@ -3,12 +3,10 @@ package com.reflexit.magiccards.ui.views;
 import java.io.IOException;
 
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
@@ -38,7 +36,7 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 	@Override
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		getMagicControl().init(site);
+		getMagicControl().init(this);
 	}
 
 	@Override
@@ -48,7 +46,13 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 
 	@Override
 	protected void createMainControl(Composite parent) {
-		getMagicControl().createPartControl(parent);
+		getMagicControl().createContents(parent);
+	}
+
+	@Override
+	protected void activate() {
+		super.activate();
+		getMagicControl().activate();
 	}
 
 	@Override
@@ -57,32 +61,9 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 	}
 
 	@Override
-	protected void setGlobalHandlers(IActionBars bars) {
-		super.setGlobalHandlers(bars);
-		setGlobalControlHandlers(bars);
-	}
-
-	protected void setGlobalControlHandlers(IActionBars bars) {
-		getMagicControl().setGlobalHandlers(bars);
-	}
-
-	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
-		getMagicControl().fillLocalPullDown(manager);
 		manager.remove(actionRefresh.getId());
 		super.fillLocalPullDown(manager);
-	}
-
-	@Override
-	protected void fillContextMenu(IMenuManager manager) {
-		getMagicControl().fillContextMenu(manager);
-		super.fillContextMenu(manager);
-	}
-
-	@Override
-	protected void fillLocalToolBar(IToolBarManager manager) {
-		getMagicControl().fillLocalToolBar(manager);
-		super.fillLocalToolBar(manager);
 	}
 
 	@Override
@@ -115,6 +96,7 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 		return null;
 	}
 
+	@Override
 	public IPersistentPreferenceStore getFilterPreferenceStore() {
 		if (getMagicControl() instanceof IMagicCardListControl)
 			return ((IMagicCardListControl) getMagicControl()).getElementPreferenceStore();

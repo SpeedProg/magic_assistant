@@ -8,6 +8,7 @@ import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.chart.IChartGenerator;
 import com.reflexit.magiccards.ui.chart.TypeChart;
+import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class TypePage extends AbstractDeckStatsPage {
 	@Override
@@ -17,18 +18,19 @@ public class TypePage extends AbstractDeckStatsPage {
 
 	@Override
 	protected IChartGenerator createChartGenerator() {
-		IChartGenerator gen = new TypeChart(CardStoreUtils.buildTypeStats(store));
+		IChartGenerator gen = new TypeChart(CardStoreUtils.buildTypeStats(getCardStore()));
 		return gen;
 	}
 
 	@Override
 	protected ICardGroup buildTree() {
-		return CardStoreUtils.buildTypeGroups(store);
+		return CardStoreUtils.buildTypeGroups(getCardStore());
 	}
 
 	@Override
-	public void createPageContents(Composite parent) {
-		super.createPageContents(parent);
+	public IMagicColumnViewer createViewer(Composite parent) {
+		super.createViewer(parent);
 		stats.setAutoExpandLevel(4);
+		return (IMagicColumnViewer) stats;
 	}
 }

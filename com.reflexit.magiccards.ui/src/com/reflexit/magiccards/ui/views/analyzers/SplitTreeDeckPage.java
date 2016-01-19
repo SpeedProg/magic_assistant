@@ -1,19 +1,9 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl.Presentation;
 import com.reflexit.magiccards.ui.views.lib.DeckListControl;
 
-public class SplitTreeDeckPage extends AbstractDeckListPage {
-	@Override
-	public AbstractMagicCardsListControl doGetMagicCardListControl() {
-		return new DeckListControl(getDeckView(), Presentation.SPLITTREE);
-	}
-
-	@Override
-	public void activate() {
-		super.activate();
-		getMagicControl().syncFilter();
-		getMagicControl().loadData(null);
+public class SplitTreeDeckPage extends DeckListControl {
+	public SplitTreeDeckPage() {
+		super(Presentation.SPLITTREE);
 	}
 }

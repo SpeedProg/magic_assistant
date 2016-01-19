@@ -90,10 +90,6 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 		return panel.getViewer();
 	}
 
-	@Override
-	public void setFilteredStore(IFilteredCardStore nfstore) {
-		super.setFilteredStore(nfstore);
-	}
 
 	public String getStatusMessage() {
 		if (fstore.getSize() > 100) {

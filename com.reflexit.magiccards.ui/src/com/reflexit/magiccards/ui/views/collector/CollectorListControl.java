@@ -19,7 +19,6 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -28,10 +27,6 @@ import com.reflexit.magiccards.ui.views.model.RootTreeViewerContentProvider;
 public class CollectorListControl extends AbstractMagicCardsListControl {
 	public static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG,
 			MagicCardField.RARITY };
-
-	public CollectorListControl(AbstractCardsView abstractCardsView) {
-		super(abstractCardsView);
-	}
 
 	@Override
 	public IMagicColumnViewer createViewer(Composite parent) {
@@ -56,11 +51,6 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getElementPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
 			reloadData();
-	}
-
-	@Override
-	protected void loadInitial() {
-		super.loadInitial();
 	}
 
 	@Override

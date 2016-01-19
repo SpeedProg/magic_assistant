@@ -4,6 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -47,11 +48,15 @@ public class ImageAction extends Action {
 		try {
 			run();
 		} catch (MagicException e) {
-			MessageDialog.openError(MagicUIActivator.getShell(), "Error", e.getMessage());
+			MessageDialog.openError(getShell(), "Error", e.getMessage());
 		} catch (Exception e) {
-			MessageDialog.openError(MagicUIActivator.getShell(), "Error", e.getMessage());
+			MessageDialog.openError(getShell(), "Error", e.getMessage());
 			MagicUIActivator.log(e);
 		}
+	}
+
+	public Shell getShell() {
+		return MagicUIActivator.getShell();
 	}
 
 	@Override

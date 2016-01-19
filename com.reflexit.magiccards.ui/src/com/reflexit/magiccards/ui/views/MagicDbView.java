@@ -33,7 +33,7 @@ import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
 
-public class MagicDbView extends AbstractSingleControlCardsView{
+public class MagicDbView extends AbstractSingleControlCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.MagicDbView";
 	protected MenuManager addToDeck;
 	protected IDeckAction copyToDeck;
@@ -44,18 +44,13 @@ public class MagicDbView extends AbstractSingleControlCardsView{
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-	}
-
-	@Override
 	public String getHelpId() {
 		return MagicUIActivator.helpId("viewmagicdb");
 	}
 
 	class MagicDbListControl extends AbstractMagicCardsListControl {
-		public MagicDbListControl(AbstractCardsView abstractCardsView) {
-			super(abstractCardsView);
+		public MagicDbListControl() {
+			super();
 		}
 
 		@Override
@@ -83,7 +78,7 @@ public class MagicDbView extends AbstractSingleControlCardsView{
 
 	@Override
 	protected AbstractMagicCardsListControl createViewControl() {
-		return new MagicDbListControl(this);
+		return new MagicDbListControl();
 	}
 
 	@Override

@@ -66,6 +66,7 @@ import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.analyzers.GroupListControl.GroupTreeViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.CostColumn;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
@@ -98,7 +99,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
 		createInfoPanel(sashForm);
-		createListControl(sashForm);
+		createMainControl(sashForm);
 		sashForm.setWeights(new int[] { 25, 75 });
 		makeActions();
 	}
@@ -215,10 +216,12 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 
 	@Override
 	protected void makeActions() {
+		super.makeActions();
 		this.load = new ImageAction("Check Legality Online", "icons/clcl16/software_update.png", () -> performUpdate());
 		refresh = new RefreshAction(this::reloadData);
 	}
 
+	@Override
 	public void reloadData() {
 		setFStore();
 		deckLegalities = LegalityMap.calculateDeckLegality(fstore.getCardStore());
@@ -236,7 +239,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		ICardGroup root = fstore.getCardGroupRoot();
 		tree.setInput(root);
 		tree.refresh(true);
-		getMagicControl().updateViewer();
+		updateViewer();
 	}
 
 	@Override
@@ -246,13 +249,13 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	}
 
 	private void updateInfo() {
-		stats = new CardStoreUtils.CardStats(store);
+		stats = new CardStoreUtils.CardStats(getCardStore());
 		totalSideboard.setText(String.valueOf(stats.sideboardCount));
 		total.setText(String.valueOf(stats.mainCount));
 		colors.setImage(SymbolConverter.buildCostImage(stats.mainColors));
 		colorsSideboard.setImage(SymbolConverter.buildCostImage(stats.sideboardColors));
 		maxRepeats.setText(String.valueOf(stats.maxRepeats));
-		CardGroup types = CardStoreUtils.buildTypeGroups(store);
+		CardGroup types = CardStoreUtils.buildTypeGroups(getCardStore());
 		CardGroup top = (CardGroup) types.getChildAtIndex(0);
 		CardGroup ncre = (CardGroup) top.getChildAtIndex(1);
 		CardGroup cre = (CardGroup) top.getChildAtIndex(2);
@@ -265,16 +268,11 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		maxRepeastDeco.updateVisibility();
 	}
 
-	@Override
-	public void setFilteredStore(IFilteredCardStore fstore) {
-		super.setFilteredStore(fstore);
-	}
-
 	public void setFStore() {
 		if (getCardStore() == null)
 			return;
 		MemoryFilteredCardStore<IMagicCard> mstore = new MemoryFilteredCardStore<IMagicCard>();
-		Location loc = store.getLocation();
+		Location loc = getCardStore().getLocation();
 		MagicCardFilter filter = (MagicCardFilter) getDeckView().getFilter().clone();
 		ICardStore mainStore = DataManager.getInstance().getCardStore(loc.toMainDeck());
 		ICardStore sideStore = DataManager.getInstance().getCardStore(loc.toSideboard());
@@ -304,38 +302,18 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	}
 
 	@Override
-	public Control createListControl(Composite parent) {
-		Control part = super.createListControl(parent);
-		tree = (TreeViewer) getMagicControl().getManager().getViewer();
+	public IMagicColumnViewer createViewer(Composite parent) {
+		tree = new GroupTreeViewer(getPreferencePageId(), parent) {
+			@Override
+			protected void createCustomColumns(List<AbstractColumn> columns) {
+				createPageCustomColumns(columns);
+			}
+		};
 		tree.setAutoExpandLevel(2);
-		return part;
+		return (IMagicColumnViewer) tree;
 	}
 
 	@Override
-	public GroupListControl doGetMagicCardListControl() {
-		return new GroupListControl(getDeckView()) {
-			@Override
-			public IMagicColumnViewer createViewer(Composite parent) {
-				return new GroupTreeViewer(getPreferencePageId(), parent) {
-					@Override
-					protected void createCustomColumns(List<AbstractColumn> columns) {
-						createPageCustomColumns(columns);
-					}
-				};
-			}
-
-			@Override
-			protected String getPreferencePageId() {
-				return DeckLegalityPage2.this.getPreferencePageId();
-			}
-
-			@Override
-			public String getStatusMessage() {
-				return DeckLegalityPage2.this.getStatusMessage();
-			}
-		};
-	}
-
 	protected String getPreferencePageId() {
 		return null;
 	}
@@ -404,7 +382,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	}
 
 	protected void performUpdate() {
-		if (store != null) {
+		if (getCardStore() != null) {
 			Job job = new Job("Calculating Legality") {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
@@ -451,6 +429,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		return f.name() + " - " + legality.getLabel();
 	}
 
+	@Override
 	public String getStatusMessage() {
 		if (fstore == null || format == null || stats == null)
 			return "";

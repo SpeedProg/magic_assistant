@@ -13,16 +13,19 @@ import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.actions.CopyPasteActionGroup;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
-import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	protected IAction actionRefresh;
 	private CopyPasteActionGroup actionGroupCopyPaste;
 
-	public MyCardsListControl(AbstractCardsView abstractCardsView, Presentation pres) {
-		super(abstractCardsView, pres);
+	public MyCardsListControl(Presentation pres) {
+		super(pres);
+	}
+
+	public MyCardsListControl() {
 	}
 
 	@Override
@@ -77,16 +80,8 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
-	protected void runShowFilter() {
-		if (ShowFilterHandler.execute()) {
-			reloadData();
-		}
-		// CardFilter.open(getViewSite().getShell());
-		// MyCardsFilterDialog cardFilterDialog = new
-		// MyCardsFilterDialog(getShell(),
-		// getFilterPreferenceStore());
-		// if (cardFilterDialog.open() == IStatus.OK)
-		// reloadData();
+	public ColumnCollection getSortColumnCollection() {
+		return new MagicColumnCollection("");
 	}
 
 	@Override

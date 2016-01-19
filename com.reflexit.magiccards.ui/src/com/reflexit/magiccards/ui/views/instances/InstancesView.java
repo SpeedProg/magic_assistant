@@ -73,10 +73,9 @@ public class InstancesView extends AbstractSingleControlCardsView implements ISe
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
+	public void createMainControl(Composite parent) {
+		super.createMainControl(parent);
 		((IMagicCardListControl) getMagicControl()).setStatus("Click on a card to populate the view");
-		loadInitial();
 	}
 
 	@Override
@@ -206,7 +205,9 @@ public class InstancesView extends AbstractSingleControlCardsView implements ISe
 		super.dispose();
 	}
 
-	protected void loadInitial() {
+	@Override
+	protected void activate() {
+		super.activate();
 		try {
 			ISelectionService s = getSite().getWorkbenchWindow().getSelectionService();
 			ISelection sel = s.getSelection();
@@ -250,9 +251,15 @@ public class InstancesView extends AbstractSingleControlCardsView implements ISe
 
 	@Override
 	protected InstancesListControl createViewControl() {
-		return new InstancesListControl(this);
+		return new InstancesListControl() {
+			@Override
+			public void activate() {
+				// ignore
+			}
+		};
 	}
 
+	@Override
 	protected void updateViewer() {
 		if (card != null)
 			getSelectionProvider().setSelection(new StructuredSelection(card));

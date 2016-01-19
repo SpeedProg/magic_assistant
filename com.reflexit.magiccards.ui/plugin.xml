@@ -904,4 +904,75 @@ id="org.eclipse.ui.views.ProgressView">
            </adapter>
         </factory>
      </extension>
+     
+     
+      
+   <extension
+         point="com.reflexit.magiccards.ui.deckPage">
+      <page
+            class="com.reflexit.magiccards.ui.gallery.GalleryDeckPage"
+            id="com.reflexit.magiccards.ui.gallery.page2"
+            name="Gallery">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.gallery.GalleryPreferencePage"
+             id="com.reflexit.magiccards.ui.gallery.GalleryPreferencePage"
+             name="View: Deck/Gallery">
+       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.gallery.GalleryView"
+            icon="icons/gallery.png"
+            id="com.reflexit.magiccards.ui.gallery.GalleryView"
+            name="Gallery"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="com.reflexit.magiccards"
+            class="com.reflexit.magiccards.ui.gallery.GallerySelectionView"
+            icon="icons/selection_view.png"
+            id="com.reflexit.magiccards.ui.gallery.GallerySelectionView"
+            name="Selection"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="com.reflexit.magiccards.ui.perspective.magic">
+            <showInPart id="com.reflexit.magiccards.ui.gallery.GallerySelectionView"/>
+            <showInPart id="com.reflexit.magiccards.ui.gallery.GalleryView"/>
+            <view
+                  id="com.reflexit.magiccards.ui.gallery.GalleryView"
+                  minimized="false"
+                  relationship="stack"
+                  relative="com.reflexit.magiccards.ui.views.MagicDbView"
+                  visible="true">
+            </view>
+            <viewShortcut
+                  id="com.reflexit.magiccards.ui.gallery.GalleryView">
+            </viewShortcut>
+            <view
+                  closeable="true"
+                  id="com.reflexit.magiccards.ui.gallery.GallerySelectionView"
+                  minimized="false"
+                  moveable="true"
+                  relationship="stack"
+                  relative="com.reflexit.magiccards.ui.views.card.CardDescView"
+                  visible="true">
+            </view>
+            <viewShortcut
+                  id="com.reflexit.magiccards.ui.gallery.GallerySelectionView">
+            </viewShortcut>
+      </perspectiveExtension>
+   </extension>
 </plugin>

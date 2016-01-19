@@ -33,8 +33,6 @@ import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
 import com.reflexit.magiccards.ui.actions.ImageAction;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.LazyTableViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
@@ -135,73 +133,51 @@ public class DrawPage extends AbstractDeckListPage {
 		};
 	}
 
-	private final class DrawListControl extends AbstractMagicCardsListControl {
-		private DrawListControl(AbstractCardsView abstractCardsView) {
-			super(abstractCardsView);
-		}
+	@Override
+	public IMagicColumnViewer createViewer(Composite parent) {
+		return new LazyTableViewer(parent, columns);
+	}
 
-		@Override
-		public IMagicColumnViewer createViewer(Composite parent) {
-			return new LazyTableViewer(parent, columns);
-		}
+	@Override
+	protected final void updateStatus() {
+		setStatus(getStatusMessage());
+		setWarning(false);
+	}
 
-		@Override
-		protected final void updateStatus() {
-			setStatus(getStatusMessage());
-			setWarning(false);
-		}
+	@Override
+	protected String getPreferencePageId() {
+		return getClass().getName();
+	}
 
-		@Override
-		protected String getPreferencePageId() {
-			return getClass().getName();
+	@Override
+	public String getStatusMessage() {
+		if (getCardStore() == null)
+			return "";
+		int cards = playdeck.countDrawn();
+		int total = ((ICardCountable) getCardStore()).getCount();
+		String res = "Drawn " + cards + " of " + total + ". Turn " + playdeck.getTurn() + ".";
+		for (Zone zone : Zone.values()) {
+			res += zoneStatus(zone);
 		}
+		return res;
+	}
 
-		@Override
-		public String getStatusMessage() {
-			if (store == null)
-				return "";
-			int cards = playdeck.countDrawn();
-			int total = ((ICardCountable) store).getCount();
-			String res = "Drawn " + cards + " of " + total + ". Turn " + playdeck.getTurn() + ".";
-			for (Zone zone : Zone.values()) {
-				res += zoneStatus(zone);
-			}
-			return res;
-		}
+	private String zoneStatus(Zone zone) {
+		int g = playdeck.countInZone(zone);
+		String zoneStr = "";
+		if (g != 0)
+			zoneStr = " " + zone.getLabel() + " " + g + ".";
+		return zoneStr;
+	}
 
-		private String zoneStatus(Zone zone) {
-			int g = playdeck.countInZone(zone);
-			String zoneStr = "";
-			if (g != 0)
-				zoneStr = " " + zone.getLabel() + " " + g + ".";
-			return zoneStr;
-		}
+	@Override
+	public IFilteredCardStore doGetFilteredStore() {
+		return playdeck;
+	}
 
-		@Override
-		public IFilteredCardStore doGetFilteredStore() {
-			return playdeck;
-		}
-
-		@Override
-		public void fillContextMenu(IMenuManager ma) {
-			// ma.add(actionShowPrefs);
-		}
-
-		@Override
-		public void fillLocalToolBar(IToolBarManager mm) {
-			// mm.add(actionShowPrefs);
-			mm.add(actionShowFind);
-		}
-
-		@Override
-		public void fillLocalPullDown(IMenuManager mm) {
-			mm.add(actionShowFind);
-		}
-
-		@Override
-		protected void loadInitial() {
-			setQuickFilterVisible(false);
-		}
+	@Override
+	protected void loadInitial() {
+		setQuickFilterVisible(false);
 	}
 
 	public String getId() {
@@ -238,6 +214,7 @@ public class DrawPage extends AbstractDeckListPage {
 		manager.add(newturn);
 		manager.add(reset);
 		manager.add(new Separator());
+		manager.add(actionShowFind);
 		manager.add(refresh);
 		super.fillLocalToolBar(manager);
 	}
@@ -252,6 +229,7 @@ public class DrawPage extends AbstractDeckListPage {
 		manager.add(kill);
 		manager.add(tap);
 		manager.add(new Separator());
+		manager.add(actionShowFind);
 		super.fillContextMenu(manager);
 	}
 
@@ -292,12 +270,12 @@ public class DrawPage extends AbstractDeckListPage {
 	protected void makeActions() {
 		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7", () -> {
 			playdeck.newGame();
-			getMagicControl().unsort();
+			unsort();
 			spinner.setValue(20);
 			fullReload();
 		});
 		this.unsort = new ImageAction("Unsort", null, "Remove sort by column", () -> {
-			getMagicControl().unsort();
+			unsort();
 			fullReload();
 		});
 		this.draw = new ImageAction("Draw", "icons/obj16/one_card16.png", "Draw One", () -> {
@@ -375,24 +353,14 @@ public class DrawPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public DrawListControl doGetMagicCardListControl() {
-		return new DrawListControl(getDeckView());
-	}
-
-	@Override
-	public void setFilteredStore(IFilteredCardStore fstore) {
-		super.setFilteredStore(fstore);
-		playdeck.setStore(store);
-	}
-
-	@Override
 	public void activate() {
+		playdeck.setStore(getCardStore());
 		super.activate();
 		fullReload();
 	}
 
 	private void fullReload() {
 		playdeck.setRefreshRequired(true);
-		getMagicControl().reloadData();
+		reloadData();
 	}
 }

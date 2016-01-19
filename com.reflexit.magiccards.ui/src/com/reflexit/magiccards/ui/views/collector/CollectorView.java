@@ -24,10 +24,8 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.CollectorViewPreferencePage;
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
-import com.reflexit.magiccards.ui.views.analyzers.AbstractMagicControlViewPage;
 import com.reflexit.magiccards.ui.views.lib.AbstractMyCardsView;
 
 /**
@@ -39,7 +37,7 @@ public class CollectorView extends AbstractMyCardsView {
 	private Action refresh;
 	private Action onlyOwn;
 	private boolean onlyOwnFiltred;
-	private AbstractMagicControlViewPage page;
+	private CollectorListControl page;
 
 	/**
 	 * The constructor.
@@ -49,22 +47,17 @@ public class CollectorView extends AbstractMyCardsView {
 
 	@Override
 	protected void createPages() {
-		page = new AbstractMagicControlViewPage() {
-			@Override
-			public AbstractMagicCardsListControl doGetMagicCardListControl() {
-				return createViewControl();
-			}
-		};
+		page = new CollectorListControl();
 		getPageGroup().add(new ViewPageContribution("", "Main", null, page));
 	}
 
 	protected CollectorListControl createViewControl() {
-		return new CollectorListControl(this);
+		return new CollectorListControl();
 	}
 
 	@Override
 	protected IMagicControl getMagicControl() {
-		return page.getMagicControl();
+		return page;
 	}
 
 	@Override

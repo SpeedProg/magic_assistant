@@ -22,7 +22,6 @@ import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
-import com.reflexit.magiccards.ui.views.analyzers.AbstractMagicControlViewPage;
 
 public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 	private Composite main;
@@ -103,9 +102,6 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 
 	protected synchronized IMagicControl getMagicControl(IViewPage page) {
 		// System.err.println(deckPage);
-		if (page instanceof AbstractMagicControlViewPage) {
-			return ((AbstractMagicControlViewPage) page).getMagicControl();
-		}
 		if (page instanceof IMagicControl) {
 			return (IMagicControl) page;
 		}

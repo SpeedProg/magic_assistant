@@ -12,13 +12,13 @@ import com.reflexit.magiccards.ui.chart.ManaCurveChart;
 public class ManaCurvePage extends AbstractDeckStatsPage {
 	@Override
 	protected IChartGenerator createChartGenerator() {
-		IChartGenerator gen = new ManaCurveChart(CardStoreUtils.buildManaCurveStats(store));
+		IChartGenerator gen = new ManaCurveChart(CardStoreUtils.buildManaCurveStats(getCardStore()));
 		return gen;
 	}
 
 	@Override
 	protected ICardGroup buildTree() {
-		return CardStoreUtils.buildManaCurveGroup(store);
+		return CardStoreUtils.buildManaCurveGroup(getCardStore());
 	}
 
 	@Override

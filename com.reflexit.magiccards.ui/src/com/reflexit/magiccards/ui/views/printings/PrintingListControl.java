@@ -15,15 +15,13 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class PrintingListControl extends AbstractMagicCardsListControl {
 	private IMagicCard card;
 
-	public PrintingListControl(AbstractCardsView abstractCardsView) {
-		super(abstractCardsView);
+	public PrintingListControl() {
 	}
 
 	@Override

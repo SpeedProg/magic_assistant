@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.ui.views.AbstractViewPage;
@@ -52,11 +51,6 @@ public abstract class AbstractDeckPage extends AbstractViewPage implements IDeck
 	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return null;
-	}
-
-	@Override
-	public void setFilteredStore(IFilteredCardStore store) {
-		this.store = store.getCardStore();
 	}
 
 	public ICardStore<IMagicCard> getCardStore() {

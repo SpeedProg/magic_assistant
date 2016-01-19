@@ -15,10 +15,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -42,9 +42,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -68,12 +66,16 @@ import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.PerspectiveFactoryMagic;
 import com.reflexit.magiccards.ui.actions.GroupByAction;
+import com.reflexit.magiccards.ui.actions.ImageAction;
+import com.reflexit.magiccards.ui.actions.SearchCardAction;
+import com.reflexit.magiccards.ui.actions.ShowPreferencesAction;
 import com.reflexit.magiccards.ui.actions.SortAction;
 import com.reflexit.magiccards.ui.actions.SortByAction;
 import com.reflexit.magiccards.ui.actions.UnsortAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
+import com.reflexit.magiccards.ui.gallery.Gallery2Viewer;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
@@ -104,8 +106,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	private Presentation presentation = Presentation.TABLE;
 	protected static final DataManager DM = DataManager.getInstance();
-	private static final String FIND = "org.eclipse.ui.edit.findReplace";
-	protected final AbstractCardsView abstractCardsView;
 	protected IPersistentPreferenceStore columnsStore;
 	protected IPersistentPreferenceStore filterStore;
 	private QuickFilterControl quickFilter;
@@ -133,23 +133,19 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	private boolean isFiltered = false;
 	private boolean isGroupped = false;
 
-	/**
-	 * The constructor.
-	 * 
-	 * @param pres2
-	 */
-	public AbstractMagicCardsListControl(AbstractCardsView abstractCardsView, Presentation pres) {
-		this.abstractCardsView = abstractCardsView;
-		columnsStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
-		filterStore = PreferenceInitializer.getFilterStore(getPreferencePageId());
+	public AbstractMagicCardsListControl(Presentation pres) {
+		this.columnsStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
+		this.filterStore = PreferenceInitializer.getFilterStore(getPreferencePageId());
 		this.viewer = null;
-		if (abstractCardsView != null)
-			setSite(abstractCardsView.getViewSite());
 		this.presentation = pres;
 	}
 
-	public AbstractMagicCardsListControl(AbstractCardsView abstractCardsView) {
-		this(abstractCardsView, null);
+	public AbstractMagicCardsListControl() {
+		this(null);
+	}
+
+	public void setPresentation(Presentation presentation) {
+		this.presentation = presentation;
 	}
 
 	public Presentation getPresentation() {
@@ -157,7 +153,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	@Override
-	public void createMainControl(Composite partControl) {
+	public void createMainControl(Composite area) {
+		Composite partControl = new Composite(area, SWT.NONE);
+		partControl.setLayout(GridLayoutFactory.fillDefaults().create());
+		partControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		createTopBar(partControl);
 		createTableControl(partControl);
 		createSearchControl(partControl);
@@ -177,6 +176,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}
 		if (presentation == Presentation.SPLITTREE)
 			return new SplitViewer(parent, getPreferencePageId());
+		if (presentation == Presentation.GALLERY)
+			return new Gallery2Viewer(parent, getPreferencePageId());
 		throw new IllegalArgumentException(presentation.name());
 	}
 
@@ -309,20 +310,25 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	@Override
-	public void init(IViewSite site) {
-		super.init(site);
+	protected void addListeners() {
+		super.addListeners();
 		addStoreChangeListener();
 		getColumnsPreferenceStore().addPropertyChangeListener(preferenceListener);
 	}
 
 	@Override
-	public void dispose() {
+	protected void removeListeners() {
 		removeStoreChangeListener();
+		getColumnsPreferenceStore().removePropertyChangeListener(preferenceListener);
+		super.removeListeners();
+	}
+
+	@Override
+	public void dispose() {
 		if (viewer != null) {
 			getSelectionProvider().removeSelectionChangedListener(selectionListener);
 			this.viewer.dispose();
 		}
-		getColumnsPreferenceStore().removePropertyChangeListener(preferenceListener);
 		try {
 			columnsStore.save();
 			filterStore.save();
@@ -334,7 +340,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected void addStoreChangeListener() {
-		new Thread("Registering listeners " + getSite().getPart().getTitle()) {
+		new Thread("Registering listeners " + getViewPart().getTitle()) {
 			@Override
 			public void run() {
 				if (WaitUtils.waitForDb()) {
@@ -553,7 +559,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			manager.add(this.actionSortBy.createMenuManager());
 		if (actionGroupBy != null)
 			manager.add(this.actionGroupBy.createMenuManager());
-		manager.add(this.actionShowFind);
 		manager.add(this.actionShowFilter);
 		manager.add(this.actionResetFilter);
 		manager.add(this.actionShowPrefs);
@@ -572,8 +577,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	};
 
 	protected String getViewPreferencePageId() {
-		if (abstractCardsView != null)
-			return abstractCardsView.getPreferencePageId();
+		if (getMagicCardsView() != null)
+			return getMagicCardsView().getPreferencePageId();
 		return null;
 	};
 
@@ -611,25 +616,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		});
 	}
 
-	@Override
-	protected void loadInitial() {
-		IPreferenceStore ps = getColumnsPreferenceStore();
-		if (viewer instanceof IMagicColumnViewer) {
-			IMagicColumnViewer cviewer = (IMagicColumnViewer) viewer;
-			// update manager columns
-			String value = ps.getString(PreferenceConstants.LOCAL_COLUMNS);
-			cviewer.updateColumns(value);
-		}
-		quickFilter.setPreferenceStore(getElementPreferenceStore());
-		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
-		setQuickFilterVisible(qf);
-		if (fstore == null) {
-			getFilteredStore();
-		}
-		// WaitUtils.scheduleJob("Loading cards " + getName(), () ->
-		// reloadData());
-	}
-
 	protected String getName() {
 		if (fstore == null)
 			return "";
@@ -650,48 +636,21 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			}
 		};
 		hookDoubleClickAction();
-		this.actionShowFilter = new Action() {
-			@Override
-			public void run() {
-				runShowFilter();
-			}
-		};
-		this.actionShowFilter.setText("Filter...");
-		this.actionShowFilter.setToolTipText("Opens a Card Filter Dialog");
-		this.actionShowFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/filter_ps.png"));
-		this.actionResetFilter = new Action() {
-			@Override
-			public void run() {
-				runResetFilter();
-			}
-		};
-		this.actionResetFilter.setText("Reset Filter");
-		this.actionResetFilter.setToolTipText("Resets the filter to default values");
-		this.actionResetFilter.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/reset_filter.gif"));
+		this.actionShowFilter = new ImageAction("Filter...", "icons/clcl16/filter_ps.png", "Opens a Card Filter Dialog",
+				this::runShowFilter);
+		this.actionResetFilter = new ImageAction("Reset Filter", "icons/clcl16/reset_filter.gif",
+				"Resets the filter to default values", this::runResetFilter);
 		this.actionSortBy = new SortByAction(getSortColumnCollection(), null, getPresentaionPreferenceStore(),
 				this::reloadData);
 		this.actionGroupBy = new GroupByAction(getGroups(), null, getPresentaionPreferenceStore(), this::reGroup);
-		// this.groupMenu.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-		this.actionShowPrefs = new Action("Preferences...") {
+		this.actionShowPrefs = new ShowPreferencesAction(getPreferencePageId()) {
 			@Override
-			public void run() {
-				String id = getPreferencePageId();
-				if (id != null) {
-					saveColumnLayout();
-					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id,
-							new String[] { id }, null);
-					dialog.open();
-				}
+			public void before() {
+				saveColumnLayout();
 			}
 		};
 		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/gear.png"));
-		this.actionShowFind = new Action("Find...") {
-			@Override
-			public void run() {
-				runFind();
-			}
-		};
-		this.actionShowFind.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/search.png"));
+		this.actionShowFind = new SearchCardAction(this::runFind);
 	}
 
 	public ColumnCollection getSortColumnCollection() {
@@ -751,10 +710,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		viewer.refresh();
 	}
 
-	/**
-	 *
-	 */
-	@Override
 	public void runCopy() {
 		Control fc = getControl().getDisplay().getFocusControl();
 		CopySupport.runCopy(fc);
@@ -776,13 +731,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			syncQuickFilter();
 			refilterData();
 		}
-		// CardFilter.open(getViewSite().getShell());
-		// Dialog cardFilterDialog = new CardFilterDialog(getShell(),
-		// getFilterPreferenceStore());
-		// if (cardFilterDialog.open() == IStatus.OK) {
-		// reloadData();
-		// quickFilter.refresh();
-		// }
 	}
 
 	protected void runResetFilter() {
@@ -803,13 +751,19 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}
 	}
 
+	protected AbstractCardsView getMagicCardsView() {
+		if (getViewPart() instanceof AbstractCardsView)
+			return (AbstractCardsView) getViewPart();
+		return null;
+	}
+
 	/**
 	 * @param bars
 	 */
 	@Override
 	public void setGlobalHandlers(IActionBars bars) {
-		if (abstractCardsView != null) {
-			abstractCardsView.activateActionHandler(actionShowFind, FIND);
+		if (getMagicCardsView() != null) {
+			getMagicCardsView().activateActionHandler(actionShowFind, actionShowFind.getActionDefinitionId());
 		}
 	}
 
@@ -840,6 +794,20 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		filter.setSortOrder(
 				SortOrder.valueOf(getPresentaionPreferenceStore().getString(PreferenceConstants.SORT_ORDER)));
 		isGroupped = filter.isGroupped();
+	}
+
+	@Override
+	protected void loadInitial() {
+		IPreferenceStore ps = getColumnsPreferenceStore();
+		if (viewer instanceof IMagicColumnViewer) {
+			IMagicColumnViewer cviewer = (IMagicColumnViewer) viewer;
+			// update manager columns
+			String value = ps.getString(PreferenceConstants.LOCAL_COLUMNS);
+			cviewer.updateColumns(value);
+		}
+		quickFilter.setPreferenceStore(getElementPreferenceStore());
+		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
+		setQuickFilterVisible(qf);
 	}
 
 	public boolean isGroupped() {
@@ -936,7 +904,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}
 	}
 
-	@Override
 	public void runPaste() {
 		MagicCardTransfer mt = MagicCardTransfer.getInstance();
 		Object contents = mt.fromClipboard();
@@ -1057,5 +1024,12 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			monitor.done();
 		}
 		return Status.OK_STATUS;
+	}
+
+	protected int getCount(Object element) {
+		if (element == null)
+			return 0;
+		int count = ((element instanceof ICardCountable) ? ((ICardCountable) element).getCount() : 1);
+		return count;
 	}
 }

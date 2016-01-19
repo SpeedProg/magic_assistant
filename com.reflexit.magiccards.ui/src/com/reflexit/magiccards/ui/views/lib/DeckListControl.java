@@ -8,11 +8,14 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 
-public class DeckListControl extends MyCardsListControl {
-	public DeckListControl(AbstractCardsView abstractCardsView, Presentation pres) {
-		super(abstractCardsView, pres);
+public class DeckListControl extends MyCardsListControl implements IDeckPage {
+	public DeckListControl() {
+		this(null);
+	}
+
+	public DeckListControl(Presentation pres) {
+		super(pres);
 		filterStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, getPreferencePageId() + ".deck." + getName());
 	}
 
@@ -25,7 +28,7 @@ public class DeckListControl extends MyCardsListControl {
 
 	@Override
 	public IFilteredCardStore doGetFilteredStore() {
-		String secondaryId = abstractCardsView.getViewSite().getSecondaryId();
+		String secondaryId = getViewSite().getSecondaryId();
 		return DM.getCardHandler().getCardCollectionFilteredStore(secondaryId);
 	}
 

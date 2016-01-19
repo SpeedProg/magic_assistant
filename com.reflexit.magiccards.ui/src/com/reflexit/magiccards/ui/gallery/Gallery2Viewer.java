@@ -19,9 +19,9 @@ import org.eclipse.swt.widgets.Menu;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.views.SingleColumnTreeViewer;
 import com.reflexit.magiccards.ui.views.IColumnSortAction;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.SingleColumnTreeViewer;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
@@ -32,7 +32,7 @@ public class Gallery2Viewer implements IMagicColumnViewer {
 	protected LazyGalleryTreeViewer galleryviewer;
 	private SingleColumnTreeViewer viewer;
 
-	public Gallery2Viewer(String preferencePageId, Composite parent) {
+	public Gallery2Viewer(Composite parent, String preferencePageId) {
 		createContents(parent);
 	}
 
@@ -62,6 +62,7 @@ public class Gallery2Viewer implements IMagicColumnViewer {
 			}
 		});
 		form.setWeights(new int[] { 22, 78 });
+		hookDragAndDrop();
 		return control;
 	}
 
@@ -144,7 +145,6 @@ public class Gallery2Viewer implements IMagicColumnViewer {
 	public ColumnCollection getColumnsCollection() {
 		return viewer.getColumnsCollection();
 	}
-
 
 	@Override
 	public boolean hookContextMenu(MenuManager menuMgr) {

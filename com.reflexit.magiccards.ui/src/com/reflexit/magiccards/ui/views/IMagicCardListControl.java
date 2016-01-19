@@ -22,6 +22,5 @@ public interface IMagicCardListControl extends IMagicControl {
 
 	public abstract void setNextSelection(ISelection structuredSelection);
 
-	@Override
 	public abstract void setStatus(String string);
 }

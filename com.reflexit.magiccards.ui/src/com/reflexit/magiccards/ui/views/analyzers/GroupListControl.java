@@ -9,7 +9,6 @@ import org.eclipse.swt.widgets.Composite;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
-import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -20,7 +19,7 @@ import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 
 public abstract class GroupListControl extends AbstractMagicCardsListControl {
-	public class GroupTreeViewer extends ExtendedTreeViewer {
+	public static class GroupTreeViewer extends ExtendedTreeViewer {
 		protected GroupTreeViewer(String id, Composite parent) {
 			super(parent, id);
 			// hookDragAndDrop();
@@ -72,8 +71,8 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 		// ignore
 	}
 
-	public GroupListControl(AbstractCardsView abstractCardsView) {
-		super(abstractCardsView);
+	public GroupListControl() {
+		super();
 	}
 
 	@Override
