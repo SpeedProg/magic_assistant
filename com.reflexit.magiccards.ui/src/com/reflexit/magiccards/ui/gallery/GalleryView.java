@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.gallery;
 
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 
@@ -42,12 +44,13 @@ public class GalleryView extends MagicDbView {
 			}
 
 			@Override
-			protected void runDoubleClick() {
-				GalleryView.this.runDoubleClick();
-			}
-
-			@Override
-			public void saveColumnLayout() {
+			protected void hookDoubleClickAction() {
+				viewer.addDoubleClickListener(new IDoubleClickListener() {
+					@Override
+					public void doubleClick(DoubleClickEvent event) {
+						runDoubleClick();
+					}
+				});
 			}
 		};
 	}

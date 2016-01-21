@@ -8,6 +8,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
+import com.reflexit.magiccards.ui.views.Presentation;
 
 public class DeckListControl extends MyCardsListControl implements IDeckPage {
 	public DeckListControl() {

@@ -2,7 +2,6 @@ package com.reflexit.magiccards.ui.views;
 
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -83,6 +82,4 @@ public abstract class MagicControl extends AbstractViewPage {
 	protected void propertyChange(PropertyChangeEvent event) {
 		// override
 	}
-
-	public abstract ISelection getSelection();
 }

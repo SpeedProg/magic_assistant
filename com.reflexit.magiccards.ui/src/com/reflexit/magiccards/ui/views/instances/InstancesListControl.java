@@ -25,9 +25,6 @@ import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 public class InstancesListControl extends AbstractMagicCardsListControl {
 	private IMagicCard card;
 
-	public InstancesListControl() {
-	}
-
 	@Override
 	public IMagicColumnViewer createViewer(Composite parent) {
 		return new InstancesViewer(getPreferencePageId(), parent);

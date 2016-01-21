@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -253,5 +254,10 @@ public class InfoPage extends AbstractDeckPage implements IDeckPage {
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
+	}
+
+	@Override
+	public ISelectionProvider getSelectionProvider() {
+		return null;
 	}
 }

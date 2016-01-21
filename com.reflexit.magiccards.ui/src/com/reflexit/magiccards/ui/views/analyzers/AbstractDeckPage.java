@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.analyzers;
 
-import org.eclipse.jface.viewers.ISelectionProvider;
-
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
@@ -43,11 +41,6 @@ public abstract class AbstractDeckPage extends AbstractViewPage implements IDeck
 	@Override
 	public void refresh() {
 		getCardStore(); // init card store
-	}
-
-	@Override
-	public ISelectionProvider getSelectionProvider() {
-		return null;
 	}
 
 	public ICardStore<IMagicCard> getCardStore() {

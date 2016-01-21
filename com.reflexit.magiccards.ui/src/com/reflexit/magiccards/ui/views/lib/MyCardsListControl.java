@@ -14,6 +14,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.actions.CopyPasteActionGroup;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 

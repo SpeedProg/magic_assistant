@@ -19,9 +19,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -41,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.PlatformUI;
@@ -96,15 +96,8 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
  * table), and comes with actions and preferences to manipulate this list
  *
  */
-public abstract class AbstractMagicCardsListControl extends MagicControl
+public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		implements IMagicCardListControl, ICardEventListener {
-	public enum Presentation {
-		TABLE, TREE, SPLITTREE, GALLERY;
-		public String getLabel() {
-			return name();
-		}
-	}
-
 	private Presentation presentation = Presentation.TABLE;
 	protected static final DataManager DM = DataManager.getInstance();
 	private QuickFilterControl quickFilter;
@@ -120,11 +113,17 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	protected IMagicViewer viewer;
 	protected ISelection revealSelection;
 	protected IFilteredCardStore<ICard> fstore;
-	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
+	private ISelectionChangedListener statusSelectionListener = new ISelectionChangedListener() {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			// selection changes on own view
 			updateStatus();
+		}
+	};
+	protected IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			AbstractMagicCardsListControl.this.propertyChange(event);
 		}
 	};
 	private Label warning;
@@ -147,7 +146,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		return presentation;
 	}
 
-	@Override
 	public void createMainControl(Composite area) {
 		Composite partControl = new Composite(area, SWT.NONE);
 		partControl.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -155,7 +153,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		createTopBar(partControl);
 		createTableControl(partControl);
 		createSearchControl(partControl);
-		getSelectionProvider().addSelectionChangedListener(selectionListener);
+		getSelectionProvider().addSelectionChangedListener(statusSelectionListener);
 	}
 
 	public IMagicViewer createViewer(Composite parent) {
@@ -219,12 +217,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		return this.viewer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.reflexit.magiccards.ui.views.IMagicCardListControl#getSelection()
-	 */
 	@Override
 	public ISelection getSelection() {
 		ISelection selection[] = new ISelection[] { new StructuredSelection() };
@@ -238,9 +230,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 				}
 			}
 		});
-		// System.err.println("current selection 2 " +
-		// manager.getSelectionProvider() + " " +
-		// selection);
 		return selection[0];
 	}
 
@@ -304,24 +293,24 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		return viewer.hookContextMenu(menuMgr);
 	}
 
-	@Override
 	protected void addListeners() {
-		super.addListeners();
+		MagicUIActivator.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceListener);
+		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(preferenceListener);
 		addStoreChangeListener();
 		getColumnsPreferenceStore().addPropertyChangeListener(preferenceListener);
 	}
 
-	@Override
 	protected void removeListeners() {
 		removeStoreChangeListener();
 		getColumnsPreferenceStore().removePropertyChangeListener(preferenceListener);
-		super.removeListeners();
+		MagicUIActivator.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
+		PlatformUI.getWorkbench().getThemeManager().removePropertyChangeListener(preferenceListener);
 	}
 
 	@Override
 	public void dispose() {
 		if (viewer != null) {
-			getSelectionProvider().removeSelectionChangedListener(selectionListener);
+			getSelectionProvider().removeSelectionChangedListener(statusSelectionListener);
 			this.viewer.dispose();
 		}
 		try {
@@ -331,6 +320,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
 		}
+		deactivate();
 		super.dispose();
 	}
 
@@ -408,14 +398,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	public void runFind() {
 		searchControl.setVisible(true);
 		searchControl.getControl().setFocus();
-	}
-
-	/**
-	 * Passing the focus request to the viewer's control.
-	 */
-	@Override
-	public void setFocus() {
-		viewer.getControl().setFocus();
 	}
 
 	@Override
@@ -603,12 +585,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	protected void hookDoubleClickAction() {
-		this.viewer.addDoubleClickListener(new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				AbstractMagicCardsListControl.this.doubleClickAction.run();
-			}
-		});
+		// override to hook
 	}
 
 	protected String getName() {
@@ -623,13 +600,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		// double cick
-		this.doubleClickAction = new Action() {
-			@Override
-			public void run() {
-				runDoubleClick();
-			}
-		};
+		// double click
 		hookDoubleClickAction();
 		this.actionShowFilter = new ImageAction("Filter...", "icons/clcl16/filter_ps.png", "Opens a Card Filter Dialog",
 				this::runShowFilter);
@@ -670,7 +641,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		return res;
 	}
 
-	@Override
 	protected void propertyChange(PropertyChangeEvent event) {
 		if (viewer.getViewer() == null || viewer.getViewer().getControl() == null)
 			return;
@@ -786,7 +756,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		isGroupped = filter.isGroupped();
 	}
 
-	@Override
 	protected void loadInitial() {
 		IPreferenceStore ps = getColumnsPreferenceStore();
 		if (viewer instanceof IMagicColumnViewer) {
@@ -957,7 +926,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	private Object jobFamility = new Object();
 	private Job loadingJob;
-	protected Action doubleClickAction;
 
 	public void loadData(final Runnable postLoad) {
 		synchronized (jobFamility) {
@@ -1025,5 +993,29 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			return 0;
 		int count = ((element instanceof ICardCountable) ? ((ICardCountable) element).getCount() : 1);
 		return count;
+	}
+
+	@Override
+	public void createPageContents(Composite parent) {
+		createMainControl(parent);
+		loadInitial(); // XXX reloadData()?
+	}
+
+	@Override
+	public void activate() {
+		super.activate();
+		addListeners();
+		// getViewSite().setSelectionProvider(getSelectionProvider());// XXX
+		refresh();
+	}
+
+	@Override
+	public void deactivate() {
+		removeListeners();
+		super.deactivate();
+	}
+
+	public Shell getShell() {
+		return getControl().getShell();
 	}
 }

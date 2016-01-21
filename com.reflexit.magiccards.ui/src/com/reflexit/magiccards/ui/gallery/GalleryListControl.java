@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.gallery;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.ui.views.IMagicViewer;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.lib.DeckListControl;

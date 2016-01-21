@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -15,8 +17,8 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl.Presentation;
 import com.reflexit.magiccards.ui.views.IViewPage;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.StackPageGroup;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
@@ -62,8 +64,13 @@ public class MyCardsView extends AbstractMyCardsView {
 		}
 
 		@Override
-		protected void runDoubleClick() {
-			MyCardsView.this.runDoubleClick();
+		protected void hookDoubleClickAction() {
+			viewer.addDoubleClickListener(new IDoubleClickListener() {
+				@Override
+				public void doubleClick(DoubleClickEvent event) {
+					MyCardsView.this.runDoubleClick();
+				}
+			});
 		}
 
 		@Override
