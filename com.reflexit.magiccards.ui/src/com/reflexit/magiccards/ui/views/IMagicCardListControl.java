@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
-public interface IMagicCardListControl extends IMagicControl {
+public interface IMagicCardListControl extends IViewPage {
 	public abstract MagicCardFilter getFilter();
 
 	public abstract IFilteredCardStore getFilteredStore();
@@ -18,7 +18,7 @@ public interface IMagicCardListControl extends IMagicControl {
 	public abstract IPersistentPreferenceStore getElementPreferenceStore();
 
 	@Override
-	public abstract void reloadData();
+	public abstract void refresh();
 
 	public abstract void setNextSelection(ISelection structuredSelection);
 

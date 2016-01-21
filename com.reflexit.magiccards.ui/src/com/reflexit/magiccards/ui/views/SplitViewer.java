@@ -35,14 +35,15 @@ public class SplitViewer implements IMagicColumnViewer {
 	private SelectionProviderIntermediate selProvider;
 	private int expansionLevel = 3;
 	private IFilteredCardStore fstore;
+	private Composite main;
 
 	public SplitViewer(Composite parent, String id) {
-		createContents(parent, id);
+		main = (Composite) createContents(parent, id);
 	}
 
 	@Override
 	public Control getControl() {
-		return treeviewer.getControl().getParent();
+		return main;
 	}
 
 	public Control createContents(Composite parent, String id) {
@@ -94,10 +95,14 @@ public class SplitViewer implements IMagicColumnViewer {
 		selProvider.addDelegate(viewer);
 		form.setLayout(new FillLayout());
 		form.setWeights(new int[] { 22, 78 });
-		return comp;
+		return form;
 	}
 
 	public void setSelection(ISelection selection) {
+		if (treeviewer == null)
+			return;
+		if (viewer == null)
+			return;
 		if (selection.isEmpty()) {
 			treeviewer.setSelection(selection, false);
 			viewer.setSelection(selection, false);
@@ -128,9 +133,8 @@ public class SplitViewer implements IMagicColumnViewer {
 	public void dispose() {
 		viewer.getControl().dispose();
 		viewer.getLabelProvider().dispose();
-		this.treeviewer.getLabelProvider().dispose();
-		this.treeviewer.getControl().dispose();
-		this.treeviewer = null;
+		treeviewer.getLabelProvider().dispose();
+		treeviewer.getControl().dispose();
 	}
 
 	@Override

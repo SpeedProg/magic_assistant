@@ -117,7 +117,7 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	}
 
 	@Override
-	public void reloadData() {
+	public void refresh() {
 		getCardStore();
 		IChartGenerator gen = createChartGenerator();
 		canvas.setChartGenerator(gen);

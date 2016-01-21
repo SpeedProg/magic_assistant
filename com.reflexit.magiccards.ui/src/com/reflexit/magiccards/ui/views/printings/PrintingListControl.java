@@ -45,7 +45,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	@Override
 	protected void sort(int index, int dir) {
 		updateSortColumn(index);
-		updateViewer();
+		refreshViewer();
 	}
 
 	public String getStatusMessage1() {

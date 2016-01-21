@@ -259,7 +259,6 @@ public class InstancesView extends AbstractSingleControlCardsView implements ISe
 		};
 	}
 
-	@Override
 	protected void updateViewer() {
 		if (card != null)
 			getSelectionProvider().setSelection(new StructuredSelection(card));

@@ -45,12 +45,11 @@ public class GalleryView extends MagicDbView {
 			protected void runDoubleClick() {
 				GalleryView.this.runDoubleClick();
 			}
-		};
-	}
 
-	@Override
-	protected void saveColumnLayout() {
-		// do not touch
+			@Override
+			public void saveColumnLayout() {
+			}
+		};
 	}
 
 	@Override

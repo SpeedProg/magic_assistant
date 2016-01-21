@@ -219,7 +219,6 @@ public class PrintingsView extends AbstractSingleControlCardsView implements ISe
 		return new PrintingListControl();
 	}
 
-	@Override
 	protected void updateViewer() {
 		if (card != null)
 			getSelectionProvider().setSelection(new StructuredSelection(card));

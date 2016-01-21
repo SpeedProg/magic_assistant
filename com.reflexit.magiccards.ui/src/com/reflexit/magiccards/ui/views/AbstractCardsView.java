@@ -29,7 +29,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -65,12 +64,6 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	private HashMap<String, IHandlerActivation> activations = new HashMap<String, IHandlerActivation>();
 
 	/**
-	 * The constructor.
-	 */
-	public AbstractCardsView() {
-	}
-
-	/**
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
@@ -85,7 +78,12 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	protected void activate() {
+		clearActionBars();
 		contributeToActionBars();
+		registerSelectionProvider();
+	}
+
+	protected void registerSelectionProvider() {
 		getSite().setSelectionProvider(getSelectionProvider());
 	}
 
@@ -94,15 +92,18 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	protected abstract void createMainControl(Composite parent);
 
 	protected void hookContextMenu() {
-		MenuManager menuMgr = createContentMenuManager();
-		if (hookContextMenu(menuMgr)) {
-			registerContextMenu(menuMgr);
+		// registerContextMenu(hookContextMenu(createContextMenuManager()));
+	}
+
+	protected void close() {
+		try {
+			getViewSite().getPage().hideView(this);
+		} catch (Exception e) {
+			// ignore
 		}
 	}
 
-	protected abstract boolean hookContextMenu(MenuManager menuMgr);
-
-	protected MenuManager createContentMenuManager() {
+	protected MenuManager createContextMenuManager() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
@@ -115,17 +116,27 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	protected void registerContextMenu(MenuManager menuMgr) {
-		getSite().registerContextMenu(menuMgr, getSelectionProvider());
+		if (menuMgr != null)
+			getSite().registerContextMenu(menuMgr, getSelectionProvider());
 	}
 
 	protected abstract ISelectionProvider getSelectionProvider();
 
+	protected void clearActionBars() {
+		IActionBars bars = getViewSite().getActionBars();
+		IMenuManager viewMenuManager = bars.getMenuManager();
+		viewMenuManager.removeAll();
+		viewMenuManager.updateAll(true);
+		IToolBarManager toolBarManager = bars.getToolBarManager();
+		toolBarManager.removeAll();
+		toolBarManager.update(true);
+		// bars.updateActionBars();
+	}
+
 	protected void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
-		bars.getMenuManager().removeAll();
 		fillLocalPullDown(bars.getMenuManager());
 		bars.getMenuManager().updateAll(true);
-		bars.getToolBarManager().removeAll();
 		fillLocalToolBar(bars.getToolBarManager());
 		bars.getToolBarManager().update(true);
 		setGlobalHandlers(bars);
@@ -133,11 +144,8 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 		hookContextMenu();
 	}
 
-	/**
-	 * @param bars
-	 */
 	protected void setGlobalHandlers(IActionBars bars) {
-		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), actionCopy);
+		bars.setGlobalActionHandler(actionCopy.getId(), actionCopy);
 		bars.setGlobalActionHandler(actionRefresh.getId(), actionRefresh);
 	}
 

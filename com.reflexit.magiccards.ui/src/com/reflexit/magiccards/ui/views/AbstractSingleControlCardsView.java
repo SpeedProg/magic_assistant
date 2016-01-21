@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views;
 
 import java.io.IOException;
 
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
@@ -14,23 +15,18 @@ import org.eclipse.ui.PartInitException;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.utils.WaitUtils;
 
 public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
-	private IMagicControl magicControl;
+	private AbstractMagicCardsListControl magicControl;
 
 	public AbstractSingleControlCardsView() {
-		setMagicControl(createViewControl());
+		magicControl = createViewControl();
 	}
 
 	protected abstract AbstractMagicCardsListControl createViewControl();
 
-	protected IMagicControl getMagicControl() {
+	protected IViewPage getMagicControl() {
 		return magicControl;
-	}
-
-	protected void setMagicControl(IMagicControl magicControl) {
-		this.magicControl = magicControl;
 	}
 
 	@Override
@@ -40,8 +36,17 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 	}
 
 	@Override
-	protected boolean hookContextMenu(MenuManager menuMgr) {
-		return getMagicControl().hookContextMenu(menuMgr);
+	protected void hookContextMenu() {
+		// magic control hooks the menu, we just need to register it and hook
+		// our fill method
+		MenuManager menuMgr = getMagicControl().getContextMenuManager();
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				fillContextMenu(manager);
+			}
+		});
+		registerContextMenu(menuMgr);
 	}
 
 	@Override
@@ -51,8 +56,10 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 
 	@Override
 	protected void activate() {
-		super.activate();
+		clearActionBars();
 		getMagicControl().activate();
+		contributeToActionBars();
+		registerSelectionProvider();
 	}
 
 	@Override
@@ -64,11 +71,6 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 	protected void fillLocalPullDown(IMenuManager manager) {
 		manager.remove(actionRefresh.getId());
 		super.fillLocalPullDown(manager);
-	}
-
-	@Override
-	public void refreshView() {
-		WaitUtils.syncExec(() -> getMagicControl().refresh());
 	}
 
 	@Override
@@ -84,7 +86,7 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 
 	@Override
 	public void reloadData() {
-		getMagicControl().reloadData();
+		getMagicControl().refresh();
 	}
 
 	/**
@@ -116,24 +118,13 @@ public abstract class AbstractSingleControlCardsView extends AbstractCardsView {
 	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
-		saveColumnLayout();
+		if (!getViewSite().getPage().isPartVisible(this))
+			return;
+		getMagicControl().saveState(memento);
 		try {
-			getFilterPreferenceStore().save();
+			getFilterPreferenceStore().save(); // XXX
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
 		}
-	}
-
-	protected void saveColumnLayout() {
-		if (!getViewSite().getPage().isPartVisible(getViewSite().getPart()))
-			return;
-		String id = getPreferencePageId();
-		if (id != null && getMagicControl() instanceof AbstractMagicCardsListControl) {
-			((AbstractMagicCardsListControl) getMagicControl()).saveColumnLayout();
-		}
-	}
-
-	protected void updateViewer() {
-		getMagicControl().updateViewer();
 	}
 }

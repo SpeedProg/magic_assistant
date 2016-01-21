@@ -56,11 +56,10 @@ import com.reflexit.magiccards.ui.actions.SortByAction;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
-import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.widgets.ComboContributionItem;
 
-public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
+public class ExportDeckPage extends AbstractDeckPage {
 	private Browser textBrowser;
 	private ISelectionProvider selProvider = new StoredSelectionProvider();
 	private IFilteredCardStore<IMagicCard> fstore;
@@ -181,6 +180,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		super.fillLocalToolBar(manager);
 	}
 
+	@Override
 	protected void makeActions() {
 		this.save = new ImageAction("Save As...", "icons/clcl16/save.png", IAction.AS_PUSH_BUTTON) {
 			@Override
@@ -211,11 +211,11 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 					PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getArea().getShell(), id,
 							new String[] { id }, null);
 					dialog.open();
-					reloadData();
+					refresh();
 				}
 			}
 		};
-		this.actionSort = new SortByAction(new MagicColumnCollection(null), filter, null, this::reloadData);
+		this.actionSort = new SortByAction(new MagicColumnCollection(null), filter, null, this::refresh);
 		this.actionRefresh = new RefreshAction(this::activate);
 	}
 
@@ -230,7 +230,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			sideboard.setToolTipText("Include sideboard");
 		else
 			sideboard.setToolTipText("Do not include sideboard");
-		reloadData();
+		refresh();
 	}
 
 	protected boolean isInludeHeader() {
@@ -240,7 +240,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	public void triggerHeader(boolean mode) {
 		includeHeader = mode;
 		header.setChecked(mode);
-		reloadData();
+		refresh();
 	}
 
 	@Override
@@ -387,7 +387,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 			actionShowPrefs.setEnabled(delegate.isColumnChoiceSupported());
 			sideboard.setEnabled(delegate.isMultipleLocationSupported());
 		}
-		reloadData();
+		refresh();
 	}
 
 	@Override
@@ -404,8 +404,7 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 	// public void runPaste() {
 	// CopySupport.runPaste(getArea().getDisplay().getFocusControl());
 	// }
-	@Override
-	public void updateViewer() {
+	public void refreshViewer() {
 		textResult = null;
 		setTopControl();
 		try {
@@ -424,18 +423,13 @@ public class ExportDeckPage extends AbstractDeckPage implements IMagicControl {
 		setFStore();
 		setTopControl();
 		super.activate();
-		updateViewer();
-	}
-
-	@Override
-	public void reloadData() {
-		setFStore();
-		updateViewer();
+		refreshViewer();
 	}
 
 	@Override
 	public void refresh() {
-		reloadData();
+		setFStore();
+		refreshViewer();
 	}
 
 	@Override

@@ -218,11 +218,11 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	protected void makeActions() {
 		super.makeActions();
 		this.load = new ImageAction("Check Legality Online", "icons/clcl16/software_update.png", () -> performUpdate());
-		refresh = new RefreshAction(this::reloadData);
+		refresh = new RefreshAction(this::refresh);
 	}
 
 	@Override
-	public void reloadData() {
+	public void refresh() {
 		setFStore();
 		deckLegalities = LegalityMap.calculateDeckLegality(fstore.getCardStore());
 		IStorageInfo storageInfo = getStorageInfo();
@@ -239,13 +239,13 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		ICardGroup root = fstore.getCardGroupRoot();
 		tree.setInput(root);
 		tree.refresh(true);
-		updateViewer();
+		refreshViewer();
 	}
 
 	@Override
 	public void activate() {
 		super.activate();
-		reloadData();
+		refresh();
 	}
 
 	private void updateInfo() {
@@ -294,7 +294,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		if (storageInfo != null) {
 			storageInfo.setProperty("format", f);
 		}
-		reloadData();
+		refresh();
 	}
 
 	protected ICardField[] getGroupFields() {
@@ -391,7 +391,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 					getControl().getDisplay().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							reloadData();
+							refresh();
 						}
 					});
 					monitor.done();

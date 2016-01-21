@@ -32,7 +32,7 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	protected void makeActions() {
 		super.makeActions();
 		actionGroupCopyPaste = new CopyPasteActionGroup(getSelectionProvider());
-		actionRefresh = new RefreshAction(this::reloadData);
+		actionRefresh = new RefreshAction(this::refresh);
 	}
 
 	@Override

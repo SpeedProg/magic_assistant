@@ -21,6 +21,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 
@@ -67,20 +68,26 @@ public abstract class AbstractViewPage implements IViewPage {
 	@Override
 	public void activate() {
 		contributeToActionBars();
-		// selection provider
-		// getViewSite().setSelectionProvider(getSelectionProvider());
+		refresh();
+	}
+
+	@Override
+	public void saveState(IMemento memento) {
+	}
+
+	@Override
+	public void refresh() {
+		// full data refresh
 	}
 
 	public void contributeToActionBars() {
 		IActionBars actionBars = getViewSite().getActionBars();
 		// toolbar
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
-		// toolBarManager.removeAll();
 		fillLocalToolBar(toolBarManager);
 		toolBarManager.update(true);
 		// local view menu
 		IMenuManager viewMenuManager = actionBars.getMenuManager();
-		// viewMenuManager.removeAll();
 		fillLocalPullDown(viewMenuManager);
 		viewMenuManager.updateAll(true);
 		// global handlers
@@ -95,7 +102,6 @@ public abstract class AbstractViewPage implements IViewPage {
 		hookContextMenu(getContextMenuManager());
 	}
 
-	@Override
 	public boolean hookContextMenu(MenuManager menuMgr) {
 		return false;
 	}
@@ -110,20 +116,13 @@ public abstract class AbstractViewPage implements IViewPage {
 	/**
 	 * @param bars
 	 */
-	@Override
 	public void setGlobalHandlers(IActionBars bars) {
 		// override if needed
 	}
 
 	protected MenuManager createContextMenuManager() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				fillContextMenu(manager);
-			}
-		});
+		setContextMenuManager(menuMgr);
 		return menuMgr;
 	}
 
@@ -149,7 +148,6 @@ public abstract class AbstractViewPage implements IViewPage {
 	/**
 	 * @param viewMenuManager
 	 */
-	@Override
 	public void fillContextMenu(IMenuManager viewMenuManager) {
 		// override if need view menu
 	}
@@ -157,7 +155,6 @@ public abstract class AbstractViewPage implements IViewPage {
 	/**
 	 * @param viewMenuManager
 	 */
-	@Override
 	public void fillLocalPullDown(IMenuManager viewMenuManager) {
 		// override if need view menu
 	}
@@ -165,7 +162,6 @@ public abstract class AbstractViewPage implements IViewPage {
 	/**
 	 * @param toolBarManager
 	 */
-	@Override
 	public void fillLocalToolBar(IToolBarManager toolBarManager) {
 		// override if need toolbar
 	}

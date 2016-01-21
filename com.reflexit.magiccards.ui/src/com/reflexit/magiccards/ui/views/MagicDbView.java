@@ -55,7 +55,7 @@ public class MagicDbView extends AbstractSingleControlCardsView {
 
 		@Override
 		protected String getPreferencePageId() {
-			return getViewPreferencePageId();
+			return MagicDbView.this.getPreferencePageId();
 		}
 
 		@Override

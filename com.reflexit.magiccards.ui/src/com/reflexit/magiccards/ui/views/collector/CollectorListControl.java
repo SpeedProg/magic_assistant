@@ -50,7 +50,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	protected void runShowFilter() {
 		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getElementPreferenceStore());
 		if (cardFilterDialog.open() == IStatus.OK)
-			reloadData();
+			refresh();
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 	public void handleEvent(final CardEvent event) {
 		int type = event.getType();
 		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE || type == CardEvent.ADD) {
-			WaitUtils.asyncExec(() -> reloadData());
+			WaitUtils.asyncExec(() -> refresh());
 		}
 	}
 

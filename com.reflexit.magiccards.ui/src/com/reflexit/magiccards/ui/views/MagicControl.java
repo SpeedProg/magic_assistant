@@ -10,7 +10,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
-public abstract class MagicControl extends AbstractViewPage implements IMagicControl {
+public abstract class MagicControl extends AbstractViewPage {
 	public MagicControl() {
 	}
 
@@ -25,7 +25,7 @@ public abstract class MagicControl extends AbstractViewPage implements IMagicCon
 		super.activate();
 		addListeners();
 		// getViewSite().setSelectionProvider(getSelectionProvider());// XXX
-		reloadData();
+		refresh();
 	}
 
 	@Override
@@ -81,11 +81,6 @@ public abstract class MagicControl extends AbstractViewPage implements IMagicCon
 	}
 
 	protected void propertyChange(PropertyChangeEvent event) {
-		// override
-	}
-
-	@Override
-	public void refresh() {
 		// override
 	}
 

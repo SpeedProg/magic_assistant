@@ -41,11 +41,8 @@ public abstract class AbstractDeckPage extends AbstractViewPage implements IDeck
 	}
 
 	@Override
-	public void activate() {
-		super.activate();
-		// selection provider
-		// XXX
-		getCardStore();
+	public void refresh() {
+		getCardStore(); // init card store
 	}
 
 	@Override

@@ -361,6 +361,6 @@ public class DrawPage extends AbstractDeckListPage {
 
 	private void fullReload() {
 		playdeck.setRefreshRequired(true);
-		reloadData();
+		refresh();
 	}
 }

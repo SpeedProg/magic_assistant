@@ -16,7 +16,6 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl.Presentation;
-import com.reflexit.magiccards.ui.views.IMagicControl;
 import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.StackPageGroup;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
@@ -114,21 +113,6 @@ public class MyCardsView extends AbstractMyCardsView {
 	@Override
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		super.fillLocalToolBar(manager);
-	}
-
-	@Override
-	protected synchronized IMagicControl getMagicControl(IViewPage page) {
-		// System.err.println(deckPage);
-		if (page instanceof IMagicControl) {
-			return (IMagicControl) page;
-		}
-		return null;
-	}
-
-	@Override
-	protected synchronized IMagicControl getMagicControl() {
-		IViewPage page = getPageGroup().getActivePage();
-		return getMagicControl(page);
 	}
 
 	@Override

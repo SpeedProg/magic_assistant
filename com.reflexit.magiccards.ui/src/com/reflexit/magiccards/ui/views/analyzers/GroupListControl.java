@@ -50,7 +50,7 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 	 * Update view in UI thread after data load is finished
 	 */
 	@Override
-	public void updateViewer() {
+	public void refreshViewer() {
 		if (viewer.getControl().isDisposed())
 			return;
 		ISelection selection = getSelection();

@@ -21,6 +21,7 @@ import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.dnd.MagicCardDragListener;
 import com.reflexit.magiccards.ui.dnd.MagicCardDropAdapter;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.analyzers.AbstractDeckPage;
 
 public class GraphicsDeckPage extends AbstractDeckPage {
@@ -90,7 +91,6 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 		return panel.getViewer();
 	}
 
-
 	public String getStatusMessage() {
 		if (fstore.getSize() > 100) {
 			return "Cannot show graphics for " + fstore.getSize() + " cards";
@@ -99,17 +99,16 @@ public class GraphicsDeckPage extends AbstractDeckPage {
 	}
 
 	@Override
-	public void activate() {
-		super.activate();
+	public void refresh() {
 		fstore.setLocation(getCardStore().getLocation());
 		fstore.clear();
 		fstore.getCardStore().addAll(getCardStore().getCards());
 		fstore.update();
-		if (fstore.getSize() <= 100) {
+		WaitUtils.asyncExec(() -> {
 			panel.setInput(fstore);
 			panel.forceFocus();
-		}
-		status.setText(getStatusMessage());
+			status.setText(getStatusMessage());
+		});
 	}
 
 	@Override

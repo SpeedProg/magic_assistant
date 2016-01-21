@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -106,8 +107,6 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	private Presentation presentation = Presentation.TABLE;
 	protected static final DataManager DM = DataManager.getInstance();
-	protected IPersistentPreferenceStore columnsStore;
-	protected IPersistentPreferenceStore filterStore;
 	private QuickFilterControl quickFilter;
 	private SearchControl searchControl;
 	private Label statusLine;
@@ -134,14 +133,10 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	private boolean isGroupped = false;
 
 	public AbstractMagicCardsListControl(Presentation pres) {
-		this.columnsStore = PreferenceInitializer.getLocalStore(getPreferencePageId());
-		this.filterStore = PreferenceInitializer.getFilterStore(getPreferencePageId());
-		this.viewer = null;
 		this.presentation = pres;
 	}
 
 	public AbstractMagicCardsListControl() {
-		this(null);
 	}
 
 	public void setPresentation(Presentation presentation) {
@@ -208,16 +203,16 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 
 	@Override
 	public IPersistentPreferenceStore getColumnsPreferenceStore() {
-		return this.columnsStore;
+		return PreferenceInitializer.getLocalStore(getPreferencePageId());
 	}
 
 	@Override
 	public IPersistentPreferenceStore getElementPreferenceStore() {
-		return this.filterStore;
+		return PreferenceInitializer.getFilterStore(getPreferencePageId());
 	}
 
 	public IPersistentPreferenceStore getPresentaionPreferenceStore() {
-		return this.columnsStore;
+		return PreferenceInitializer.getLocalStore(getPreferencePageId());
 	}
 
 	public IMagicViewer getManager() {
@@ -330,8 +325,8 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			this.viewer.dispose();
 		}
 		try {
-			columnsStore.save();
-			filterStore.save();
+			getColumnsPreferenceStore().save();
+			getElementPreferenceStore().save();
 			getPresentaionPreferenceStore().save();
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
@@ -359,11 +354,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	}
 
 	public void reGroup() {
-		reloadData();
+		refresh();
 	}
 
 	@Override
-	public void reloadData() {
+	public void refresh() {
 		MagicLogger.trace("reload data " + getClass());
 		setNextSelection(getSelection());
 		syncFilter();
@@ -400,7 +395,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		loadData(new Runnable() {
 			@Override
 			public void run() {
-				updateViewer();
+				refreshViewer();
 				// select first visible element
 				if (fstore.getSize() == 0)
 					return;
@@ -641,7 +636,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		this.actionResetFilter = new ImageAction("Reset Filter", "icons/clcl16/reset_filter.gif",
 				"Resets the filter to default values", this::runResetFilter);
 		this.actionSortBy = new SortByAction(getSortColumnCollection(), null, getPresentaionPreferenceStore(),
-				this::reloadData);
+				this::refresh);
 		this.actionGroupBy = new GroupByAction(getGroups(), null, getPresentaionPreferenceStore(), this::reGroup);
 		this.actionShowPrefs = new ShowPreferencesAction(getPreferencePageId()) {
 			@Override
@@ -693,21 +688,16 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 						((IMagicColumnViewer) viewer).updateColumns((String) newValue);
 					}
 				});
-				WaitUtils.asyncExec(() -> refresh());
+				WaitUtils.asyncExec(() -> refreshViewer());
 			}
 		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
-			WaitUtils.asyncExec(() -> refresh());
+			WaitUtils.asyncExec(() -> refreshViewer());
 		} else if (property.equals(PreferenceConstants.LOCAL_SHOW_QUICKFILTER)) {
 			boolean qf = Boolean.valueOf(newValue.toString());
 			WaitUtils.asyncExec(() -> setQuickFilterVisible(qf));
 		} else if (newValue instanceof FontData[] || newValue instanceof RGB) {
-			WaitUtils.asyncExec(() -> refresh());
+			WaitUtils.asyncExec(() -> refreshViewer());
 		}
-	}
-
-	@Override
-	public void refresh() {
-		viewer.refresh();
 	}
 
 	public void runCopy() {
@@ -843,8 +833,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 	/**
 	 * Update view in UI thread after data load is finished
 	 */
-	@Override
-	public void updateViewer() {
+	public void refreshViewer() {
 		IFilteredCardStore filteredStore = getFilteredStore();
 		Location location = filteredStore.getLocation();
 		Object object = location == null ? getClass() : location;
@@ -934,6 +923,11 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 		}
 	}
 
+	@Override
+	public void saveState(IMemento memento) {
+		saveColumnLayout();
+	}
+
 	public void saveColumnLayout() {
 		if (!(viewer instanceof IMagicColumnViewer))
 			return;
@@ -1013,7 +1007,7 @@ public abstract class AbstractMagicCardsListControl extends MagicControl
 			if (postLoad != null)
 				display.asyncExec(postLoad);
 			else
-				display.asyncExec(() -> updateViewer());
+				display.asyncExec(() -> refreshViewer());
 		} catch (final Exception e) {
 			// display.asyncExec(() ->
 			// MessageDialog.openError(display.getActiveShell(), "Error",

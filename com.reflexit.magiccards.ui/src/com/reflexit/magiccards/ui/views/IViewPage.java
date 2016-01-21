@@ -1,19 +1,17 @@
 package com.reflexit.magiccards.ui.views;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.services.IDisposable;
 
 /**
  * Interface which is used for views which multiple pages, only one of which is
- * visible at a time. These pages can be arranged in tabs or stack layout with
- * some other control that switches them.
+ * visible at a time (mostly). These pages can be arranged in tabs or stack
+ * layout with some other control that switches them.
  * 
  * @author elaskavaia
  *
@@ -63,15 +61,9 @@ public interface IViewPage extends IDisposable {
 
 	public void setContextMenuManager(MenuManager menuMgr);
 
-	public abstract boolean hookContextMenu(MenuManager menuMgr);
-
 	public ISelectionProvider getSelectionProvider();
 
-	public abstract void setGlobalHandlers(IActionBars bars);
+	public void saveState(IMemento memento);
 
-	public abstract void fillLocalPullDown(IMenuManager manager);
-
-	public abstract void fillContextMenu(IMenuManager manager);
-
-	public abstract void fillLocalToolBar(IToolBarManager manager);
+	public abstract void refresh();
 }

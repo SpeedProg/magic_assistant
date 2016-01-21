@@ -124,6 +124,6 @@ public class GallerySelectionView extends GalleryView {
 			}
 		}
 		gsstore.update();
-		getMagicControl().updateViewer();
+		((AbstractMagicCardsListControl) getMagicControl()).refreshViewer();
 	}
 }
