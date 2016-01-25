@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views.lib;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -8,7 +7,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.swt.widgets.Control;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
@@ -22,35 +20,12 @@ import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.StackPageGroup;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
-import com.reflexit.magiccards.ui.widgets.ComboContributionItem;
 
 public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
 	private IFilteredCardStore mystore;
 
 	public MyCardsView() {
-	}
-
-	class PresentationComboContributionItem extends ComboContributionItem {
-		protected PresentationComboContributionItem(String string) {
-			super("pres_id");
-			ArrayList<String> list = new ArrayList<>();
-			for (final Presentation rt : Presentation.values()) {
-				list.add(rt.getLabel());
-			}
-			setLabels(list);
-			setSelection(string);
-		}
-
-		@Override
-		protected int computeWidth(Control control) {
-			return 110;
-		}
-
-		@Override
-		protected void onSelect(String text) {
-			getPageGroup().activate(text);
-		}
 	}
 
 	class MyCardPresentation extends MyCardsListControl {
@@ -75,7 +50,12 @@ public class MyCardsView extends AbstractMyCardsView {
 
 		@Override
 		public void fillLocalToolBar(IToolBarManager manager) {
-			manager.add(new PresentationComboContributionItem(getPresentation().getLabel()));
+			manager.add(new PresentationComboContributionItem(getPresentation().getLabel()) {
+				@Override
+				protected void onSelect(String text) {
+					getPageGroup().activate(text);
+				}
+			});
 			super.fillLocalToolBar(manager);
 		}
 

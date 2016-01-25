@@ -171,7 +171,7 @@ public class DeckView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected void activate() {
+	public void activate() {
 		super.activate();
 		updatePartName();
 	}

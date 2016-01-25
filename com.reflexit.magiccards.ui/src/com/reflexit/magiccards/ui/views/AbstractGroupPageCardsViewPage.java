@@ -1,38 +1,34 @@
 package com.reflexit.magiccards.ui.views;
 
-import java.util.ArrayList;
-
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.IViewPart;
 
-import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.utils.SelectionProviderIntermediate;
 
-public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
+/**
+ * View page which has a group as main control
+ * 
+ */
+public abstract class AbstractGroupPageCardsViewPage extends AbstractViewPage {
 	private Composite main;
 	private ViewPageGroup pageGroup;
 	private SelectionProviderIntermediate selectionProviderBridge = new SelectionProviderIntermediate();
 	private MenuManager sharedContextMenuManager;
 
-	public AbstractGroupPageCardsView() {
+	public AbstractGroupPageCardsViewPage() {
 		pageGroup = createPageGroup();
 		createPages();
 	}
 
 	protected ViewPageGroup createPageGroup() {
-		return new FolderPageGroup() {
+		return new StackPageGroup() {
 			@Override
 			public void activate() {
 				IViewPage activePage = pageGroup.getActivePage();
@@ -50,9 +46,9 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 	}
 
 	@Override
-	public void init(IViewSite site) throws PartInitException {
+	public void init(IViewPart site) {
 		super.init(site);
-		pageGroup.init(this);
+		pageGroup.init(site);
 	}
 
 	@Override
@@ -62,12 +58,12 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 	}
 
 	@Override
-	protected ISelectionProvider getSelectionProvider() {
+	public ISelectionProvider getSelectionProvider() {
 		return selectionProviderBridge;
 	}
 
 	@Override
-	protected void createMainControl(Composite parent) {
+	protected void createPageContents(Composite parent) {
 		main = new Composite(parent, SWT.NONE);
 		main.setLayoutData(new GridData(GridData.FILL_BOTH));
 		main.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -76,76 +72,42 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 	}
 
 	@Override
-	protected void activate() {
-		if (pageGroup.getActivePageIndex() < 0)
-			pageGroup.setActivePageIndex(0);
+	public void activate() {
 		pageGroup.activate();
+		super.activate();
 	}
 
 	protected synchronized IViewPage getActivePage() {
 		return pageGroup.getActivePage();
 	}
 
-	@Override
 	public IFilteredCardStore getFilteredStore() {
 		return ((IMagicCardListControl) getMainPage()).getFilteredStore();
 	}
 
-	@Override
-	protected void hookContextMenu() {
-		// register view menu
-		registerContextMenu(getContextMenuManager());
-	}
-
-	public IAction getGroupAction() {
-		return ((AbstractMagicCardsListControl) getActivePage()).getGroupAction();
-	}
-
-	public void setSelection(IStructuredSelection structuredSelection) {
-		ArrayList<Object> l = new ArrayList<Object>();
-		for (Object o : structuredSelection.toList()) {
-			if (o instanceof MagicCard) {
-				l.addAll(((MagicCard) o).getRealCards().getChildrenList());
-				continue;
-			} else if (o instanceof IMagicCard) {
-				l.add(o);
-			}
-		}
-		getSelectionProvider().setSelection(new StructuredSelection(l));
-	}
-
 	protected void preActivate(IViewPage activePage) {
-		// clear menus and actions
-		clearActionBars();
-	}
-
-	@Override
-	protected void clearActionBars() {
-		super.clearActionBars();
-		// reset context menu
-		sharedContextMenuManager = createContextMenuManager();
-		pageGroup.getActivePage().setContextMenuManager(sharedContextMenuManager);
-		hookContextMenu(); // register
+		// noting for bow
 	}
 
 	protected void postActivate(IViewPage activePage) {
-		// contribute this view extra actions
+		// contribute this group's extra actions
 		contributeToActionBars();
 		registerSelectionProvider();
 	}
 
-	@Override
 	protected void registerSelectionProvider() {
 		selectionProviderBridge.setSelectionProviderDelegate(pageGroup.getActivePage().getSelectionProvider());
-		super.registerSelectionProvider();
 	}
 
-	private MenuManager getContextMenuManager() {
+	@Override
+	public MenuManager getContextMenuManager() {
+		if (sharedContextMenuManager == null)
+			sharedContextMenuManager = createContextMenuManager();
 		return sharedContextMenuManager;
 	}
 
 	@Override
-	public void reloadData() {
+	public void refresh() {
 		if (getActivePage() != null)
 			getActivePage().refresh();
 	}
@@ -164,7 +126,6 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 		return pageGroup.getPage(0);
 	}
 
-	@Override
 	public IPersistentPreferenceStore getFilterPreferenceStore() {
 		if (getActivePage() instanceof IMagicCardListControl)
 			return ((IMagicCardListControl) getActivePage()).getElementPreferenceStore();
