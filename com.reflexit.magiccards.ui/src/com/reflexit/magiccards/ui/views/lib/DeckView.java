@@ -231,7 +231,6 @@ public class DeckView extends AbstractMyCardsView {
 					}
 				} else {
 					// System.err.println(event);
-					getPageGroup().refresh();
 					reloadData();// XXX
 				}
 			}
