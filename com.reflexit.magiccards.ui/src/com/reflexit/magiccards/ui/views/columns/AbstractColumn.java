@@ -128,6 +128,10 @@ public abstract class AbstractColumn extends ColumnLabelProvider {
 
 	@Override
 	public Color getBackground(Object element) {
+		// if (element instanceof ICardGroup) {
+		// return
+		// Display.getDefault().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+		// }
 		boolean own = false;
 		if (element instanceof IMagicCardPhysical) {
 			own = ((IMagicCardPhysical) element).isOwn();
