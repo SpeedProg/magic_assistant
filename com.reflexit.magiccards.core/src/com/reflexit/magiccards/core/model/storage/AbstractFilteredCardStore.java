@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model.storage;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -208,11 +210,26 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 						ICardGroup group = findGroupIndex(elem, filter);
 						addToNameGroup(elem, group);
 					}
+					removeSingleNameGroups(rootGroup);
 				}
 			} else {
 				rootGroup.addAll(filteredList);
 			}
 			rootGroup.setFilter(filter);
+		}
+	}
+
+	private void removeSingleNameGroups(CardGroup group) {
+		if (group.getFieldIndex() == MagicCardField.NAME && filter.isNameGroupping()) {
+			if (group.size() == 1) {
+				group.getParent().remove(group);
+				group.getParent().add(group.getChildAtIndex(0));
+			}
+		} else {
+			Collection<CardGroup> subGroups = new ArrayList<CardGroup>(group.getSubGroups());
+			for (CardGroup sub : subGroups) {
+				removeSingleNameGroups(sub);
+			}
 		}
 	}
 
