@@ -1003,7 +1003,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 
 	@Override
 	public void activate() {
-		super.activate();
+		contributeToActionBars();
 		addListeners();
 		// getViewSite().setSelectionProvider(getSelectionProvider());// XXX
 		refresh();
