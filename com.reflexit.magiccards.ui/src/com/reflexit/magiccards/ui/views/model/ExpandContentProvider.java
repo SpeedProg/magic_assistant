@@ -37,8 +37,6 @@ public class ExpandContentProvider extends TableViewerContentProvider implements
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (getInput() == newInput)
-			return; // XXX?
 		super.inputChanged(viewer, oldInput, newInput);
 		this.topChildren = getFlatChildren(newInput);
 	}
