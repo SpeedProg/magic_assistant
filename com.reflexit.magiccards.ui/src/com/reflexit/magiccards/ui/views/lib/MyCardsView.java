@@ -15,9 +15,9 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
+import com.reflexit.magiccards.ui.views.FolderPageGroup;
 import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.Presentation;
-import com.reflexit.magiccards.ui.views.StackPageGroup;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
 
@@ -50,12 +50,13 @@ public class MyCardsView extends AbstractMyCardsView {
 
 		@Override
 		public void fillLocalToolBar(IToolBarManager manager) {
-			manager.add(new PresentationComboContributionItem(getPresentation().getLabel()) {
-				@Override
-				protected void onSelect(String text) {
-					getPageGroup().activate(text);
-				}
-			});
+			// manager.add(new
+			// PresentationComboContributionItem(getPresentation().getLabel()) {
+			// @Override
+			// protected void onSelect(String text) {
+			// getPageGroup().activate(text);
+			// }
+			// });
 			super.fillLocalToolBar(manager);
 		}
 
@@ -69,7 +70,7 @@ public class MyCardsView extends AbstractMyCardsView {
 
 	@Override
 	protected ViewPageGroup createPageGroup() {
-		return new StackPageGroup() {
+		return new FolderPageGroup() {
 			@Override
 			public void activate() {
 				IViewPage activePage = getPageGroup().getActivePage();
@@ -82,14 +83,14 @@ public class MyCardsView extends AbstractMyCardsView {
 
 	@Override
 	protected void createPages() {
-		addPage(Presentation.TABLE);
-		addPage(Presentation.SPLITTREE);
-		addPage(Presentation.TREE);
-		addPage(Presentation.GALLERY);
+		addPage(Presentation.TREE, "Cards");
+		addPage(Presentation.TABLE, "List");
+		addPage(Presentation.SPLITTREE, "Groups");
+		addPage(Presentation.GALLERY, "Gallery");
 	}
 
-	protected void addPage(Presentation pres) {
-		getPageGroup().add(new ViewPageContribution("", pres.getLabel(), null, new MyCardPresentation(pres)));
+	protected void addPage(Presentation pres, String name) {
+		getPageGroup().add(new ViewPageContribution(pres.name(), name, null, new MyCardPresentation(pres)));
 	}
 
 	@Override
