@@ -7,6 +7,11 @@
      -->
 
      <Match>
+       <!--  All malicious access stuff -->
+       <Bug code="MS" />
+     </Match>
+
+     <Match>
          <Bug pattern="SBSC_USE_STRINGBUFFER_CONCATENATION" />
      </Match>
 
