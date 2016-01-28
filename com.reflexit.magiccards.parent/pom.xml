@@ -120,6 +120,7 @@
             <artifactId>findbugs-maven-plugin</artifactId>
             <version>3.0.2</version>
             <configuration>
+               <excludeFilterFile>../com.reflexit.magiccards.parent/findbugs-exclude.xml</excludeFilterFile>
                <findbugsXmlOutput>true</findbugsXmlOutput>
                <failOnError>false</failOnError>
             </configuration>

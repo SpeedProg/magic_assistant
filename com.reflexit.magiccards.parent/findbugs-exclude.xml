@@ -1,0 +1,22 @@
+<FindBugsFilter>
+
+<!--  
+     <Match>
+       <Bug code="DE,UrF,SIC" />
+     </Match>
+     -->
+
+     <Match>
+         <Bug pattern="SBSC_USE_STRINGBUFFER_CONCATENATION" />
+     </Match>
+
+
+     <!-- All bugs in test classes, except for JUnit-specific bugs -->
+     <Match>
+      <Class name="~.*\.*Test" />
+      <Not>
+          <Bug code="IJU" />
+      </Not>
+     </Match>
+
+</FindBugsFilter>
