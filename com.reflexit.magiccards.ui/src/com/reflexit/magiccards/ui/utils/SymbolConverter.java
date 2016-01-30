@@ -34,6 +34,7 @@ public class SymbolConverter {
 		manaMap.put("{B}", "icons/mana/Symbol_B_mana.gif");
 		manaMap.put("{G}", "icons/mana/Symbol_G_mana.gif");
 		manaMap.put("{R}", "icons/mana/Symbol_R_mana.gif");
+		manaMap.put("{C}", "icons/mana/Symbol_C_mana.png");
 		manaMap.put("{S}", "icons/mana/Symbol_snow_mana.gif");
 		manaMap.put("{X}", "icons/mana/Symbol_X_mana.gif");
 		manaMap.put("{Y}", "icons/mana/Symbol_Y_mana.gif");
