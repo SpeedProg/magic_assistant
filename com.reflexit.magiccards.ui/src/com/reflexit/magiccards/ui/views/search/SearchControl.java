@@ -57,9 +57,11 @@ public class SearchControl {
 
 	public void setVisible(boolean vis) {
 		comp.setVisible(vis);
-		if (!vis)
+		if (!vis) {
 			this.gridData.heightHint = 0;
-		else {
+			this.gridData.exclude = true;
+		} else {
+			this.gridData.exclude = false;
 			this.gridData.heightHint = SWT.DEFAULT;
 			this.gridData.minimumHeight = 32;
 			setFocus();
@@ -112,7 +114,7 @@ public class SearchControl {
 			}
 		});
 		this.searchText = new Text(toolbar, SWT.SEARCH);
-		//		this.searchText.setText("search...");
+		// this.searchText.setText("search...");
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
 		this.searchText.setLayoutData(td);
 		this.searchText.addModifyListener(new ModifyListener() {
@@ -247,7 +249,8 @@ public class SearchControl {
 	}
 
 	/**
-	 * For testing and external search if needed. Ui buttons would not be updated.
+	 * For testing and external search if needed. Ui buttons would not be
+	 * updated.
 	 *
 	 * @param text
 	 * @param matchCase

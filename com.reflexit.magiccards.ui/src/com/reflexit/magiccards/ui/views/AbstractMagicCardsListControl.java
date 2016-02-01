@@ -148,8 +148,9 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 
 	public void createMainControl(Composite area) {
 		Composite partControl = new Composite(area, SWT.NONE);
-		partControl.setLayout(GridLayoutFactory.fillDefaults().create());
+		partControl.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 0).create());
 		partControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		// partControl.setBackground(partControl.getDisplay().getSystemColor(SWT.COLOR_CYAN));
 		createTopBar(partControl);
 		createTableControl(partControl);
 		createSearchControl(partControl);
@@ -407,6 +408,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 
 	@Override
 	public void setStatus(String text) {
+		if (statusLine == null)
+			return;
 		if (statusLine.isDisposed())
 			return;
 		if (statusLine.getText().equals(text))
@@ -418,10 +421,12 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		} else {
 			statusLine.setVisible(true);
 		}
-		statusLine.getParent().layout(true, true);
+		statusLine.getParent().getParent().layout(true, true);
 	}
 
 	public void setWarning(boolean war) {
+		if (warning == null)
+			return;
 		if (warning.isDisposed())
 			return;
 		warning.setVisible(war);
@@ -494,12 +499,12 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 
 	protected Composite createTopBar(Composite composite) {
 		topToolBar = new Composite(composite, SWT.NONE);
-		topToolBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		topToolBar.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		topToolBar.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
 		quickFilter = createQuickFilterControl(topToolBar);
 		quickFilter.setLayoutData(new GridData());
 		statusLine = createStatusLine(topToolBar);
-		statusLine.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		statusLine.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		warning = new Label(topToolBar, SWT.NONE);
 		warning.setImage(MagicUIActivator.getImage("icons/clcl16/exclamation.gif"));
 		warning.setToolTipText("There are filtered cards!");
@@ -547,7 +552,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 			manager.add(this.actionGroupBy);
 		if (actionSortBy != null)
 			manager.add(this.actionSortBy);
-		manager.add(this.actionShowFind);
+		if (actionShowFind != null)
+			manager.add(this.actionShowFind);
 		manager.add(this.actionShowFilter);
 		manager.add(this.actionResetFilter);
 		manager.add(this.actionShowPrefs);
@@ -728,7 +734,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	}
 
 	protected void setQuickFilterVisible(boolean qf) {
-		quickFilter.setVisible(qf);
+		if (quickFilter != null)
+			quickFilter.setVisible(qf);
 	}
 
 	protected void sort(int index, int dir) {
@@ -764,7 +771,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 			String value = ps.getString(PreferenceConstants.LOCAL_COLUMNS);
 			cviewer.updateColumns(value);
 		}
-		quickFilter.setPreferenceStore(getElementPreferenceStore());
+		if (quickFilter != null)
+			quickFilter.setPreferenceStore(getElementPreferenceStore());
 		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
 		setQuickFilterVisible(qf);
 	}

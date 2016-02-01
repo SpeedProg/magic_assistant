@@ -28,6 +28,7 @@ import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardGame.MagicCardGameField;
 import com.reflexit.magiccards.core.model.MagicCardGame.Zone;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
+import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.storage.PlayingDeck;
@@ -176,6 +177,11 @@ public class DrawPage extends AbstractDeckListPage {
 	}
 
 	@Override
+	public ICardStore<IMagicCard> getCardStore() {
+		return super.getCardStore();
+	}
+
+	@Override
 	protected void loadInitial() {
 		setQuickFilterVisible(false);
 	}
@@ -200,7 +206,7 @@ public class DrawPage extends AbstractDeckListPage {
 		manager.add(showexile);
 		manager.add(new Separator());
 		manager.add(refresh);
-		super.fillLocalPullDown(manager);
+		// super.fillLocalPullDown(manager);
 	}
 
 	@Override
@@ -216,7 +222,7 @@ public class DrawPage extends AbstractDeckListPage {
 		manager.add(new Separator());
 		manager.add(actionShowFind);
 		manager.add(refresh);
-		super.fillLocalToolBar(manager);
+		// super.fillLocalToolBar(manager);
 	}
 
 	@Override
@@ -230,7 +236,7 @@ public class DrawPage extends AbstractDeckListPage {
 		manager.add(tap);
 		manager.add(new Separator());
 		manager.add(actionShowFind);
-		super.fillContextMenu(manager);
+		// super.fillContextMenu(manager);
 	}
 
 	class SelectionImageAction extends ImageAction implements ISelectionChangedListener {
@@ -268,6 +274,7 @@ public class DrawPage extends AbstractDeckListPage {
 
 	@Override
 	protected void makeActions() {
+		super.makeActions();
 		this.reset = new ImageAction("New Game", "icons/obj16/hand16.png", "New Game. Shuffle and Draw 7", () -> {
 			playdeck.newGame();
 			unsort();
@@ -355,7 +362,8 @@ public class DrawPage extends AbstractDeckListPage {
 	@Override
 	public void activate() {
 		playdeck.setStore(getCardStore());
-		super.activate();
+		contributeToActionBars();
+		addListeners();
 		fullReload();
 	}
 

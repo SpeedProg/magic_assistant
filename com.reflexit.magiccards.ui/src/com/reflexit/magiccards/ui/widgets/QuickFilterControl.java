@@ -120,6 +120,7 @@ public class QuickFilterControl extends Composite {
 		super.setVisible(vis);
 		GridData gd = (GridData) getLayoutData();
 		gd.exclude = !vis;
+		gd.widthHint = vis ? SWT.DEFAULT : 0;
 		getParent().getParent().layout(true);
 		if (!vis) {
 			if (uthread != null) {

@@ -51,10 +51,10 @@ import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
@@ -76,7 +76,6 @@ import com.reflexit.magiccards.ui.views.columns.LegalityColumn;
 
 public class DeckLegalityPage2 extends AbstractDeckListPage {
 	private static final Format DEFAULT_FORMAT = Format.STANDARD;
-	private IFilteredCardStore fstore;
 	private Format format = DEFAULT_FORMAT;
 	private ImageAction load;
 	private LegalityMap deckLegalities = LegalityMap.EMPTY; // format->legality
@@ -98,10 +97,11 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	public void createPageContents(Composite area) {
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
-		createInfoPanel(sashForm);
 		createMainControl(sashForm);
-		sashForm.setWeights(new int[] { 25, 75 });
+		createInfoPanel(sashForm);
+		sashForm.setWeights(new int[] { 75, 25 });
 		makeActions();
+		setQuickFilterVisible(false);
 	}
 
 	abstract class CheckControlDecoration extends ControlDecoration {
@@ -224,7 +224,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	@Override
 	public void refresh() {
 		setFStore();
-		deckLegalities = LegalityMap.calculateDeckLegality(fstore.getCardStore());
+		deckLegalities = LegalityMap.calculateDeckLegality((ICardStore) fstore.getCardStore());
 		IStorageInfo storageInfo = getStorageInfo();
 		if (storageInfo != null) {
 			String f = storageInfo.getProperty("format");
@@ -271,7 +271,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	public void setFStore() {
 		if (getCardStore() == null)
 			return;
-		MemoryFilteredCardStore<IMagicCard> mstore = new MemoryFilteredCardStore<IMagicCard>();
+		MemoryFilteredCardStore<ICard> mstore = new MemoryFilteredCardStore<ICard>();
 		Location loc = getCardStore().getLocation();
 		MagicCardFilter filter = (MagicCardFilter) getDeckView().getFilter().clone();
 		ICardStore mainStore = DataManager.getInstance().getCardStore(loc.toMainDeck());
@@ -405,7 +405,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 
 	private Map<Integer, LegalityMap> calculateCardLegalities(IProgressMonitor monitor) {
 		try {
-			return ParseGathererLegality.cardSetLegality(fstore.getCardStore(), new CoreMonitorAdapter(monitor));
+			return ParseGathererLegality.cardSetLegality((ICardStore) fstore.getCardStore(),
+					new CoreMonitorAdapter(monitor));
 		} catch (IOException e) {
 			MessageDialog.openError(getControl().getShell(), "Error", e.getMessage());
 			return null;
@@ -433,7 +434,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	public String getStatusMessage() {
 		if (fstore == null || format == null || stats == null)
 			return "";
-		String err = format.validateLegality(fstore.getCardStore(), stats);
+		String err = format.validateLegality((ICardStore) fstore.getCardStore(), stats);
 		if (err == null)
 			return "Format: " + format.name() + " is legal";
 		else

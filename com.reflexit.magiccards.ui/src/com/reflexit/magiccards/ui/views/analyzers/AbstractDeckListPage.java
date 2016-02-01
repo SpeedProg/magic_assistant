@@ -13,12 +13,10 @@ import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
 public abstract class AbstractDeckListPage extends AbstractMagicCardsListControl implements IDeckPage {
-	private ICardStore store;
-
 	public ICardStore<IMagicCard> getCardStore() {
-		if (store == null && getViewPart() != null && getDeckView().getCardCollection() != null)
-			store = getDeckView().getCardCollection().getStore();
-		return store;
+		if (getViewPart() != null && getDeckView().getCardCollection() != null)
+			return getDeckView().getCardCollection().getStore();
+		return null;
 	}
 
 	@Override
