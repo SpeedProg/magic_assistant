@@ -24,7 +24,8 @@ import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 
 /**
- * Class that implements IFilteredCardStore, it is only contains filtered filteredList and no physical media
+ * Class that implements IFilteredCardStore, it is only contains filtered
+ * filteredList and no physical media
  *
  * @author Alena
  *
@@ -101,7 +102,7 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 		if (getCardStore() == null) {
 			MagicLogger.log("Cannot initialize " + this + ". Store is null");
 		} else
-		getCardStore().initialize();
+			getCardStore().initialize();
 	}
 
 	public boolean isInitialized() {
@@ -210,7 +211,9 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 						ICardGroup group = findGroupIndex(elem, filter);
 						addToNameGroup(elem, group);
 					}
-					removeSingleNameGroups(rootGroup);
+					if (filter.getGroupField() != MagicCardField.NAME) {
+						removeSingleNameGroups(rootGroup);
+					}
 				}
 			} else {
 				rootGroup.addAll(filteredList);
@@ -220,7 +223,9 @@ public class AbstractFilteredCardStore<T> implements IFilteredCardStore<T> {
 	}
 
 	private void removeSingleNameGroups(CardGroup group) {
-		if (group.getFieldIndex() == MagicCardField.NAME && filter.isNameGroupping()) {
+		if (!filter.isNameGroupping())
+			return;
+		if (group.getFieldIndex() == MagicCardField.NAME) {
 			if (group.size() == 1) {
 				group.getParent().remove(group);
 				group.getParent().add(group.getChildAtIndex(0));

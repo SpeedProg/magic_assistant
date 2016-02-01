@@ -118,7 +118,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 
 			@Override
 			public void remove() {
-				children.remove(cur);
+				CardGroup.this.remove(cur);
 				subs.remove(cur.getName());
 				recache();
 			}

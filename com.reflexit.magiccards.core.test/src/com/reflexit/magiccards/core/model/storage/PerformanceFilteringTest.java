@@ -78,7 +78,7 @@ public class PerformanceFilteringTest extends TestCase {
 
 	@Test
 	public void testDefaultFilter() {
-		assertFast(5, runfiltering());
+		assertFast(10, runfiltering());
 	}
 
 	@Test
