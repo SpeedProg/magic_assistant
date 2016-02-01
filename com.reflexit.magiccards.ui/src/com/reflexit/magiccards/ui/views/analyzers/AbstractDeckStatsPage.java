@@ -41,10 +41,10 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	public void createPageContents(Composite area) {
 		area.setLayout(new FillLayout());
 		SashForm sashForm = new SashForm(area, SWT.HORIZONTAL);
+		createMainControl(sashForm);
 		canvas = new ChartCanvas(sashForm, SWT.BORDER);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
-		createMainControl(sashForm);
-		sashForm.setWeights(new int[] { 60, 40 });
+		sashForm.setWeights(new int[] { 40, 60 });
 		makeActions();
 		loadInitial();
 	}
@@ -84,7 +84,8 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	protected Composite createTopBar(Composite composite) {
 		Composite bar = super.createTopBar(composite);
 		bar.setVisible(false);
-		((GridData) bar.getLayoutData()).heightHint = 0;
+		GridData gridData = (GridData) bar.getLayoutData();
+		gridData.exclude = true;
 		bar.getParent().layout(true, true);
 		return bar;
 	}
