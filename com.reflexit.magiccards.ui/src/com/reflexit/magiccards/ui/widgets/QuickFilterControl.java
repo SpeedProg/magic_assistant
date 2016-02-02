@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -13,7 +15,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -104,8 +105,8 @@ public class QuickFilterControl extends Composite {
 
 	public QuickFilterControl(Composite composite, Runnable run, boolean visible) {
 		super(composite, SWT.NONE);
-		setLayout(new GridLayout());
-		setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		setLayout(GridLayoutFactory.fillDefaults().create());
+		setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		createBar(this);
 		this.runnable = run;
 		setVisible(visible);
@@ -144,27 +145,23 @@ public class QuickFilterControl extends Composite {
 	}
 
 	void createBar(Composite comp) {
-		// toolbar composite
-		GridLayout gridLayout2 = new GridLayout(2, false);
-		gridLayout2.marginHeight = 0;
-		gridLayout2.marginWidth = 0;
-		comp.setLayout(gridLayout2);
+		setLayout(GridLayoutFactory.fillDefaults().numColumns(6).create());
+		// search field
+		createSearchField(comp);
 		// toolbar
 		toolbar = new ToolBar(comp, SWT.FLAT);
-		toolbar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		toolbar.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		// this has to be first to set proper hight of toolbar
 		createActions(toolbar);
-		// search field
-		createSearchField(toolbar);
 		createColorButton(toolbar, "White");
 		createColorButton(toolbar, "Blue");
 		createColorButton(toolbar, "Black");
 		createColorButton(toolbar, "Red");
 		createColorButton(toolbar, "Green");
 		// type
-		createTypeField(toolbar);
+		createTypeField(comp);
 		// set
-		createEditionField(toolbar);
+		createEditionField(comp);
 		// hide
 		// createHideButton(comp);
 	}
@@ -191,11 +188,10 @@ public class QuickFilterControl extends Composite {
 		store.setToDefault(EditionsFilterPreferencePage.LAST_SET);
 	}
 
-	private void createSearchField(ToolBar toolbar) {
-		this.searchText = new Text(toolbar, SWT.SEARCH);
+	private void createSearchField(Composite toolbar) {
+		this.searchText = new Text(toolbar, SWT.SEARCH | SWT.ICON_CANCEL);
 		this.searchText.setText(ALL_NAMES);
-		GridData td = new GridData(GridData.FILL_HORIZONTAL);
-		this.searchText.setLayoutData(td);
+		searchText.setLayoutData(GridDataFactory.fillDefaults().hint(200, 16).create());
 		this.searchText.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -220,16 +216,19 @@ public class QuickFilterControl extends Composite {
 			}
 		});
 		searchText.setToolTipText("Name filter");
-		ToolItem text = new ToolItem(toolbar, SWT.SEPARATOR);
-		text.setControl(this.searchText);
-		text.setWidth(200);
 		searchText.addFocusListener(new SearchContextFocusListener());
+		if (toolbar instanceof ToolBar) {
+			ToolItem text = new ToolItem((ToolBar) toolbar, SWT.SEPARATOR);
+			text.setControl(this.searchText);
+			text.setWidth(200);
+		}
 	}
 
-	private void createTypeField(ToolBar toolbar) {
+	private void createTypeField(Composite toolbar) {
 		typeCombo = new Combo(toolbar, SWT.BORDER);
 		typeCombo.add(ALL_TYPES);
 		typeCombo.setText(ALL_TYPES);
+		typeCombo.setLayoutData(GridDataFactory.fillDefaults().hint(100, 16).create());
 		Collection<String> names = CardTypes.getInstance().getLocalizedNames();
 		for (String type : names) {
 			typeCombo.add(type);
@@ -249,15 +248,18 @@ public class QuickFilterControl extends Composite {
 			}
 		});
 		typeCombo.setToolTipText("Type filter");
-		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
-		item.setControl(this.typeCombo);
-		item.setWidth(150);
 		typeCombo.addFocusListener(new SearchContextFocusListener());
+		if (toolbar instanceof ToolBar) {
+			ToolItem item = new ToolItem((ToolBar) toolbar, SWT.SEPARATOR);
+			item.setControl(typeCombo);
+			item.setWidth(150);
+		}
 	}
 
-	private void createEditionField(ToolBar toolbar) {
+	private void createEditionField(Composite toolbar) {
 		EditionTextControl setCombo = new EditionTextControl(toolbar, SWT.BORDER);
 		setCombo.setToolTipText("Set filter");
+		setCombo.setLayoutData(GridDataFactory.fillDefaults().hint(150, 16).create());
 		setCombo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -271,9 +273,11 @@ public class QuickFilterControl extends Composite {
 			}
 		});
 		this.setCombo = setCombo;
-		ToolItem item = new ToolItem(toolbar, SWT.SEPARATOR);
-		item.setControl(setCombo);
-		item.setWidth(180);
+		if (toolbar instanceof ToolBar) {
+			ToolItem item = new ToolItem((ToolBar) toolbar, SWT.SEPARATOR);
+			item.setControl(setCombo);
+			item.setWidth(180);
+		}
 	}
 
 	// private void createToolBarLabel(ToolBar toolbar, String string) {

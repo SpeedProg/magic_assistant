@@ -504,7 +504,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		quickFilter = createQuickFilterControl(topToolBar);
 		quickFilter.setLayoutData(new GridData());
 		statusLine = createStatusLine(topToolBar);
-		statusLine.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		statusLine.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 		warning = new Label(topToolBar, SWT.NONE);
 		warning.setImage(MagicUIActivator.getImage("icons/clcl16/exclamation.gif"));
 		warning.setToolTipText("There are filtered cards!");

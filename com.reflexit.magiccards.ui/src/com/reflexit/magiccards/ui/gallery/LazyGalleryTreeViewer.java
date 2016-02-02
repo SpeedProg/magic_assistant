@@ -37,8 +37,8 @@ import org.eclipse.swt.widgets.Widget;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 
 /**
- * This is super lazy viewer which works with non-lazy provider. It will not create tree items or ask for labels of
- * element until they are visible.
+ * This is super lazy viewer which works with non-lazy provider. It will not
+ * create tree items or ask for labels of element until they are visible.
  * 
  * @author elaskavaia
  *
@@ -71,6 +71,13 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 		gallery.setBackground(parent.getBackground());
 		gallery.setForeground(parent.getForeground());
 		setGroupsVisible(true);
+	}
+
+	@Override
+	public void refresh(boolean updateLabels) {
+		super.refresh(updateLabels);
+		gallery.setBackground(gallery.getParent().getBackground());
+		gallery.setForeground(gallery.getParent().getForeground());
 	}
 
 	public void setGroupsVisible(boolean visible) {
@@ -326,7 +333,8 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 	}
 
 	/**
-	 * How many of category items (top level) we create non-lazily. If all lazy it its lagging on first repaint
+	 * How many of category items (top level) we create non-lazily. If all lazy
+	 * it its lagging on first repaint
 	 * 
 	 * @return
 	 */

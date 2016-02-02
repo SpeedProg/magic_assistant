@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.Path;
@@ -17,6 +16,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -26,6 +26,9 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
@@ -57,7 +60,6 @@ import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
-import com.reflexit.magiccards.ui.widgets.ComboContributionItem;
 
 public class ExportDeckPage extends AbstractDeckPage {
 	private Browser textBrowser;
@@ -67,7 +69,6 @@ public class ExportDeckPage extends AbstractDeckPage {
 	private String textResult;
 	protected ReportType reportType;
 	private Text textArea;
-	private TypeComboContributionItem typeSelector;
 	StatusLineContributionItem a;
 	private ImageAction sideboard;
 	private ImageAction header;
@@ -77,34 +78,37 @@ public class ExportDeckPage extends AbstractDeckPage {
 	private MagicCardFilter filter;
 	private SortByAction actionSort;
 	private ImageAction actionRefresh;
+	private Combo typeCombo;
 
-	class TypeComboContributionItem extends ComboContributionItem {
-		protected TypeComboContributionItem() {
-			super("type_id");
-			Collection<ReportType> types = ImportExportFactory.getExportTypes();
-			ArrayList<String> list = new ArrayList<>();
-			for (final ReportType rt : types) {
-				list.add(rt.getLabel());
-			}
-			setLabels(list);
-		}
-
-		@Override
-		protected void onSelect(String text) {
-			setReportType(ImportExportFactory.getByLabel(text));
-		}
+	private void addComboType(ReportType rt) {
+		typeCombo.add(rt.getLabel());
+		typeCombo.setData(rt.getLabel(), rt);
 	}
 
 	@Override
 	public void createPageContents(Composite area) {
-		makeActions();
+		typeCombo = new Combo(area, SWT.READ_ONLY | SWT.DROP_DOWN);
+		typeCombo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+		Collection<ReportType> types = ImportExportFactory.getExportTypes();
+		for (ReportType rt : types) {
+			addComboType(rt);
+		}
+		typeCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setReportType(ImportExportFactory.getByLabel(typeCombo.getText()));
+			}
+		});
+		Composite exportArea = new Composite(area, SWT.NONE);
+		exportArea.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		exportArea.setFont(area.getFont());
 		stackLayout = new StackLayout();
-		area.setLayout(stackLayout);
+		exportArea.setLayout(stackLayout);
 		try {
 			// if (true)
 			// throw new SWTError();
-			this.textBrowser = new Browser(area, SWT.WRAP | SWT.INHERIT_DEFAULT);
-			this.textBrowser.setFont(area.getFont());
+			this.textBrowser = new Browser(exportArea, SWT.WRAP | SWT.INHERIT_FORCE);
+			this.textBrowser.setFont(exportArea.getFont());
 			textBrowser.addLocationListener(new LocationAdapter() {
 				@Override
 				public void changing(LocationEvent event) {
@@ -138,8 +142,7 @@ public class ExportDeckPage extends AbstractDeckPage {
 			MagicLogger.log(e);
 			textBrowser = null;
 		}
-		textArea = new Text(area, SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-		initReportTypes();
+		textArea = new Text(exportArea, SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		setTopControl();
 	}
 
@@ -151,10 +154,11 @@ public class ExportDeckPage extends AbstractDeckPage {
 			}
 		}
 		setReportType(reportType);
+		typeCombo.setText(reportType.getLabel());
 	}
 
 	protected void setTopControl() {
-		if (reportType.getLabel().contains("HTML") && textBrowser != null) {
+		if (reportType != null && reportType.getLabel().contains("HTML") && textBrowser != null) {
 			stackLayout.topControl = textBrowser;
 		} else {
 			stackLayout.topControl = textArea;
@@ -169,7 +173,6 @@ public class ExportDeckPage extends AbstractDeckPage {
 
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(this.typeSelector);
 		manager.add(this.save);
 		manager.add(actionSort);
 		manager.add(this.actionShowPrefs);
@@ -188,7 +191,6 @@ public class ExportDeckPage extends AbstractDeckPage {
 				saveAs();
 			}
 		};
-		this.typeSelector = new TypeComboContributionItem();
 		this.sideboard = new ImageAction("Include Sideboard", "icons/obj16/sideboard16.png", IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
@@ -217,6 +219,7 @@ public class ExportDeckPage extends AbstractDeckPage {
 		};
 		this.actionSort = new SortByAction(new MagicColumnCollection(null), filter, null, this::refresh);
 		this.actionRefresh = new RefreshAction(this::activate);
+		initReportTypes();
 	}
 
 	protected boolean isInludeSideboard() {
@@ -414,6 +417,10 @@ public class ExportDeckPage extends AbstractDeckPage {
 			setText("Error: " + e.getCause());
 		} catch (InterruptedException e) {
 			setText("Cancelled");
+		}
+		if (textBrowser != null) {
+			textBrowser.setBackground(getArea().getBackground());
+			textBrowser.setForeground(getArea().getForeground());
 		}
 		getArea().layout();
 	}
