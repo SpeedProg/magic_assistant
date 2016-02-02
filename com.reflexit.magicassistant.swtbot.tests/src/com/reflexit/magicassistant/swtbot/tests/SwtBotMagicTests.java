@@ -25,6 +25,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 		GroupByCost.class, //
 		OverwriteDeckCheck.class, //
 		EnterDeck.class,//
+		AnalysersTest.class, //
 })
 public class SwtBotMagicTests {
 	{
