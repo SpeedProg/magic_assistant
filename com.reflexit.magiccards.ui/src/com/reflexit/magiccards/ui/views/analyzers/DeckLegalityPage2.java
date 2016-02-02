@@ -11,7 +11,6 @@
  *******************************************************************************/
 package com.reflexit.magiccards.ui.views.analyzers;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +64,7 @@ import com.reflexit.magiccards.ui.actions.ImageAction;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 import com.reflexit.magiccards.ui.views.analyzers.GroupListControl.GroupTreeViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
@@ -407,8 +407,8 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		try {
 			return ParseGathererLegality.cardSetLegality((ICardStore) fstore.getCardStore(),
 					new CoreMonitorAdapter(monitor));
-		} catch (IOException e) {
-			MessageDialog.openError(getControl().getShell(), "Error", e.getMessage());
+		} catch (Exception e) {
+			WaitUtils.syncExec(() -> MessageDialog.openError(getControl().getShell(), "Error", e.getMessage()));
 			return null;
 		}
 	}

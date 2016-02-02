@@ -58,12 +58,12 @@ public abstract class AbstractDeckStatsPage extends AbstractDeckListPage {
 	@Override
 	public void fillLocalPullDown(IMenuManager manager) {
 		manager.add(actionRefresh);
-		super.fillLocalPullDown(manager);
+		// super.fillLocalPullDown(manager);
 	}
 
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
-		super.fillLocalToolBar(manager);
+		// super.fillLocalToolBar(manager);
 		manager.add(actionRefresh);
 	}
 

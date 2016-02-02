@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.MagicException;
-import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
@@ -21,7 +20,7 @@ public abstract class AbstractParseGathererPage {
 		load(ICoreProgressMonitor.NONE);
 	}
 
-	public synchronized void load(ICoreProgressMonitor monitor) throws IOException {
+	public synchronized void load(ICoreProgressMonitor monitor) throws IOException, MagicException {
 		monitor.beginTask(getTitle(), 100);
 		try {
 			URL url = new URL(getUrl());
@@ -31,8 +30,6 @@ public abstract class AbstractParseGathererPage {
 				return;
 			setHtml(html);
 			loadHtml(html, new SubCoreProgressMonitor(monitor, 50));
-		} catch (MagicException e) {
-			MagicLogger.log(e);
 		} finally {
 			monitor.done();
 		}
