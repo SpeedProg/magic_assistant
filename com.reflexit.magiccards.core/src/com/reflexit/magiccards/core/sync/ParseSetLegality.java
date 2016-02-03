@@ -15,7 +15,7 @@ import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 
-public class ParseSetLegality extends AbstractParseGathererPage {
+public class ParseSetLegality extends AbstractParseHtmlPage {
 	private Format format;
 
 	public ParseSetLegality(String format) {
@@ -43,7 +43,7 @@ public class ParseSetLegality extends AbstractParseGathererPage {
 			String string = sets[k].trim();
 			string = string.replaceAll("  ", " ");
 			string = string.replaceAll(" *\\(.*", "");
-			string = HtmlTableImportDelegate.purifyItem(string);
+			string = ParserHtmlHelper.purifyItem(string);
 			// System.err.println("Looking for " + string);
 			if (string.length() > 0) {
 				Edition ed = eds.getEditionByName(string);

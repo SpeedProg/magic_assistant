@@ -21,8 +21,8 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 /**
  * Retrieve legality info
  */
-public class ParseGathererCardLanguages extends AbstractParseGathererPage {
-	static final String SET_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Card/Languages.aspx";
+public class ParseGathererCardLanguages extends AbstractParseHtmlPage {
+	static final String SET_QUERY_URL_BASE = GatherHelper.GATHERER_URL_BASE + "Pages/Card/Languages.aspx";
 	private String lang;
 	private int cardId;
 	private int langId;

@@ -22,6 +22,7 @@ import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
 import com.reflexit.magiccards.core.sync.ParseSetLegality;
+import com.reflexit.magiccards.core.sync.ParseWikiSets;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
@@ -61,6 +62,7 @@ public class CheckForUpdateDbHandler extends AbstractHandler {
 					setsLoader.load(new SubCoreProgressMonitor(monitor, 10));
 					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
+					new ParseWikiSets().load(new SubCoreProgressMonitor(monitor, 10));
 					ParseSetLegality.loadAllFormats(new SubCoreProgressMonitor(monitor, 10));
 					final Collection<Edition> newSets = setsLoader.getNew();
 					if (newSets.size() > 0) {

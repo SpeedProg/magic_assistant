@@ -36,6 +36,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.monitor.ICoreRunnableWithProgress;
 import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseGathererSets;
+import com.reflexit.magiccards.core.sync.ParseWikiSets;
 import com.reflexit.magiccards.core.sync.TextPrinter;
 import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.core.xml.StringCache;
@@ -211,6 +212,7 @@ public class XmlCardHolder implements ICardHandler {
 					pm.subTask("Updating set list...");
 					try {
 						new ParseGathererSets().load(new SubCoreProgressMonitor(pm, 10));
+						new ParseWikiSets().load(new SubCoreProgressMonitor(pm, 10));
 						Editions.getInstance().save();
 					} catch (Exception e) {
 						MagicLogger.log(e); // move on if exception via set loading

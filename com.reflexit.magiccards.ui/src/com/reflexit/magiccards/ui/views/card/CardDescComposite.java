@@ -27,7 +27,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
-import com.reflexit.magiccards.core.sync.ParserHtmlHelper;
+import com.reflexit.magiccards.core.sync.GatherHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
@@ -80,7 +80,7 @@ class CardDescComposite extends Composite {
 					if (location.equals("about:blank"))
 						return;
 					try {
-						int cardId = ParserHtmlHelper.extractCardIdFromURL(new URL(location));
+						int cardId = GatherHelper.extractCardIdFromURL(new URL(location));
 						if (cardId != 0) {
 							event.doit = false;
 							ICardStore<IMagicCard> magicDBStore = DataManager.getCardHandler()
@@ -228,7 +228,7 @@ class CardDescComposite extends Composite {
 				MagicLogger.log("Same flip id for " + card.getCardId());
 				flipId = -flipId;
 			}
-			links = "<a href=\"" + ParserHtmlHelper.createImageDetailURL(flipId) + "\">Flip</a><br><br>";
+			links = "<a href=\"" + GatherHelper.createImageDetailURL(flipId) + "\">Flip</a><br><br>";
 		}
 		return links;
 	}

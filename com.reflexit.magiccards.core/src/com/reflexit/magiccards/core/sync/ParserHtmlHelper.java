@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -258,4 +259,74 @@ public abstract class ParserHtmlHelper {
 	}
 
 	public abstract boolean loadSingleUrl(URL url, ILoadCardHander handler) throws IOException;
+	
+	
+	public static String tagDown(String text) {
+		text = text.replace("<TABLE", "<table");
+		text = text.replace("<TR", "<tr");
+		text = text.replace("<TD", "<td");
+		text = text.replace("<TH", "<th");
+		text = text.replace("TR>", "tr>");
+		text = text.replace("TD>", "td>");
+		text = text.replace("TH>", "th>");
+		return text;
+	}
+
+	public static List<String> purifyList(List<String> tbody) {
+		List<String> fields = new ArrayList<String>(tbody.size());
+		for (String in : tbody) {
+			fields.add(purifyItem(in));
+		}
+		return fields;
+	}
+
+	public static String purifyItem(String in) {
+		in = in.replaceAll("<[^>]*>", "");
+		in = in.replace("&nbsp;", " ");
+		in = in.replace("&amp;", "&");
+		in = in.trim();
+		return in;
+	}
+
+	public static List<String> splitArray(String tag, String text) {
+		String[] rows = text.split("<" + tag + "[^>]*>");
+		ArrayList<String> res = new ArrayList<String>();
+		for (String r : rows) {
+			int x = r.indexOf("</" + tag + ">");
+			if (x < 0)
+				continue;
+			res.add(r.substring(0, x));
+		}
+		return res;
+	}
+
+	public static String consume(String tag, String text) {
+		String tagStart = "<" + tag + "[^>]*>";
+		String tagEnd = "</" + tag + ">";
+		Matcher matcherStart = Pattern.compile(tagStart).matcher(text);
+		if (matcherStart.find()) {
+			int from = matcherStart.start(0);
+			Matcher matcherEnd = Pattern.compile(tagEnd).matcher(text);
+			if (matcherEnd.find(matcherStart.end())) {
+				int end = matcherEnd.end();
+				return text.substring(0, from) + text.substring(end);
+			}
+		}
+		return text;
+	}
+
+	public static String extractPatternValue(String html, Pattern pattern, boolean multiple) {
+		Matcher matcher = pattern.matcher(html);
+		String value = "";
+		while (matcher.find()) {
+			String v = matcher.group(1).trim();
+			if (value.length() > 0) {
+				if (multiple == false)
+					throw new IllegalStateException("Multiple pattern found where signle expected");
+				value += "\n";
+			}
+			value += v;
+		}
+		return value;
+	}
 }

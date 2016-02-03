@@ -39,8 +39,8 @@ import com.reflexit.magiccards.core.xml.StringCache;
 /**
  * Retrieve legality info
  */
-public class ParseGathererOracle extends AbstractParseGathererPage {
-	public static final String DETAILS_QUERY_URL_BASE = GATHERER_URL_BASE
+public class ParseGathererOracle extends AbstractParseHtmlPage {
+	public static final String DETAILS_QUERY_URL_BASE = GatherHelper.GATHERER_URL_BASE
 			+ "Pages/Card/Details.aspx?multiverseid=";
 	private MagicCard fromCard;
 	private Set<ICardField> fieldMapFilter;

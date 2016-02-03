@@ -18,7 +18,7 @@ import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.core.model.storage.MemoryCardStore;
 import com.reflexit.magiccards.core.model.utils.CardStoreUtils;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
-import com.reflexit.magiccards.core.sync.ParserHtmlHelper;
+import com.reflexit.magiccards.core.sync.GatherHelper;
 import com.reflexit.magiccards.core.xml.MyXMLStreamWriter;
 import com.reflexit.magiccards.core.xml.XMLStreamException;
 
@@ -234,8 +234,8 @@ public class CompactHtmlExportDelegate extends AbstractExportDelegate<IMagicCard
 	}
 
 	protected void printNameAndLink(MyXMLStreamWriter w, IMagicCard card) throws XMLStreamException {
-		String cardDetailUrl = ParserHtmlHelper.createImageDetailURL(card.getCardId()).toString();
-		URL imageUrl = ParserHtmlHelper.createImageURL(card.getCardId());
+		String cardDetailUrl = GatherHelper.createImageDetailURL(card.getCardId()).toString();
+		URL imageUrl = GatherHelper.createImageURL(card.getCardId());
 		w.ela("a", cardLine(card), "href", cardDetailUrl, "onmouseover",
 				"document.images.card_pic.src='" + imageUrl.toExternalForm() + "'");
 	}

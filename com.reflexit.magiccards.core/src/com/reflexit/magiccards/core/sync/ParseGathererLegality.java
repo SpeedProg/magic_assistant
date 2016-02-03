@@ -29,8 +29,8 @@ import com.reflexit.magiccards.core.monitor.SubCoreProgressMonitor;
 /**
  * Retrieve legality info
  */
-public class ParseGathererLegality extends AbstractParseGathererPage {
-	private static final String LEGALITY_QUERY_URL_BASE = GATHERER_URL_BASE
+public class ParseGathererLegality extends AbstractParseHtmlPage {
+	private static final String LEGALITY_QUERY_URL_BASE = GatherHelper.GATHERER_URL_BASE
 			+ "Pages/Card/Printings.aspx?multiverseid=";
 	private int cardId;
 	private IMagicCard card;

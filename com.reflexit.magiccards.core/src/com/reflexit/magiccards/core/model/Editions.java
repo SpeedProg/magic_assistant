@@ -31,6 +31,7 @@ public class Editions implements ISearchableProperty {
 	private LinkedHashMap<String, Edition> nameAliases;
 	private Edition unknown;
 	private static int idcounter = 0;
+	private static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
 	public static class Edition {
 		private String name;
@@ -41,7 +42,6 @@ public class Editions implements ISearchableProperty {
 		private LegalityMap legalityMap = LegalityMap.EMPTY;
 		private String block;
 		private int id;
-		private final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
 		public Edition(String name, String abbr) {
 			this.name = name;
@@ -60,10 +60,7 @@ public class Editions implements ISearchableProperty {
 		}
 
 		public void setReleaseDate(String date) throws ParseException {
-			if (date == null || date.length() == 0 || date.equals("?"))
-				release = null;
-			else
-				release = formatter.parse(date);
+			release = parseReleaseDate(date);
 		}
 
 		public Date getReleaseDate() {
@@ -106,6 +103,27 @@ public class Editions implements ISearchableProperty {
 			return abbrs[0];
 		}
 
+		public void setMainAbbreviation(String abbr) {
+			if (isAbbreviationFake()) {
+				abbrs[0] = abbr;
+			} else {
+				for (int i = 0; i < abbrs.length; i++) {
+					if (abbrs[i].equals(abbr)) {
+						if (i == 0)
+							return;
+						String temp = abbrs[0];
+						abbrs[0] = abbr;
+						abbrs[i] = temp;
+						return;
+					}
+				}
+				String[] arr = new String[abbrs.length + 1];
+				System.arraycopy(abbrs, 0, arr, 1, abbrs.length);
+				arr[0] = abbr;
+				abbrs = arr;
+			}
+		}
+
 		public String getExtraAbbreviations() {
 			if (abbrs.length > 1) {
 				String line = abbrs[1];
@@ -135,6 +153,7 @@ public class Editions implements ISearchableProperty {
 		public void setType(String type) {
 			if (type == null || type.length() == 0)
 				this.type = "?";
+			else
 			this.type = type;
 		}
 
@@ -305,6 +324,13 @@ public class Editions implements ISearchableProperty {
 		if (instance == null)
 			instance = new Editions();
 		return instance;
+	}
+
+	public static Date parseReleaseDate(String date) throws ParseException {
+		if (date == null || date.length() == 0 || date.equals("?"))
+			return null;
+		else
+			return formatter.parse(date);
 	}
 
 	public Collection<Edition> getEditions() {
@@ -514,7 +540,7 @@ public class Editions implements ISearchableProperty {
 				Edition ed = getEditionByName(name);
 				String rel = "";
 				if (ed.getReleaseDate() != null)
-					rel = ed.formatter.format(ed.getReleaseDate());
+					rel = formatter.format(ed.getReleaseDate());
 				String type = "";
 				if (ed.getType() != null) {
 					type = ed.getType();

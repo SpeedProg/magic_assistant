@@ -26,8 +26,8 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 /**
  * Retrieve legality info
  */
-public class ParseGathererSets extends AbstractParseGathererPage {
-	private static final String SET_QUERY_URL_BASE = GATHERER_URL_BASE + "Pages/Default.aspx";
+public class ParseGathererSets extends AbstractParseHtmlPage {
+	private static final String SET_QUERY_URL_BASE = GatherHelper.GATHERER_URL_BASE + "Pages/Default.aspx";
 	/*-
 	                <b>
 	                    Filter Card Set:
@@ -91,10 +91,21 @@ public class ParseGathererSets extends AbstractParseGathererPage {
 		// card.setCardId(11179);
 		ParseGathererSets parser = new ParseGathererSets();
 		parser.load(ICoreProgressMonitor.NONE);
+		System.err.println("new sets:");
+		System.err.println(parser.getNew());
+		System.err.println("all parsed:");
+		System.err.println(parser.getAll());
 		Collection<Edition> editions = Editions.getInstance().getEditions();
+		ArrayList<String> have = new ArrayList<>();
 		for (Iterator iterator = editions.iterator(); iterator.hasNext();) {
 			Edition edition = (Edition) iterator.next();
-			System.err.println(edition.getName() + " " + edition.getMainAbbreviation());
+			have.add(edition.getName());
+			// System.err.println(edition.getName() + " " + edition.getMainAbbreviation());
 		}
+		ArrayList<String> on = new ArrayList<>(parser.getAll());
+		ArrayList<String> have1 = new ArrayList<>(have);
+		System.err.println("extra:");
+		have1.removeAll(on);
+		System.err.println(have1);
 	}
 }

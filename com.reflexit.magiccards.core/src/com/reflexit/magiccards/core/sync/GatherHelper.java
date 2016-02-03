@@ -8,9 +8,12 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.NotNull;
 
 public abstract class GatherHelper extends ParserHtmlHelper {
 	protected static Pattern countPattern = Pattern
@@ -26,6 +29,8 @@ public abstract class GatherHelper extends ParserHtmlHelper {
 		manaMap.put("\\Q{tap}", "{T}");
 		manaMap.put("\\Q{untap}", "{Q}");
 	}
+
+	public static final String GATHERER_URL_BASE = "http://gatherer.wizards.com/";
 
 	public GatherHelper() {
 		super();
@@ -85,6 +90,55 @@ public abstract class GatherHelper extends ParserHtmlHelper {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	@NotNull
+	public static URL createImageURL(int cardId) {
+		try {
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId
+					+ "&type=card");
+		} catch (MalformedURLException e) {
+			throw new MagicException(e);
+		}
+	}
+
+	public static URL createImageDetailURL(int cardId) {
+		try {
+			return new URL(ParseGathererOracle.DETAILS_QUERY_URL_BASE + cardId);
+		} catch (MalformedURLException e) {
+			throw new MagicException(e);
+		}
+	}
+
+	public static int extractCardIdFromURL(URL url) {
+		String query = url.getQuery();
+		Pattern pattern = Pattern.compile("multiverseid=(-*\\d+)");
+		Matcher matcher = pattern.matcher(query);
+		if (matcher.find()) {
+			return Integer.parseInt(matcher.group(1));
+		}
+		return 0;
+	}
+
+	public static URL createSetImageURL(String editionAbbr, String rarity) {
+		try {
+			String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr
+					+ "&size=small&rarity="
+					+ rarLetter);
+		} catch (MalformedURLException e) {
+			throw new MagicException(e);
+		}
+	}
+
+	public static URL createManaImageURL(String symbol) {
+		String manaName = symbol.replaceAll("[{}/]", "");
+		try {
+			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=" + manaName
+					+ "&type=symbol");
+		} catch (MalformedURLException e) {
+			return null;
 		}
 	}
 }

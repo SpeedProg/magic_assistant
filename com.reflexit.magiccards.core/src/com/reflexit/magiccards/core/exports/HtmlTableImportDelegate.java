@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.core.exports;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.seller.ParseTcgPlayerPrices;
+import com.reflexit.magiccards.core.sync.ParserHtmlHelper;
 
 public class HtmlTableImportDelegate extends TableImportDelegate {
 	private HashMap<String, String> setaliases = new HashMap<String, String>();
@@ -146,30 +146,11 @@ public class HtmlTableImportDelegate extends TableImportDelegate {
 	}
 
 	private List<String> purifyList(List<String> tbody) {
-		List<String> fields = new ArrayList<String>(tbody.size());
-		for (String in : tbody) {
-			fields.add(purifyItem(in));
-		}
-		return fields;
-	}
-
-	public static String purifyItem(String in) {
-		in = in.replaceAll("<[^>]*>", "");
-		in = in.replace("&nbsp;", " ");
-		in = in.replace("&amp;", "&");
-		in = in.trim();
-		return in;
+		return ParserHtmlHelper.purifyList(tbody);
 	}
 
 	protected List<String> splitArray(String tag, String text) {
-		String[] rows = text.split("<" + tag + "[^>]*>");
-		ArrayList<String> res = new ArrayList<String>();
-		for (String r : rows) {
-			int x = r.indexOf("</" + tag + ">");
-			if (x < 0)
-				continue;
-			res.add(r.substring(0, x));
-		}
-		return res;
+		return ParserHtmlHelper.splitArray(tag, text);
 	}
+
 }
