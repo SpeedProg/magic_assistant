@@ -6,8 +6,8 @@
  *******************************************************************************/
 package com.reflexit.unittesting;
 
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;

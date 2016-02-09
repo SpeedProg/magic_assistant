@@ -22,8 +22,8 @@ import org.eclipse.ui.INewWizard;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;

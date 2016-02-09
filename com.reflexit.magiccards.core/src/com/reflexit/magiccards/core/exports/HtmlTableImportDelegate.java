@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.abs.ICardField;

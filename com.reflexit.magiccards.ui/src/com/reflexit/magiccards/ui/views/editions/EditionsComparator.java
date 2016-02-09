@@ -3,7 +3,7 @@ package com.reflexit.magiccards.ui.views.editions;
 import java.util.Comparator;
 import java.util.Date;
 
-import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Edition;
 
 public class EditionsComparator implements Comparator<Edition> {
 	private EditionField field;

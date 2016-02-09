@@ -11,8 +11,8 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 public class AbstractEditionColumn extends ColumnLabelProvider {

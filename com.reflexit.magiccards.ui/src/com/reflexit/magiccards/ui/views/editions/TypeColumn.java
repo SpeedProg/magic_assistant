@@ -1,6 +1,6 @@
 package com.reflexit.magiccards.ui.views.editions;
 
-import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Edition;
 
 final class TypeColumn extends AbstractEditionColumn {
 	TypeColumn() {

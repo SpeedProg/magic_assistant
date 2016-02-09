@@ -23,8 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCard;

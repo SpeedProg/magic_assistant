@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views.editions;
 
-import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Edition;
 
 public class AliasesColumn extends AbstractEditionColumn {
 	public AliasesColumn() {
@@ -10,7 +9,7 @@ public class AliasesColumn extends AbstractEditionColumn {
 
 	@Override
 	public String getText(Object element) {
-		Editions.Edition ed = (Edition) element;
+		Edition ed = (Edition) element;
 		return ed.getExtraAliases();
 	}
 

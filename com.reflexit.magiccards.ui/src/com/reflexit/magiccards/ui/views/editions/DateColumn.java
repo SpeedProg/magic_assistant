@@ -3,8 +3,7 @@ package com.reflexit.magiccards.ui.views.editions;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Edition;
 
 final class DateColumn extends AbstractEditionColumn {
 	private final SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
@@ -14,7 +13,7 @@ final class DateColumn extends AbstractEditionColumn {
 
 	@Override
 	public String getText(Object element) {
-		Editions.Edition ed = (Edition) element;
+		Edition ed = (Edition) element;
 		if (ed.getReleaseDate() == null)
 			return "?";
 		return formatter.format(ed.getReleaseDate());

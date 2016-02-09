@@ -2,8 +2,7 @@ package com.reflexit.magiccards.ui.views.editions;
 
 import org.eclipse.swt.graphics.Image;
 
-import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.Rarity;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
@@ -15,7 +14,7 @@ public class EditionNameColumn extends AbstractEditionColumn {
 
 	@Override
 	public String getText(Object element) {
-		Editions.Edition ed = (Edition) element;
+		Edition ed = (Edition) element;
 		return ed.getName();
 	}
 
@@ -26,7 +25,7 @@ public class EditionNameColumn extends AbstractEditionColumn {
 
 	@Override
 	public Image getImage(Object element) {
-		Editions.Edition ed = (Edition) element;
+		Edition ed = (Edition) element;
 		MagicCard fake = new MagicCard();
 		fake.setSet(ed.getName());
 		fake.setRarity(Rarity.MYTHIC_RARE);

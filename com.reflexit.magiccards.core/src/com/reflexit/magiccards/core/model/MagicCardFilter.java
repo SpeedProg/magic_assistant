@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;

@@ -17,8 +17,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.ParseSetLegality;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -123,7 +123,7 @@ public class EditionsPreferencePage extends PreferencePage implements IWorkbench
 	protected void deleteSets() {
 		IStructuredSelection selection = comp.getSelection();
 		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-			Editions.Edition ed = (Edition) iterator.next();
+			Edition ed = (Edition) iterator.next();
 			deleteSet(ed);
 		}
 	}

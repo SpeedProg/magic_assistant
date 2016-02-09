@@ -1,8 +1,7 @@
 package com.reflexit.magiccards.ui.views.editions;
 
 import com.reflexit.magiccards.core.legality.Format;
-import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Edition;
 
 final class FormatColumn extends AbstractEditionColumn {
 	FormatColumn() {
@@ -11,7 +10,7 @@ final class FormatColumn extends AbstractEditionColumn {
 
 	@Override
 	public String getText(Object element) {
-		Editions.Edition ed = (Edition) element;
+		Edition ed = (Edition) element;
 		Format firstLegal = ed.getLegalityMap().getFirstLegal();
 		if (firstLegal == null)
 			return Format.LEGACY.name();

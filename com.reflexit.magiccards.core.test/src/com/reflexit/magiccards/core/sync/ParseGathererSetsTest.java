@@ -7,8 +7,8 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 public class ParseGathererSetsTest extends TestCase {

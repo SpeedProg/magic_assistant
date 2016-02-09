@@ -9,8 +9,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.legality.Format;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.Legality;
 import com.reflexit.magiccards.core.model.LegalityMap;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;

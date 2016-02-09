@@ -12,7 +12,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class EditionsTest extends TestCase {

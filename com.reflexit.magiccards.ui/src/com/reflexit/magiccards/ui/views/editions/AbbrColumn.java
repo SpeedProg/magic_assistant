@@ -1,7 +1,6 @@
 package com.reflexit.magiccards.ui.views.editions;
 
-import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
+import com.reflexit.magiccards.core.model.Edition;
 
 public class AbbrColumn extends AbstractEditionColumn {
 	public AbbrColumn() {
@@ -10,7 +9,7 @@ public class AbbrColumn extends AbstractEditionColumn {
 
 	@Override
 	public String getText(Object element) {
-		Editions.Edition ed = (Edition) element;
+		Edition ed = (Edition) element;
 		String abbrs = ed.getMainAbbreviation();
 		if (ed.getExtraAbbreviations().length() > 0)
 			abbrs += " (" + ed.getExtraAbbreviations() + ")";

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 
 public class EditionsContentProvider implements ITreeContentProvider {
 	ArrayList<Edition> editions = new ArrayList<Edition>();

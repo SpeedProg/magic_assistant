@@ -77,4 +77,17 @@ public class Rarity implements ISearchableProperty {
 		}
 		return i2 - i1;
 	}
+
+	public static String getMoreRare(String r) {
+		Collection values = getInstance().names.values();
+		String prev = null;
+		for (Iterator iterator = values.iterator(); iterator.hasNext();) {
+			String v = (String) iterator.next();
+			if (r.equals(v)) {
+				return prev;
+			}
+			prev = v;
+		}
+		return null;
+	}
 }

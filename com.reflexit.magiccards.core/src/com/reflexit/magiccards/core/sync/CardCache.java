@@ -21,6 +21,7 @@ import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.CannotDetermineSetAbbriviation;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.NotNull;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -36,33 +37,10 @@ public class CardCache {
 		return createSetImageURL(edition, rarity, upload);
 	}
 
-	public static URL createSetImageURL(String edition, String rarity, boolean upload)
+	private static URL createSetImageURL(String editionName, String rarity, boolean upload)
 			throws MalformedURLException, IOException {
-		String editionAbbr = Editions.getInstance().getAbbrByName(edition);
-		if ("Land".equals(rarity))
-			rarity = "Common";
-		String name = (editionAbbr == null ? edition : editionAbbr) + "-" + rarity;
-		String path = createLocalSetImageFilePath(name);
-		File file = new File(path);
-		URL localUrl = file.toURI().toURL();
-		if (upload == false)
-			return localUrl;
-		if (file.exists()) {
-			return localUrl;
-		}
-		if (WebUtils.isWorkOffline())
-			return null;
-		if (editionAbbr == null)
-			return null;
-		try {
-			URL url = createSetImageRemoteURL(editionAbbr, rarity);
-			InputStream st = WebUtils.openUrl(url);
-			FileUtils.saveStream(st, file);
-			st.close();
-		} catch (IOException e1) {
-			throw e1;
-		}
-		return localUrl;
+		Edition edition = Editions.getInstance().getEditionByName(editionName);
+		return edition.getImageFiles().getLocalURL(rarity, upload);
 	}
 
 	public static URL createRemoteImageURL(IMagicCard card) throws MalformedURLException {
@@ -70,10 +48,6 @@ public class CardCache {
 		if (strUrl == null)
 			return null;
 		return new URL(strUrl);
-	}
-
-	public static URL createSetImageRemoteURL(String editionAbbr, String rarity) {
-		return GatherHelper.createSetImageURL(editionAbbr, rarity);
 	}
 
 	@NotNull
@@ -98,13 +72,6 @@ public class CardCache {
 																					// EN
 		}
 		return new File(FileUtils.getStateLocationFile(), part).getPath();
-	}
-
-	private static String createLocalSetImageFilePath(String name) {
-		File loc = FileUtils.getStateLocationFile();
-		String part = "Sets/" + name + ".jpg";
-		String file = new File(loc, part).getPath();
-		return file;
 	}
 
 	private static boolean isLoadingEnabled() {

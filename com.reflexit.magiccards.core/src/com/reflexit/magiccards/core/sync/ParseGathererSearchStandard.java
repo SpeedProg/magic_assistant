@@ -12,8 +12,8 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
@@ -159,7 +159,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 			if (edition.length() <= 1)
 				continue;
 			edition = edition.trim();
-			Edition ed = new Editions.Edition(edition, abbr);
+			Edition ed = new Edition(edition, abbr);
 			if (id.equals(setId)) {
 				card.setSet(edition);
 				card.setRarity(rarity.trim());

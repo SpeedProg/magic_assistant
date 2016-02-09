@@ -28,8 +28,8 @@ import java.util.Locale;
 
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**

@@ -19,8 +19,8 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 /**
@@ -44,7 +44,7 @@ public class ParseGathererSets extends AbstractParseHtmlPage {
 	private static Pattern setStartPattern = Pattern
 			.compile("Card Set:.*?<option value=\"\"></option>(.*?)</select>");
 	private static Pattern oneSetPattern = Pattern.compile("<option.*?>(.*?)</option>");
-	private Collection<Edition> newSets = new ArrayList<Editions.Edition>();
+	private Collection<Edition> newSets = new ArrayList<Edition>();
 	private Collection<String> allParsed = new ArrayList<String>();
 
 	public ParseGathererSets() {

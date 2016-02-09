@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
@@ -122,7 +122,7 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		String artist = getMatch(plainPattern, rows[6]);
 		card.setArtist(artist);
 		String set = getMatch(plainPattern, rows[7]);
-		Edition ed = new Editions.Edition(set, abbr.toUpperCase(Locale.ENGLISH));
+		Edition ed = new Edition(set, abbr.toUpperCase(Locale.ENGLISH));
 		handler.handleEdition(ed);
 		card.setSet(set);
 		String regset = Editions.getInstance().getNameByAbbr(ed.getMainAbbreviation());

@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.NotNull;
+import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
-import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.core.model.MagicCard;
 
 public abstract class ParserHtmlHelper {
