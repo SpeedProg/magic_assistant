@@ -135,6 +135,10 @@ public class Editions implements ISearchableProperty {
 			return "";
 		}
 
+		public String[] getAbbreviations() {
+			return abbrs;
+		}
+
 		public String getExtraAliases() {
 			if (aliases.length > 0) {
 				String line = aliases[0];
