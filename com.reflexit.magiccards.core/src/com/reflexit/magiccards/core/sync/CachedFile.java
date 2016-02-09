@@ -70,7 +70,6 @@ public class CachedFile {
 					return true;
 				if (str.substring(0, 3).equals("GIF"))
 					return true;
-				System.err.println(str);
 			} catch (IOException e) {
 				// ignore
 			}

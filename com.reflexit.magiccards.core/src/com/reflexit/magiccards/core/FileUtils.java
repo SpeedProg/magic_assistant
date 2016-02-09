@@ -287,19 +287,19 @@ public class FileUtils {
 	}
 
 	public static int readFileAsBytes(File file, byte[] buf) throws IOException {
-		InputStream st = new FileInputStream(file);
-		int numRead = 0;
-		int offset = 0;
-		int len = buf.length;
-		while ((numRead = st.read(buf, offset, len)) != -1) {
-			// just fill the buffer
-			offset += numRead;
-			len -= numRead;
-			if (len >= 0)
-				break;
+		try (InputStream st = new FileInputStream(file)) {
+			int numRead = 0;
+			int offset = 0;
+			int len = buf.length;
+			while ((numRead = st.read(buf, offset, len)) != -1) {
+				// just fill the buffer
+				offset += numRead;
+				len -= numRead;
+				if (len >= 0)
+					break;
+			}
+			return offset;
 		}
-		st.close();
-		return offset;
 	}
 
 	public static boolean deleteTree(File rootDir) {
