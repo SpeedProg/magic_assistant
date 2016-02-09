@@ -40,6 +40,8 @@ public class CardCache {
 	private static URL createSetImageURL(String editionName, String rarity, boolean upload)
 			throws MalformedURLException, IOException {
 		Edition edition = Editions.getInstance().getEditionByName(editionName);
+		if (edition == null)
+			return null;
 		return edition.getImageFiles().getLocalURL(rarity, upload);
 	}
 

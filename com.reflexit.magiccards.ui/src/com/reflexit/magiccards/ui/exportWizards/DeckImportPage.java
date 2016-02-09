@@ -449,6 +449,8 @@ public class DeckImportPage extends WizardDataTransferPage {
 	}
 
 	private void defaultPrompt() {
+		if (reportType == null)
+			reportType = ImportExportFactory.TEXT_DECK_CLASSIC;
 		String mess = "You have selected '" + reportType.getLabel() + "' format.\n";
 		if (importData.getError() != null) {
 			mess += "Warning: cannot parse data (" + importData.getError().getMessage() + "). ";

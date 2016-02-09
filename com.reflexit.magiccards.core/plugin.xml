@@ -17,14 +17,14 @@
             extension="txt"
             id="classic"
             importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
-            label="Deck Classic Text (1 x Name)">
+            label="Deck Classic Text: 1 x Name">
       </deckFormat>
             <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.ClassicNoXExportDelegate"
             extension="txt"
             id="classic2"
             importDelegate="com.reflexit.magiccards.core.exports.ClassicImportDelegate"
-            label="Deck Classic Text (2 Name)">
+            label="Deck Classic Text: 2 Name">
       </deckFormat>
       <deckFormat
             exportDelegate="com.reflexit.magiccards.core.exports.CsvExportDelegate"
@@ -160,6 +160,13 @@
             importDelegate="com.reflexit.magiccards.core.exports.MagicCardsInfoImportDelegate"
             label="http://magiccards.info"
             xmlFormat="true">
+      </deckFormat>
+      <deckFormat
+            extension="scry"
+            id="scryGlass"
+            importDelegate="com.reflexit.magiccards.core.exports.ScryGlassImportDelegate"
+            label="Scry Glass: 4 Name [Set]"
+            xmlFormat="false">
       </deckFormat>
    </extension>
 </plugin>

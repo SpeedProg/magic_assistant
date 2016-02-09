@@ -58,7 +58,7 @@ Ninth Edition|9ED|9E|July 2005|Core||Modern|9th Edition
 Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica Block|Modern|Ravnica
 Guildpact|GPT||February 2006|Expansion|Ravnica Block|Modern|
 Dissension|DIS||May 2006|Expansion|Ravnica Block|Modern|
-Coldsnap|CSP||July 2006|Expansion|Ice Age Block|Modern|
+Coldsnap|CSP|CS|July 2006|Expansion|Ice Age Block|Modern|
 Time Spiral "Timeshifted"|TSB||October 2006|Starter|||Timeshifted,"Timeshifted"
 Promo set for Gatherer|PPR||October 2006|Online|||
 Time Spiral|TSP||October 2006|Expansion|Time Spiral Block|Modern|
