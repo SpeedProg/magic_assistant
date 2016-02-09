@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.UIJob;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
@@ -654,26 +655,59 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		Object newValue = event.getNewValue();
 		if (property.equals(PreferenceConstants.LOCAL_COLUMNS)) {
 			if (viewer instanceof IMagicColumnViewer) {
-				// System.err.println(getFilteredStore().getLocation() + "
-				// proprty
-				// change event: " + event.getProperty()
-				// + "\n " + event.getOldValue() + "\n " + event.getNewValue());
-				// new Exception().printStackTrace();
 				WaitUtils.syncExec(() -> {
 					synchronized (AbstractMagicCardsListControl.this) {
 						((IMagicColumnViewer) viewer).updateColumns((String) newValue);
 					}
 				});
-				WaitUtils.asyncExec(() -> refreshViewer());
+				scheduleRefreshViewer();
 			}
 		} else if (property.equals(PreferenceConstants.SHOW_GRID)) {
-			WaitUtils.asyncExec(() -> refreshViewer());
+			scheduleRefreshViewer();
 		} else if (property.equals(PreferenceConstants.LOCAL_SHOW_QUICKFILTER)) {
 			boolean qf = Boolean.valueOf(newValue.toString());
 			WaitUtils.asyncExec(() -> setQuickFilterVisible(qf));
 		} else if (newValue instanceof FontData[] || newValue instanceof RGB) {
-			WaitUtils.asyncExec(() -> refreshViewer());
+			scheduleRefreshViewer();
 		}
+	}
+
+	protected void scheduleRefreshViewer() {
+		UIJob uiJob = new UIJob("Refresh") {
+			@Override
+			public boolean shouldSchedule() {
+				Job[] jobs = getJobManager().find(getControl());
+				for (Job job : jobs) {
+					if (job.getState() == Job.WAITING)
+						return false;
+				}
+				if (jobs.length >= 2)
+					return false;
+				return super.shouldSchedule();
+			}
+
+			@Override
+			public boolean shouldRun() {
+				Job[] jobs = getJobManager().find(getControl());
+				for (Job job : jobs) {
+					if (job.getState() == Job.WAITING)
+						return false;
+				}
+				return true;
+			}
+
+			@Override
+			public boolean belongsTo(Object family) {
+				return family == getControl();
+			}
+
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				refreshViewer();
+				return Status.OK_STATUS;
+			}
+		};
+		uiJob.schedule(10);
 	}
 
 	public void runCopy() {
