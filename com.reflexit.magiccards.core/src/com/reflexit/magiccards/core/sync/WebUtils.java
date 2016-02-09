@@ -19,8 +19,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import com.reflexit.magiccards.core.FileUtils;
-import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.OfflineException;
 
 public class WebUtils {
 	private static boolean workOffline = false;
@@ -74,7 +74,7 @@ public class WebUtils {
 		for (int i = 0; i < maxAttempts; i++) {
 			// Don't do anything if offline only working is enabled.
 			if (WebUtils.isWorkOffline()) {
-				throw new MagicException("Online updates are disabled");
+				throw new OfflineException();
 			}
 			try {
 				URLConnection openConnection = url.openConnection();

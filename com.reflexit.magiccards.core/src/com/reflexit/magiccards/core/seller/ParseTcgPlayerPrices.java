@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.OfflineException;
 import com.reflexit.magiccards.core.exports.HtmlTableImportDelegate;
 import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.exports.ImportSource;
@@ -97,7 +97,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	public Iterable<IMagicCard> updatePrices(Iterable<IMagicCard> iterable, ICoreProgressMonitor monitor)
 			throws IOException {
 		if (WebUtils.isWorkOffline())
-			throw new MagicException("Online updates are disabled");
+			throw new OfflineException();
 		CardList list = new CardList(iterable);
 		int size = list.size();
 		Set<Object> uniqueSets = list.getUnique(MagicCardField.SET);
