@@ -32,7 +32,6 @@ public class DeckImportWizard extends Wizard implements IImportWizard {
 		for (; i < pages.length; i++) {
 			IWizardPage page = pages[i];
 			if (!page.isPageComplete()) {
-				System.err.println("page " + i);
 				return false;
 			}
 		}
