@@ -16,7 +16,7 @@ import com.reflexit.magiccards.core.model.Editions.Edition;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class EditionsTest extends TestCase {
-	private static final int EDITIONS_SIZE = 151;
+	private static final int EDITIONS_SIZE = 152;
 	private static final String EDITIONS_FILE = Editions.EDITIONS_FILE;
 	protected Editions editions;
 
@@ -166,9 +166,9 @@ public class EditionsTest extends TestCase {
 				assertTrue("Expected " + ftv + " but was " + type,
 						type.equals("Starter"));
 			} else if (edition.getName().startsWith(ftv)) {
-				assertTrue("Expected " + ftv + " but was " + block, block.equals(ftv));
+				assertTrue("Expected " + ftv + " but was " + block + " in " + edition, block.equals(ftv));
 				assertTrue("Expected " + ftv + " but was " + type,
-						type.equals("Reprint"));
+						type.equals("Starter"));
 			} else
 				assertTrue("Expected type but was " + type + " in " + edition, type.equals("Core")
 						|| type.equals("Expansion")
