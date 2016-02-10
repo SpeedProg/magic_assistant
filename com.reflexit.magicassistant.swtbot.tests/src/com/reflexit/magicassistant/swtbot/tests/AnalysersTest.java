@@ -65,6 +65,7 @@ public class AnalysersTest extends AbstractSwtBotTest {
 			DeckView.openCollection(col, null);
 			return;
 		}
+		removeAllDecks();
 		syncExec(() -> CopySupport.runCopy(getImportData()));
 		bot.menu("File").menu("Import...").click();
 		SWTBotShell sshell = bot.shell("Import");
