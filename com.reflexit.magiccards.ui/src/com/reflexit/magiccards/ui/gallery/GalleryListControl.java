@@ -15,7 +15,7 @@ public class GalleryListControl extends DeckListControl {
 
 	@Override
 	public IMagicViewer createViewer(Composite parent) {
-		return new Gallery2Viewer(parent, getPreferencePageId());
+		return new SplitGalleryViewer(parent, getPreferencePageId());
 	}
 
 	@Override

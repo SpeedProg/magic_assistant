@@ -27,12 +27,12 @@ import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.model.GroupExpandContentProvider;
 
-public class Gallery2Viewer implements IMagicColumnViewer {
+public class SplitGalleryViewer implements IMagicColumnViewer {
 	private Composite control;
 	protected LazyGalleryTreeViewer galleryviewer;
 	private SingleColumnTreeViewer viewer;
 
-	public Gallery2Viewer(Composite parent, String preferencePageId) {
+	public SplitGalleryViewer(Composite parent, String preferencePageId) {
 		createContents(parent);
 	}
 

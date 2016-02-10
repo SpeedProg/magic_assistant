@@ -75,7 +75,7 @@ import com.reflexit.magiccards.ui.actions.UnsortAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
-import com.reflexit.magiccards.ui.gallery.Gallery2Viewer;
+import com.reflexit.magiccards.ui.gallery.SplitGalleryViewer;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
@@ -170,7 +170,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		if (presentation == Presentation.SPLITTREE)
 			return new SplitViewer(parent, getPreferencePageId());
 		if (presentation == Presentation.GALLERY)
-			return new Gallery2Viewer(parent, getPreferencePageId());
+			return new SplitGalleryViewer(parent, getPreferencePageId());
 		throw new IllegalArgumentException(presentation.name());
 	}
 
