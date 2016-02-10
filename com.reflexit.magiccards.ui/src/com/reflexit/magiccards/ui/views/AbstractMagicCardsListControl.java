@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -51,7 +50,6 @@ import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.GroupOrder;
-import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -327,17 +325,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	}
 
 	protected void addStoreChangeListener() {
-		new Thread("Registering listeners " + getViewPart().getTitle()) {
-			@Override
-			public void run() {
-				if (WaitUtils.waitForDb()) {
-					DM.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
-					DM.getMagicDBStore().addListener(AbstractMagicCardsListControl.this);
-				} else {
-					MagicLogger.log("Timeout on waiting for db init. Listeners are not installed.");
-				}
-			}
-		}.start();
+		DM.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
+		DM.getMagicDBStore().addListener(AbstractMagicCardsListControl.this);
 	}
 
 	protected void removeStoreChangeListener() {
@@ -867,7 +856,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	}
 
 	private void restoreSelection(ISelection selection) {
-		// MagicLogger.traceStart("restoreSelection");
+		MagicLogger.trace("restoreSelection " + revealSelection);
 		if (revealSelection != null) {
 			// set desired selection
 			selection = revealSelection;
@@ -921,13 +910,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE) {
 			loadData(null);
 		} else if (type == CardEvent.ADD) {
-			if (event.getData() instanceof List) {
-				List arr = (List) event.getData();
-				if (arr.size() == 1)
-					setNextSelection(new StructuredSelection(arr.get(0)));
-			} else if (event.getData() instanceof IMagicCard) {
-				setNextSelection(new StructuredSelection(event.getData()));
-			}
+			Object data = event.getFirstDataElement();
+			setNextSelection(new StructuredSelection(data));
 			// System.err.println("Card added: " + revealSelection + " on " +
 			// getPartName());
 			loadData(null);

@@ -231,7 +231,7 @@ public class DeckView extends AbstractMyCardsView {
 					}
 				} else {
 					// System.err.println(event);
-					reloadData();// XXX
+					// list control will do refresh
 				}
 			}
 		});

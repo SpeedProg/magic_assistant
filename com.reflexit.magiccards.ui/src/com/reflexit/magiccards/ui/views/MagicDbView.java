@@ -31,6 +31,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardDialog;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.card.CardDescView;
 
 public class MagicDbView extends AbstractSingleControlCardsView {
@@ -65,8 +66,22 @@ public class MagicDbView extends AbstractSingleControlCardsView {
 
 		@Override
 		public void handleEvent(CardEvent event) {
-			if (event.getData() instanceof MagicCard) {// XXX
-				super.handleEvent(event);
+			Object data = event.getFirstDataElement();
+			if (data instanceof MagicCard) {
+				int type = event.getType();
+				switch (type) {
+				case CardEvent.UPDATE:
+					WaitUtils.asyncExec(() -> viewer.refresh());
+					break;
+				case CardEvent.ADD:
+					setNextSelection(new StructuredSelection(data));
+					loadData(null);
+				case CardEvent.REMOVE:
+					loadData(null);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 

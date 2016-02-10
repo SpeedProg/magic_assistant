@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
+
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
@@ -21,7 +25,7 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
  * @author elaskavaia
  *
  */
-public class GroupExpandContentProvider implements ITreeContentProvider, ISizeContentProvider {
+public class GroupExpandContentProvider implements ITreeContentProvider, ISizeContentProvider, ISelectionTranslator {
 	private Object input;
 	private String top;
 	private Object[] topChildren;
@@ -141,5 +145,34 @@ public class GroupExpandContentProvider implements ITreeContentProvider, ISizeCo
 	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
+	}
+
+	@Override
+	public IStructuredSelection translateSelection(IStructuredSelection selection, int level) {
+		if (selection.isEmpty() || input == null)
+			return selection;
+		ArrayList<Object> res = new ArrayList<>();
+		for (Object object : selection.toArray()) {
+			Object toSearch = object;
+			if (object instanceof TreePath) {
+				toSearch = ((TreePath) object).getLastSegment();
+			}
+			Object found = findTreePath(toSearch, level);
+			if (found != null)
+				res.add(found);
+		}
+		return new StructuredSelection(res);
+	}
+
+	protected Object findTreePath(Object toSearch, int levelTruncate) {
+		if (toSearch == input)
+			return new TreePath(new Object[0]);
+		if (toSearch == top)
+			return new TreePath(new Object[] { top });
+		for (Object object : topChildren) {
+			if (toSearch == object)
+				return new TreePath(new Object[] { top, object });
+		}
+		return toSearch;
 	}
 }

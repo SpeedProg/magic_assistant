@@ -15,12 +15,12 @@ public class CardEventUpdate extends CardEvent {
 		super(source, UPDATE, new CardList<ICard>(data), mask);
 	}
 
-	public CardEventUpdate(Object source, Iterable<? extends ICard> data, Set<? extends ICardField> mask) {
-		super(source, UPDATE, new CardList<ICard>(data), mask);
-	}
-
 	@SuppressWarnings("unchecked")
 	public CardList<? extends ICard> getCardList() {
 		return (CardList<? extends ICard>) getData();
+	}
+
+	public Set<? extends ICardField> getMask() {
+		return (Set<? extends ICardField>) getExtra();
 	}
 }

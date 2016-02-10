@@ -37,7 +37,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 	public static final class NonGroupPredicate implements Predicate<Object> {
 		@Override
 		public boolean test(Object o) {
-			return !(o instanceof ICardGroup);
+			return (o instanceof ICard) && !(o instanceof ICardGroup);
 		}
 	}
 
@@ -401,7 +401,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 		return list;
 	}
 
-	public void addAll(Iterable cards) {
+	public synchronized void addAll(Iterable cards) {
 		if (cards == null)
 			return;
 		for (Object elem : new CardList(cards).getList()) {
@@ -457,7 +457,7 @@ public final class CardGroup extends MagicCardHash implements ICardGroup, Iterab
 	}
 
 	@Override
-	public void removeAll() {
+	public synchronized void removeAll() {
 		children.clear();
 		subs.clear();
 		recache();

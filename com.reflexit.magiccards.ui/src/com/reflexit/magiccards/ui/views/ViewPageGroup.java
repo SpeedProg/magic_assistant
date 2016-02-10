@@ -82,7 +82,7 @@ public class ViewPageGroup {
 	}
 
 	public boolean activate(int page) {
-		if (activePageIndex == page && pages.get(activePageIndex).isInitialized())
+		if (activePageIndex == page && pages.get(activePageIndex).isInstantiated())
 			return false;
 		deactivate();
 		setActivePageIndex(page);
@@ -106,7 +106,7 @@ public class ViewPageGroup {
 			// no prev page
 		} else {
 			ViewPageContribution vcOld = pages.get(activePageIndex);
-			if (vcOld.isInitialized()) {
+			if (vcOld.isInstantiated()) {
 				safeRun(() -> vcOld.getViewPage().deactivate());
 			}
 		}

@@ -14,8 +14,10 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.nebula.jface.galleryviewer.GalleryTreeViewer;
 import org.eclipse.nebula.widgets.gallery.AbstractGridGroupRenderer;
@@ -35,6 +37,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
 import com.reflexit.magiccards.ui.utils.ImageCreator;
+import com.reflexit.magiccards.ui.views.model.ISelectionTranslator;
 
 /**
  * This is super lazy viewer which works with non-lazy provider. It will not
@@ -43,7 +46,7 @@ import com.reflexit.magiccards.ui.utils.ImageCreator;
  * @author elaskavaia
  *
  */
-public class LazyGalleryTreeViewer extends GalleryTreeViewer {
+public class LazyGalleryTreeViewer extends GalleryTreeViewer implements ISelectionTranslator {
 	private static final String CHILDREN = "c";
 	private int expandToLevel;
 
@@ -350,11 +353,26 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer {
 
 	@Override
 	public void setSelection(ISelection selection, boolean reveal) {
-		// TODO translate
+		if (!(selection instanceof IStructuredSelection))
+			return;
 		try {
-			super.setSelection(selection, reveal);
+			super.setSelection(translateSelection((IStructuredSelection) selection, -1), reveal);
 		} catch (NullPointerException e) {
 			// sadly. This will happend if item was not instantiated
 		}
+	}
+
+	@Override
+	public IStructuredSelection translateSelection(IStructuredSelection selection, int level) {
+		IContentProvider contentProvider = getContentProvider();
+		if (contentProvider instanceof ISelectionTranslator && !selection.isEmpty()) {
+			selection = ((ISelectionTranslator) contentProvider).translateSelection(selection, level);
+		}
+		return selection;
+	}
+
+	@Override
+	public void setSelection(ISelection selection) {
+		setSelection(selection, true);
 	}
 }

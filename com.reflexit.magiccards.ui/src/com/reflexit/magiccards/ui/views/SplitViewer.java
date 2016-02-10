@@ -210,6 +210,7 @@ public class SplitViewer implements IMagicColumnViewer {
 	@Override
 	public void refresh() {
 		treeviewer.refresh(true);
+		viewer.refresh(true);
 	}
 
 	@Override

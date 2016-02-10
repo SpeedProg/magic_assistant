@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.core.model.events;
 
+import java.util.Iterator;
+
 public class CardEvent {
 	public static final int ADD = 1;
 	public static final int REMOVE = 2;
@@ -31,6 +33,20 @@ public class CardEvent {
 
 	public final Object getData() {
 		return this.data;
+	}
+
+	public final Object getFirstDataElement() {
+		Object data = getData();
+		while (data instanceof Iterable) {
+			Iterable arr = (Iterable) data;
+			Iterator iterator = arr.iterator();
+			if (iterator.hasNext()) {
+				data = iterator.next();
+			} else {
+				break;
+			}
+		}
+		return data;
 	}
 
 	public final Object getExtra() {
