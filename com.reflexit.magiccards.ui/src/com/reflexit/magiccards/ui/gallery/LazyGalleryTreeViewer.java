@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
 import com.reflexit.magiccards.ui.utils.ImageCreator;
+import com.reflexit.magiccards.ui.views.model.GroupExpandContentProvider;
 import com.reflexit.magiccards.ui.views.model.ISelectionTranslator;
 
 /**
@@ -73,7 +74,9 @@ public class LazyGalleryTreeViewer extends GalleryTreeViewer implements ISelecti
 		});
 		gallery.setBackground(parent.getBackground());
 		gallery.setForeground(parent.getForeground());
-		setGroupsVisible(true);
+		setContentProvider(new GroupExpandContentProvider());
+		setLabelProvider(new MagicCardImageLabelProvider(this));
+		setGroupsVisible(false);
 	}
 
 	@Override

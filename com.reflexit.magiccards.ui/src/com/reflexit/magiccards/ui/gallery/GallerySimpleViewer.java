@@ -15,7 +15,6 @@ import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
 import com.reflexit.magiccards.ui.views.model.SortOrderViewerComparator;
 
 public class GallerySimpleViewer extends LazyGalleryTreeViewer implements IMagicViewer {
-	private FlatTreeContentProvider flatTreeContentProvider;
 	private ViewerManager manager;
 
 	public GallerySimpleViewer(Composite parent, String id) {
@@ -29,11 +28,9 @@ public class GallerySimpleViewer extends LazyGalleryTreeViewer implements IMagic
 		getControl().setFont(ViewerManager.getFont());
 		// drillDownAdapter = new DrillDownAdapter(viewer);
 		// this.viewer.setContentProvider(new RegularViewContentProvider());
-		flatTreeContentProvider = new FlatTreeContentProvider();
-		flatTreeContentProvider.setLevel(5);
-		setContentProvider(flatTreeContentProvider);
-		setLabelProvider(new MagicCardImageLabelProvider(getViewer()));
-		setUseHashlookup(true);
+		// flatTreeContentProvider = new FlatTreeContentProvider();
+		// flatTreeContentProvider.setLevel(5);
+		// setContentProvider(flatTreeContentProvider);
 		updatePresentation();
 		// viewer.setSorter(new NameSorter());
 		// createDefaultColumns();
@@ -44,7 +41,7 @@ public class GallerySimpleViewer extends LazyGalleryTreeViewer implements IMagic
 		// viewer.refresh();
 		// }
 		// });
-		getViewer().setGroupsVisible(false);
+		// getViewer().setGroupsVisible(false);
 		return getControl();
 	}
 
@@ -54,12 +51,10 @@ public class GallerySimpleViewer extends LazyGalleryTreeViewer implements IMagic
 		getControl().dispose();
 	}
 
-
 	@Override
 	public LazyGalleryTreeViewer getViewer() {
 		return this;
 	}
-
 
 	@Override
 	public void setLinesVisible(boolean grid) {
@@ -87,8 +82,6 @@ public class GallerySimpleViewer extends LazyGalleryTreeViewer implements IMagic
 	public int getSortDirection() {
 		return SWT.UP;
 	}
-
-
 
 	private void updatePresentation() {
 		// TODO Auto-generated method stub

@@ -9,13 +9,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.graphics.Image;
+
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.utils.MRUCache;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
- * This class manages Card images, it is singleton and its resposible for disposing them. Do not dispose these images!
+ * This class manages Card images, it is singleton and its resposible for
+ * disposing them. Do not dispose these images!
  * 
  * @author elaskavaia
  *
@@ -47,7 +49,8 @@ public class ImageCache {
 	}
 
 	/**
-	 * Images from this map will be disposed except CARD_NOT_FOUND_IMAGE_TEMPLATE
+	 * Images from this map will be disposed except
+	 * CARD_NOT_FOUND_IMAGE_TEMPLATE
 	 * 
 	 * @param key
 	 * @param value
@@ -57,8 +60,8 @@ public class ImageCache {
 	}
 
 	/**
-	 * If image is in cache it immediately returns, otherwise callback will be called when image is ready or error
-	 * happened
+	 * If image is in cache it immediately returns, otherwise callback will be
+	 * called when image is ready or error happened
 	 * 
 	 * @param element
 	 * @param callback
@@ -79,8 +82,7 @@ public class ImageCache {
 		final IMagicCard card = (IMagicCard) element;
 		if (in() == false)
 			return null;
-		// System.err.println("loaidng");
-		new Job("loading card image " + card) {
+		new Job("Loading card image " + card) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -102,17 +104,14 @@ public class ImageCache {
 		return null;
 	}
 
-	protected boolean in() {
-		synchronized (this) {
-			if (cart > 50)
-				return false;
-			cart++;
-		}
+	protected synchronized boolean in() {
+		if (cart > 50)
+			return false;
+		cart++;
 		return true;
 	}
-	protected void out() {
-		synchronized (this) {
-			cart--;
-		}
+
+	protected synchronized void out() {
+		cart--;
 	}
 }

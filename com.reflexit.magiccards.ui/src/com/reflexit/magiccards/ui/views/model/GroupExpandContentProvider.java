@@ -13,14 +13,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.reflexit.magiccards.core.model.CardGroup;
-import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 
 /**
- * Flat contents of the object with one root. Expanded up "Name" groups.
+ * Flat contents of the object with one root.
  * 
  * @author elaskavaia
  *
@@ -36,9 +34,9 @@ public class GroupExpandContentProvider implements ITreeContentProvider, ISizeCo
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (this.input == newInput)
-			return;
-		Object[] res = getChildren(newInput);
+		// if (this.input == newInput)
+		// return;
+		Object[] res = calculateChildren(newInput);
 		this.input = newInput;
 		this.top = "Cards";
 		this.topChildren = res;
@@ -47,41 +45,41 @@ public class GroupExpandContentProvider implements ITreeContentProvider, ISizeCo
 
 	@Override
 	public Object[] getChildren(Object element) {
-		Object[] res = null;
 		if (element == input) {
 			return new Object[] { top };
 		}
 		if (element == top) {
 			return topChildren;
 		}
-		if (element instanceof CardGroup) {
-			CardGroup group = (CardGroup) element;
-			Collection<ICard> children = daexpand(group);
+		return calculateChildren(element);
+	}
+
+	public Object[] calculateChildren(Object element) {
+		Object[] res;
+		if (element instanceof ICardGroup) {
+			ICardGroup group = (ICardGroup) element;
+			Collection<ICard> children = daexpand(group, new ArrayList<>());
 			res = children.toArray(new Object[children.size()]);
+		} else if (element instanceof ICard) {
+			res = new Object[0];
 		} else if (element instanceof IFilteredCardStore) {
 			ICardGroup root = ((IFilteredCardStore<?>) element).getCardGroupRoot();
-			res = getChildren(root);
+			res = calculateChildren(root);
 		} else if (element instanceof Collection) {
-			Collection<ICard> list = daexpand((Collection<?>) element);
+			Collection<ICard> list = daexpand((Collection<?>) element, new ArrayList<>());
 			res = list.toArray(new Object[list.size()]);
 		} else if (element instanceof Object[]) {
-			return (Object[]) element;
+			res = (Object[]) element;
+		} else {
+			res = new Object[0];
 		}
 		return res;
 	}
 
-	private Collection<ICard> daexpand(ICardGroup cardGroup) {
-		return daexpand((CardGroup) cardGroup, new ArrayList<>());
-	}
-
-	private Collection<ICard> daexpand(Collection<?> collection) {
-		return daexpand(collection, new ArrayList<>());
-	}
-
-	private Collection<ICard> daexpand(Collection<?> collection, List<ICard> result) {
+	protected Collection<ICard> daexpand(Collection<?> collection, List<ICard> result) {
 		for (Object object : collection) {
-			if (object instanceof CardGroup) {
-				daexpand((CardGroup) object, result);
+			if (object instanceof ICardGroup) {
+				daexpand((ICardGroup) object, result);
 			} else if (object instanceof ICard) {
 				result.add((ICard) object);
 			}
@@ -89,24 +87,19 @@ public class GroupExpandContentProvider implements ITreeContentProvider, ISizeCo
 		return result;
 	}
 
-	private Collection<ICard> daexpand(CardGroup cardGroup, List<ICard> result) {
-		for (Object object : cardGroup.getChildrenList()) {
-			if (object instanceof CardGroup && !isLeafGroup((CardGroup) object)) {
-				daexpand((CardGroup) object, result);
-			} else if (object instanceof ICard) {
-				result.add((ICard) object);
-			}
-		}
-		return result;
-	}
-
-	protected boolean isLeafGroup(CardGroup group) {
-		return group.getFieldIndex() == MagicCardField.NAME;
+	protected Collection<ICard> daexpand(ICardGroup cardGroup, List<ICard> result) {
+		return daexpand(cardGroup.getChildrenList(), result);
 	}
 
 	@Override
 	public Object getParent(Object element) {
-		return null;
+		if (element == input) {
+			return null;
+		}
+		if (element == top) {
+			return input;
+		}
+		return top;
 	}
 
 	@Override
@@ -116,6 +109,8 @@ public class GroupExpandContentProvider implements ITreeContentProvider, ISizeCo
 		}
 		if (element instanceof ICardGroup) {
 			return ((ICardGroup) element).size() > 0;
+		} else if (element instanceof ICard) {
+			return false;
 		} else if (element instanceof IFilteredCardStore) {
 			IFilteredCardStore fstore = (IFilteredCardStore) element;
 			return fstore.getCardGroupRoot().size() > 0;
@@ -131,6 +126,8 @@ public class GroupExpandContentProvider implements ITreeContentProvider, ISizeCo
 	public int getSize(Object element) {
 		if (element instanceof ICardGroup) {
 			return ((ICardGroup) element).size();
+		} else if (element instanceof ICard) {
+			return 0;
 		} else if (element instanceof IFilteredCardStore) {
 			IFilteredCardStore fstore = (IFilteredCardStore) element;
 			return fstore.getCardGroupRoot().size();
@@ -169,10 +166,8 @@ public class GroupExpandContentProvider implements ITreeContentProvider, ISizeCo
 			return new TreePath(new Object[0]);
 		if (toSearch == top)
 			return new TreePath(new Object[] { top });
-		for (Object object : topChildren) {
-			if (toSearch == object)
-				return new TreePath(new Object[] { top, object });
-		}
+		if (toSearch instanceof ICard && !(toSearch instanceof ICardGroup))
+			return new TreePath(new Object[] { top, toSearch });
 		return toSearch;
 	}
 }

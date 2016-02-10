@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.gallery;
 
-import java.util.Collection;
-
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
@@ -14,13 +12,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicViewer;
+import com.reflexit.magiccards.ui.views.model.GroupExpandContentProvider;
 
 public class GallerySelectionView extends GalleryView {
 	public static final String ID = "com.reflexit.magiccards.ui.gallery.GallerySelectionView";
@@ -110,17 +108,15 @@ public class GallerySelectionView extends GalleryView {
 	}
 
 	public void setDetails(ISelection selection) {
-		if (!(selection instanceof IStructuredSelection))
+		if (!(selection instanceof IStructuredSelection) || selection.isEmpty())
 			return;
 		IStructuredSelection ss = (IStructuredSelection) selection;
+		((AbstractMagicCardsListControl) getMagicControl()).refreshViewer();
 		gsstore.getCardStore().removeAll();
-		for (Object item : ss.toList()) {
+		Object[] children = new GroupExpandContentProvider().calculateChildren(ss.toList());
+		for (Object item : children) {
 			if (item instanceof ICard) {
-				if (item instanceof CardGroup) {
-					Collection children = ((CardGroup) item).expand();
-					gsstore.addAll(children);
-				} else
-					gsstore.add((ICard) item);
+				gsstore.add((ICard) item);
 			}
 		}
 		gsstore.update();

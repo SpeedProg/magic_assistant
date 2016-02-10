@@ -6,7 +6,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -14,6 +13,7 @@ import com.reflexit.magiccards.core.model.IMagicCardPhysical;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.ui.utils.ImageCache;
+import com.reflexit.magiccards.ui.utils.WaitUtils;
 
 final class MagicCardImageLabelProvider extends LabelProvider implements IImageOverlayRenderer {
 	private StructuredViewer viewer;
@@ -52,24 +52,16 @@ final class MagicCardImageLabelProvider extends LabelProvider implements IImageO
 			return null;
 		}
 		final IMagicCard card = (IMagicCard) candidate;
-		Image im = cache.getImage(card, () -> refreshCallback(card, element));
+		Image im = cache.getImage(card, () -> refreshCallback(element));
 		if (im != null)
 			return im;
 		return cache.CARD_NOT_FOUND_IMAGE_TEMPLATE;
 	}
 
-	protected void refreshCallback(final IMagicCard card, final Object element) {
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (cache.getCachedImage(card) != null) {
-					viewer.refresh(element, true);
-					// System.err.println("setting real image for " + element);
-				}
-				// item.setImage(image);
-				// item.getParent().redraw();
-			}
-		});
+	protected void refreshCallback(final Object element) {
+		if (viewer == null)
+			return;
+		WaitUtils.asyncExec(() -> viewer.refresh(element, true));
 	}
 
 	@Override

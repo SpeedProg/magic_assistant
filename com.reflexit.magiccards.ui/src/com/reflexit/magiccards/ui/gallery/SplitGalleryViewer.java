@@ -25,7 +25,6 @@ import com.reflexit.magiccards.ui.views.SingleColumnTreeViewer;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.MagicColumnCollection;
-import com.reflexit.magiccards.ui.views.model.GroupExpandContentProvider;
 
 public class SplitGalleryViewer implements IMagicColumnViewer {
 	private Composite control;
@@ -50,8 +49,6 @@ public class SplitGalleryViewer implements IMagicColumnViewer {
 		viewer.getTree().setHeaderVisible(false);
 		galleryviewer = new LazyGalleryTreeViewer(control);
 		galleryviewer.getControl().setFont(MagicUIActivator.getDefault().getFont());
-		galleryviewer.setContentProvider(new GroupExpandContentProvider());
-		galleryviewer.setLabelProvider(new MagicCardImageLabelProvider(galleryviewer));
 		galleryviewer.setGroupsVisible(false);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
