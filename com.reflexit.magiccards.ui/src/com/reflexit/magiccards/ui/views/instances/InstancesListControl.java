@@ -15,6 +15,7 @@ import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
+import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
@@ -28,6 +29,11 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	@Override
 	public IMagicColumnViewer createViewer(Composite parent) {
 		return new InstancesViewer(getPreferencePageId(), parent);
+	}
+
+	@Override
+	public void handleEvent(CardEvent event) {
+		mcpEventHandler(event);
 	}
 
 	@Override

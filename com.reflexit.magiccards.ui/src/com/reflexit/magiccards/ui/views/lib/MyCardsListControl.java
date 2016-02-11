@@ -10,6 +10,7 @@ import org.eclipse.ui.IActionBars;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICard;
+import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.actions.CopyPasteActionGroup;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
@@ -27,6 +28,11 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	}
 
 	public MyCardsListControl() {
+	}
+
+	@Override
+	public void handleEvent(CardEvent event) {
+		mcpEventHandler(event);
 	}
 
 	@Override

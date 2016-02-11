@@ -3,6 +3,7 @@ package com.reflexit.magiccards.ui.views.analyzers;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardCountable;
+import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.IStorage;
@@ -43,5 +44,10 @@ public abstract class AbstractDeckListPage extends AbstractMagicCardsListControl
 			return si;
 		}
 		return null;
+	}
+
+	@Override
+	public void handleEvent(CardEvent event) {
+		mcpEventHandler(event);
 	}
 }

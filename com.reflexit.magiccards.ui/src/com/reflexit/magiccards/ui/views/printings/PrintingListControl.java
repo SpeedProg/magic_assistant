@@ -5,12 +5,14 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
+import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
@@ -25,6 +27,11 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	}
 
 	@Override
+	public void handleEvent(CardEvent event) {
+		mcEventHandler(event);
+	}
+
+	@Override
 	protected String getPreferencePageId() {
 		return getViewPreferencePageId();
 	}
@@ -32,6 +39,12 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	@Override
 	public IMagicColumnViewer createViewer(Composite parent) {
 		return new PrintingsViewer(getPreferencePageId(), parent);
+	}
+
+	@Override
+	public void fillLocalToolBar(IToolBarManager manager) {
+		// TODO Auto-generated method stub
+		// super.fillLocalToolBar(manager);
 	}
 
 	@Override

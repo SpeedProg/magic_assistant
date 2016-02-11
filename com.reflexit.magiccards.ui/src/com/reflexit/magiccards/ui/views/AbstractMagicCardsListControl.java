@@ -51,6 +51,7 @@ import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardComparator;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardFilter;
@@ -904,17 +905,57 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		}
 	}
 
-	@Override
-	public void handleEvent(final CardEvent event) {
+	public void mcpEventHandler(final CardEvent event) {
+		Object data = event.getFirstDataElement();
 		int type = event.getType();
-		if (type == CardEvent.UPDATE || type == CardEvent.REMOVE) {
-			loadData(null);
-		} else if (type == CardEvent.ADD) {
-			Object data = event.getFirstDataElement();
-			setNextSelection(new StructuredSelection(data));
-			// System.err.println("Card added: " + revealSelection + " on " +
-			// getPartName());
-			loadData(null);
+		if (data instanceof MagicCard) {
+			switch (type) {
+			case CardEvent.UPDATE:
+				WaitUtils.asyncExec(() -> viewer.refresh());
+				break;
+			case CardEvent.ADD:
+				break;
+			case CardEvent.REMOVE:
+				break;
+			default:
+				break;
+			}
+		} else {
+			switch (type) {
+			case CardEvent.UPDATE:
+				WaitUtils.asyncExec(() -> viewer.refresh());
+				break;
+			case CardEvent.ADD:
+				setNextSelection(new StructuredSelection(data));
+				loadData(null);
+				break;
+			case CardEvent.REMOVE:
+				loadData(null);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	public void mcEventHandler(final CardEvent event) {
+		Object data = event.getFirstDataElement();
+		int type = event.getType();
+		if (data instanceof MagicCard) {
+			switch (type) {
+			case CardEvent.UPDATE:
+				WaitUtils.asyncExec(() -> viewer.refresh());
+				break;
+			case CardEvent.ADD:
+				setNextSelection(new StructuredSelection(data));
+				loadData(null);
+				break;
+			case CardEvent.REMOVE:
+				loadData(null);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
