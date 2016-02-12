@@ -15,6 +15,7 @@ import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
+import com.reflexit.magiccards.ui.views.columns.GroupColumn;
 import com.reflexit.magiccards.ui.views.columns.LanguageColumn;
 import com.reflexit.magiccards.ui.views.columns.SetColumn;
 
@@ -36,6 +37,7 @@ public class PrintingsViewer extends ExtendedTreeViewer implements IDisposable {
 		return new ColumnCollection() {
 			@Override
 			protected void createColumns(List<AbstractColumn> columns) {
+				columns.add(new GroupColumn(false, false, false));
 				columns.add(new SetColumn(true));
 				columns.add(new LanguageColumn());
 			}

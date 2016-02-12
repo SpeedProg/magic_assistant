@@ -2,7 +2,9 @@ package com.reflexit.magiccards.ui.views.printings;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IToolBarManager;
@@ -10,10 +12,10 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.IMagicCard;
-import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -90,57 +92,39 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 		monitor.done();
 	}
 
-	public Collection<IMagicCard> searchInStore(ICardStore<IMagicCard> store) {
-		ArrayList<IMagicCard> res = new ArrayList<IMagicCard>();
+	public Collection<IMagicCard> searchInStore(IDbCardStore<IMagicCard> store) {
 		if (card == null || card == MagicCard.DEFAULT || card.getName() == null)
-			return res;
-		String englishName = card.getName();
-		String language = card.getLanguage();
-		if (language != null && !language.equals(Language.ENGLISH.getLang())) {
-			int enId = card.getEnglishCardId();
-			if (enId != 0) {
-				IMagicCard card2 = store.getCard(enId);
-				englishName = card2 != null ? card2.getName() : card.getName();
-			}
+			return Collections.emptyList();
+		String englishName;
+		int enId = card.getEnglishCardId();
+		if (enId != 0) {
+			IMagicCard card2 = store.getCard(enId);
+			englishName = card2 != null ? card2.getName() : card.getName();
+		} else {
+			englishName = card.getName();
 		}
-		boolean multilang = false;
+		Collection<IMagicCard> candidates = store.getCandidates(englishName);
+		LinkedHashSet<IMagicCard> res = new LinkedHashSet<>();
+		res.addAll(candidates);
+		ArrayList<IMagicCard> res2 = new ArrayList<IMagicCard>();
 		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard next = iterator.next();
 			try {
-				if (englishName.equals(next.getName())) {
-					res.add(next);
-				}
-				language = next.getLanguage();
-				if (language != null && !language.equals(Language.ENGLISH.getLang())) {
-					multilang = true;
+				int parentId = next.getEnglishCardId();
+				if (parentId != 0) {
+					for (Iterator<IMagicCard> iterator2 = res.iterator(); iterator2.hasNext();) {
+						IMagicCard mc = iterator2.next();
+						if (mc.getCardId() == parentId) {
+							res2.add(next);
+						}
+					}
 				}
 			} catch (Exception e) {
 				MagicUIActivator.log("Bad card: " + next);
 				MagicUIActivator.log(e);
 			}
 		}
-		if (multilang) {
-			ArrayList<IMagicCard> res2 = new ArrayList<IMagicCard>();
-			for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
-				IMagicCard next = iterator.next();
-				try {
-					int parentId = next.getEnglishCardId();
-					if (parentId != 0) {
-						for (Iterator<IMagicCard> iterator2 = res.iterator(); iterator2.hasNext();) {
-							IMagicCard mc = iterator2.next();
-							if (mc.getCardId() == parentId) {
-								if (!res.contains(next))
-									res2.add(next);
-							}
-						}
-					}
-				} catch (Exception e) {
-					MagicUIActivator.log("Bad card: " + next);
-					MagicUIActivator.log(e);
-				}
-			}
-			res.addAll(res2);
-		}
+		res.addAll(res2);
 		return res;
 	}
 
