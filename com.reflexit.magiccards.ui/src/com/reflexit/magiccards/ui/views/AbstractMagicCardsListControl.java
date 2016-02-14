@@ -776,6 +776,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		if (filter == null)
 			return;
 		IPreferenceStore store = getElementPreferenceStore();
+		if (quickFilter != null)
+			quickFilter.setPreferenceStore(store);
 		HashMap<String, String> map = storeToMap(store);
 		filter.update(map);
 		filter.setOnlyLastSet(store.getBoolean(EditionsFilterPreferencePage.LAST_SET));
@@ -795,8 +797,6 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 			String value = ps.getString(PreferenceConstants.LOCAL_COLUMNS);
 			cviewer.updateColumns(value);
 		}
-		if (quickFilter != null)
-			quickFilter.setPreferenceStore(getElementPreferenceStore());
 		boolean qf = ps.getBoolean(PreferenceConstants.LOCAL_SHOW_QUICKFILTER);
 		setQuickFilterVisible(qf);
 	}

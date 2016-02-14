@@ -27,6 +27,8 @@ import com.reflexit.magiccards.core.model.xml.DeckFilteredCardFileStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.actions.MaterializeAction;
 import com.reflexit.magiccards.ui.actions.OpenSideboardAction;
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
+import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.FolderPageGroup;
@@ -272,5 +274,10 @@ public class DeckView extends AbstractMyCardsView {
 	@Override
 	public String getId() {
 		return ID;
+	}
+
+	@Override
+	public CardFilterDialog getCardFilterDialog() {
+		return new DeckFilterDialog(getShell(), getFilterPreferenceStore());
 	}
 }

@@ -41,7 +41,9 @@ import com.reflexit.magiccards.core.model.events.ICardEventListener;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.actions.DeleteCardAction;
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.dialogs.EditMagicCardPhysicalDialog;
+import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.AbstractGroupPageCardsView;
@@ -327,5 +329,10 @@ public abstract class AbstractMyCardsView extends AbstractGroupPageCardsView imp
 	@Override
 	public void handleEvent(CardEvent event) {
 		// do nothing
+	}
+
+	@Override
+	public CardFilterDialog getCardFilterDialog() {
+		return new MyCardsFilterDialog(getShell(), getFilterPreferenceStore());
 	}
 }

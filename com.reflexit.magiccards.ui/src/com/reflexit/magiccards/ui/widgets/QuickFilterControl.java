@@ -333,7 +333,6 @@ public class QuickFilterControl extends Composite {
 	// }
 	public void setPreferenceStore(IPreferenceStore store) {
 		this.store = store;
-		refresh();
 	}
 
 	public void refresh() {

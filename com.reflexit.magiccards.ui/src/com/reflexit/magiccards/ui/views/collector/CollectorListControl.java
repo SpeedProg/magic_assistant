@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -17,7 +16,6 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -43,13 +41,6 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		res.add(new GroupOrder("Core/Block/Set/Lang/Rarity", MagicCardField.SET_CORE, MagicCardField.SET_BLOCK,
 				MagicCardField.SET, MagicCardField.LANG, MagicCardField.RARITY));
 		return res;
-	}
-
-	@Override
-	protected void runShowFilter() {
-		MyCardsFilterDialog cardFilterDialog = new MyCardsFilterDialog(getShell(), getElementPreferenceStore());
-		if (cardFilterDialog.open() == IStatus.OK)
-			refresh();
 	}
 
 	@Override

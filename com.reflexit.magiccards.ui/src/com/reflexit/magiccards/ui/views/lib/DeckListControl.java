@@ -1,12 +1,10 @@
 package com.reflexit.magiccards.ui.views.lib;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.Presentation;
 
@@ -16,13 +14,6 @@ public class DeckListControl extends MyCardsListControl implements IDeckPage {
 
 	public DeckListControl(Presentation pres) {
 		super(pres);
-	}
-
-	@Override
-	protected void runShowFilter() {
-		DeckFilterDialog cardFilterDialog = new DeckFilterDialog(getShell(), getElementPreferenceStore());
-		if (cardFilterDialog.open() == IStatus.OK)
-			refresh(); // was null in realoadData
 	}
 
 	@Override

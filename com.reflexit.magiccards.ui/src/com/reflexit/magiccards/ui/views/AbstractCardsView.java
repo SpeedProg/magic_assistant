@@ -51,6 +51,7 @@ import com.reflexit.magiccards.ui.actions.MagicCopyAction;
 import com.reflexit.magiccards.ui.actions.RefreshAction;
 import com.reflexit.magiccards.ui.dialogs.BrowserOpenAcknoledgementDialog;
 import com.reflexit.magiccards.ui.dialogs.BuyCardsConfirmationDialog;
+import com.reflexit.magiccards.ui.dialogs.CardFilterDialog;
 import com.reflexit.magiccards.ui.dialogs.LoadExtrasDialog;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.jobs.LoadingExtraJob;
@@ -403,4 +404,8 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	public abstract IPreferenceStore getFilterPreferenceStore();
+
+	public CardFilterDialog getCardFilterDialog() {
+		return new CardFilterDialog(getShell(), getFilterPreferenceStore());
+	}
 }
