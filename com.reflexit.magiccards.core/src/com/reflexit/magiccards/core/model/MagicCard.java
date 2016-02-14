@@ -701,4 +701,14 @@ public class MagicCard extends AbstractMagicCard {
 	public float getRating() {
 		return rating;
 	}
+
+	public String getEnglishType() {
+		int x = getEnglishCardId();
+		if (x == 0)
+			return getType();
+		IMagicCard norm = db().getCard(x);
+		if (norm == null)
+			norm = this;
+		return norm.getType();
+	}
 }

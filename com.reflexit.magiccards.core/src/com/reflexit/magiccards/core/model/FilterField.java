@@ -144,106 +144,101 @@ public enum FilterField {
 		if (value != null && value.length() > 0) {
 			FilterField ff = this;
 			switch (ff) {
-				case RARITY:
-				case LOCATION:
-				case EDITION:
-					return BinaryExpr.fieldEquals(ff.getField(), value);
-				case CARD_TYPE:
-					return BinaryExpr.textSearch(ff.getField(), value);
-				case TYPE_LINE:
-				case NAME_LINE:
-				case ARTIST:
-				case COMMENT:
-				case SPECIAL:
-					return BinaryExpr.textSearch(ff.getField(), value);
-				case FORMAT:
-					TextValue tvalue = new TextValue(value, true, true, false);
-					return new BinaryExpr(new CardFieldExpr(ff.getField()), Operation.MATCHES, tvalue);
-				case CCC:
-				case POWER:
-				case TOUGHNESS:
-				case COUNT:
-				case FORTRADECOUNT:
-				case COMMUNITYRATING:
-				case COLLNUM:
-					return BinaryExpr.fieldInt(ff.getField(), value);
-				case COLOR: {
-					String en;
-					if (value.equals("Multi-Color")) {
-						return fieldEquals(MagicCardField.CTYPE, "multi");
-					} else if (value.equals("Mono-Color")) {
-						return fieldEquals(MagicCardField.CTYPE, "colorless").or(
-								fieldEquals(MagicCardField.CTYPE, "mono"));
-					} else if (value.equals("Hybrid")) {
-						return fieldEquals(MagicCardField.CTYPE, "hybrid");
-					} else if (value.equals("Colorless")) {
-						return fieldEquals(MagicCardField.CTYPE, "colorless").or(
-								fieldEquals(MagicCardField.CTYPE, "land"));
-					} else if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
-						return BinaryExpr
-								.fieldMatches(MagicCardField.COST, en);
+			case RARITY:
+			case LOCATION:
+			case EDITION:
+				return BinaryExpr.fieldEquals(ff.getField(), value);
+			case NAME_LINE:
+				return BinaryExpr.textSearch(ff.getField(), value)
+						.or(BinaryExpr.textSearch(MagicCardField.ENGLISH_NAME, value));
+			case CARD_TYPE:
+				return BinaryExpr.textSearch(ff.getField(), value);
+			case TYPE_LINE:
+				return BinaryExpr.textSearch(ff.getField(), value)
+						.or(BinaryExpr.textSearch(MagicCardField.ENGLISH_TYPE, value));
+			case ARTIST:
+			case COMMENT:
+			case SPECIAL:
+				return BinaryExpr.textSearch(ff.getField(), value);
+			case FORMAT:
+				TextValue tvalue = new TextValue(value, true, true, false);
+				return new BinaryExpr(new CardFieldExpr(ff.getField()), Operation.MATCHES, tvalue);
+			case CCC:
+			case POWER:
+			case TOUGHNESS:
+			case COUNT:
+			case FORTRADECOUNT:
+			case COMMUNITYRATING:
+			case COLLNUM:
+				return BinaryExpr.fieldInt(ff.getField(), value);
+			case COLOR: {
+				String en;
+				if (value.equals("Multi-Color")) {
+					return fieldEquals(MagicCardField.CTYPE, "multi");
+				} else if (value.equals("Mono-Color")) {
+					return fieldEquals(MagicCardField.CTYPE, "colorless").or(fieldEquals(MagicCardField.CTYPE, "mono"));
+				} else if (value.equals("Hybrid")) {
+					return fieldEquals(MagicCardField.CTYPE, "hybrid");
+				} else if (value.equals("Colorless")) {
+					return fieldEquals(MagicCardField.CTYPE, "colorless").or(fieldEquals(MagicCardField.CTYPE, "land"));
+				} else if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
+					return BinaryExpr.fieldMatches(MagicCardField.COST, en);
+				}
+				break;
+			}
+			case COLOR_IDENITY: {
+				String en;
+				if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
+					if (Colors.ManaColor.COLORLESS.tag().equals(en)) {
+						return Expr.EMPTY;
 					}
-					break;
+					return BinaryExpr.fieldMatches(MagicCardField.COST, en)
+							.or(BinaryExpr.fieldMatches(MagicCardField.ORACLE,
+									new TextValue(en, true, // word boundary
+											true, // case sensitive
+											false // regex
+									)));
 				}
-				case COLOR_IDENITY: {
-					String en;
-					if ((en = Colors.getInstance().getEncodeByName(value)) != null) {
-						if (Colors.ManaColor.COLORLESS.tag().equals(en)) {
-							return Expr.EMPTY;
-						}
-						return BinaryExpr.fieldMatches(MagicCardField.COST, en)
-								.or(BinaryExpr.fieldMatches(MagicCardField.ORACLE,
-										new TextValue(en,
-												true, // word boundary
-												true, // case sensitive
-												false // regex
-										)));
-					}
-					break;
+				break;
+			}
+			case DBPRICE: {
+				return new BinaryExpr(new CardFieldExpr(MagicCardField.DBPRICE), Operation.EQ, new Value("0"))
+						.and(fieldInt(MagicCardField.PRICE, value)).or(fieldInt(MagicCardField.DBPRICE, value));
+			}
+			case PRICE: {
+				return new BinaryExpr(new CardFieldExpr(MagicCardField.PRICE), Operation.EQ, new Value("0"))
+						.and(fieldInt(MagicCardField.DBPRICE, value)).or(fieldInt(MagicCardField.PRICE, value));
+			}
+			case OWNERSHIP: {
+				BinaryExpr b1 = fieldEquals(MagicCardField.OWNERSHIP, value);
+				Expr b2;
+				if ("true".equals(value))
+					b2 = fieldInt(MagicCardField.OWN_COUNT, ">=1");
+				else
+					b2 = fieldInt(MagicCardField.OWN_COUNT, "==0");
+				return b1.or(b2);
+			}
+			case LANG: {
+				if (value.equals("")) {
+					return Expr.TRUE;
+				} else if (value.equals(Languages.Language.ENGLISH.getLang())) {
+					return fieldEquals(MagicCardField.LANG, null).or(fieldEquals(MagicCardField.LANG, value));
+				} else {
+					return fieldEquals(MagicCardField.LANG, value);
 				}
-				case DBPRICE: {
-					return new BinaryExpr(new CardFieldExpr(MagicCardField.DBPRICE), Operation.EQ, new Value(
-							"0"))
-							.and(fieldInt(MagicCardField.PRICE, value))
-							.or(fieldInt(MagicCardField.DBPRICE, value));
-				}
-				case PRICE: {
-					return new BinaryExpr(new CardFieldExpr(MagicCardField.PRICE), Operation.EQ, new Value(
-							"0"))
-							.and(fieldInt(MagicCardField.DBPRICE, value))
-							.or(fieldInt(MagicCardField.PRICE, value));
-				}
-				case OWNERSHIP: {
-					BinaryExpr b1 = fieldEquals(MagicCardField.OWNERSHIP, value);
-					Expr b2;
-					if ("true".equals(value))
-						b2 = fieldInt(MagicCardField.OWN_COUNT, ">=1");
-					else
-						b2 = fieldInt(MagicCardField.OWN_COUNT, "==0");
-					return b1.or(b2);
-				}
-				case LANG: {
-					if (value.equals("")) {
-						return Expr.TRUE;
-					} else if (value.equals(Languages.Language.ENGLISH.getLang())) {
-						return fieldEquals(MagicCardField.LANG, null)
-								.or(fieldEquals(MagicCardField.LANG, value));
-					} else {
-						return fieldEquals(MagicCardField.LANG, value);
-					}
-				}
-				case TEXT_LINE:
-				case TEXT_LINE_2:
-				case TEXT_LINE_3:
-				case TEXT_NOT_1:
-				case TEXT_NOT_2:
-				case TEXT_NOT_3:
-					return BinaryExpr.textSearch(MagicCardField.TEXT, value)
-							.or(BinaryExpr.textSearch(MagicCardField.ORACLE, value));
-				case GROUP_FIELD:
-					return Expr.EMPTY;
-				default:
-					break;
+			}
+			case TEXT_LINE:
+			case TEXT_LINE_2:
+			case TEXT_LINE_3:
+			case TEXT_NOT_1:
+			case TEXT_NOT_2:
+			case TEXT_NOT_3:
+				return BinaryExpr.textSearch(MagicCardField.TEXT, value)
+						.or(BinaryExpr.textSearch(MagicCardField.ORACLE, value));
+			case GROUP_FIELD:
+				return Expr.EMPTY;
+			default:
+				break;
 			}
 			throw new IllegalArgumentException();
 		}

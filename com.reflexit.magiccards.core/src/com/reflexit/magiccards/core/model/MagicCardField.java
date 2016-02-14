@@ -152,7 +152,6 @@ public enum MagicCardField implements ICardField {
 		// Colors cl = Colors.getInstance();
 		// return cl.getConvertedManaCost(((IMagicCard) card).getCost());
 		// }
-
 		@Override
 		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, "*");
@@ -340,7 +339,7 @@ public enum MagicCardField implements ICardField {
 			return card.getProperty(this);
 		};
 	},
-	SET_BLOCK(null) {  // block of the set
+	SET_BLOCK(null) { // block of the set
 		@Override
 		public Object get(IMagicCard card) {
 			return card.getEdition().getBlock();
@@ -363,7 +362,8 @@ public enum MagicCardField implements ICardField {
 			return card.getEdition().getReleaseDate();
 		};
 	},
-	UNIQUE_COUNT(null) { // count of unique cards (usually only make sense for group)
+	UNIQUE_COUNT(null) { // count of unique cards (usually only make sense for
+							// group)
 		@Override
 		public ICardVisitor getAggregator() {
 			return new FieldUniqueAggregator(this);
@@ -374,7 +374,8 @@ public enum MagicCardField implements ICardField {
 			return card.getUniqueCount();
 		};
 	},
-	SIZE(null) { // flat size of the group, size of non-groupped element is always 1
+	SIZE(null) { // flat size of the group, size of non-groupped element is
+					// always 1
 		@Override
 		public ICardVisitor getAggregator() {
 			return new FieldSizeAggregator(this);
@@ -385,7 +386,8 @@ public enum MagicCardField implements ICardField {
 			return card.getUniqueCount();
 		};
 	},
-	SIDE(null) { // for multi sides/duble/flip card represent version of card (0 or 1)
+	SIDE(null) { // for multi sides/duble/flip card represent version of card (0
+					// or 1)
 		@Override
 		public ICardVisitor getAggregator() {
 			return new CollisionAggregator(this, 0);
@@ -452,6 +454,38 @@ public enum MagicCardField implements ICardField {
 
 		@Override
 		public void set(IMagicCard card, Object value) {
+			// ignore
+		}
+	},
+	ENGLISH_NAME(null) { // block of the set
+		@Override
+		public ICardVisitor getAggregator() {
+			return new StringAggregator(this);
+		}
+
+		@Override
+		public Object getM(MagicCard card) {
+			return card.getEnglishName();
+		}
+
+		@Override
+		public void setM(MagicCard card, Object value) {
+			// ignore
+		}
+	},
+	ENGLISH_TYPE(null) { // block of the set
+		@Override
+		public ICardVisitor getAggregator() {
+			return new StringAggregator(this);
+		}
+
+		@Override
+		public Object getM(MagicCard card) {
+			return card.getEnglishType();
+		}
+
+		@Override
+		public void setM(MagicCard card, Object value) {
 			// ignore
 		}
 	},
@@ -879,9 +913,9 @@ public enum MagicCardField implements ICardField {
 			return SET;
 		if (field.equals("QTY"))
 			return COUNT;
-		//		// legacy
-		//		if (field.equals("CUSTOM"))
-		//			return LegacyField.INSTANCE;
+		// // legacy
+		// if (field.equals("CUSTOM"))
+		// return LegacyField.INSTANCE;
 		return null;
 	}
 
