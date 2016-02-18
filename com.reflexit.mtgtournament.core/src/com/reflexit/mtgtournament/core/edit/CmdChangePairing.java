@@ -33,6 +33,7 @@ public class CmdChangePairing implements ITCommand {
 					PlayerRoundInfo pri = playerRoundInfo[i];
 					if (pri.getPlayer() == newpartner) {
 						pri.setPlayer(oldpartner);
+						pri.setWinGames(0, 0, 0);
 						break;
 					}
 				}

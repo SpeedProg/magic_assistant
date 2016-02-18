@@ -1,3 +1,16 @@
+changes in 1.4.2.020
+* Bug 530 english search should return localized cards
+* Bug 531 Only one type of art for basic lands in other language (German)
+* Fixed creature count for Printings
+* Bug 529 tournaments dont save results of matches 
+changes in 1.4.2.019
+* Added Oath of the Gatewatch set
+* Added mana symbol for Colorless mana
+changes in 1.4.2.018
+* Bug 523 Duplicate entries in Instances view 
+changes in 1.4.2.017
+* Fix of image cache corruption caused by fix for Bug 500
+* Bug 488 Hidden Cards problem (another attempt)
 changes in 1.4.2.016
 * Bug 501 Planechase cards' expansion becomes the artist name
 * Bug 500 regression: incorrect number of cards reported after changing

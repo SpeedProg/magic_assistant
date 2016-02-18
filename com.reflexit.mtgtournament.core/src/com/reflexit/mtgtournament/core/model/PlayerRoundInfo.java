@@ -85,8 +85,6 @@ public class PlayerRoundInfo {
 		if (newPlayer == null)
 			throw new NullPointerException();
 		p = newPlayer;
-		gamesDraw = gamesLost = gamesWon = 0;
-		r = PlayerGameResult._NONE;
 	}
 
 	/**
