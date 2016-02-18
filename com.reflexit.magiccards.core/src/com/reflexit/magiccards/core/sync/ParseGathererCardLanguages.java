@@ -13,6 +13,8 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +27,7 @@ public class ParseGathererCardLanguages extends AbstractParseHtmlPage {
 	static final String SET_QUERY_URL_BASE = GatherHelper.GATHERER_URL_BASE + "Pages/Card/Languages.aspx";
 	private String lang;
 	private int cardId;
-	private int langId;
+	private List<Integer> langIds = new ArrayList<>();
 	private int page;
 	/*-
 	        <tr class="cardItem oddItem">
@@ -44,13 +46,7 @@ public class ParseGathererCardLanguages extends AbstractParseHtmlPage {
 	private static Pattern rowPattern = Pattern
 			.compile("<tr class=\"cardItem(.*?multiverseid=(\\d+).*?)</tr>");
 
-	public static void main(String[] args) throws IOException {
-		ParseGathererCardLanguages parser = new ParseGathererCardLanguages();
-		parser.setCardId(153981);
-		parser.setLanguage("Russian");
-		parser.load(ICoreProgressMonitor.NONE);
-		System.err.println(parser.getLangCardId());
-	}
+
 
 	public void setLanguage(String string) {
 		lang = string;
@@ -66,18 +62,22 @@ public class ParseGathererCardLanguages extends AbstractParseHtmlPage {
 	protected void loadHtml(String html1, ICoreProgressMonitor monitor) {
 		String html = html1.replaceAll("\r?\n", " ");
 		Matcher matcher = rowPattern.matcher(html);
-		langId = 0;
+		if (page == 0)
+			langIds.clear();
 		int count = 0;
+		boolean last = false;
 		while (matcher.find()) {
+			last = false;
 			count++;
 			String all = matcher.group(1);
 			String id = matcher.group(2);
 			if (all.contains(lang)) {
-				langId = Integer.valueOf(id);
-				break;
+				Integer langId1 = Integer.valueOf(id);
+				langIds.add(langId1);
+				last = true;
 			}
 		}
-		if (langId == 0)
+		if (langIds.size() == 0 || last)
 			if (count >= 25 && page <= 3) {
 				page++;
 				try {
@@ -94,6 +94,18 @@ public class ParseGathererCardLanguages extends AbstractParseHtmlPage {
 	}
 
 	public int getLangCardId() {
-		return langId;
+		return langIds.get(0);
+	}
+
+	public List<Integer> getLangCardIds() {
+		return langIds;
+	}
+
+	public static void main(String[] args) throws IOException {
+		ParseGathererCardLanguages parser = new ParseGathererCardLanguages();
+		parser.setCardId(407693);
+		parser.setLanguage("Portuguese");
+		parser.load(ICoreProgressMonitor.NONE);
+		System.err.println(parser.getLangCardIds());
 	}
 }

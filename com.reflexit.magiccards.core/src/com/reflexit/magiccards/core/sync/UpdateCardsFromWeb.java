@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -106,22 +107,26 @@ public class UpdateCardsFromWeb {
 					if (loadLang) {
 						langParser.setCardId(cardId);
 						langParser.load(new SubCoreProgressMonitor(monitor, 40));
-						int langId = langParser.getLangCardId();
-						if (langId != 0) {
-							MagicCard newMagicCard = (MagicCard) magicCard.cloneCard();
-							newMagicCard.setCardId(langId);
-							int englishCardId = card.getEnglishCardId();
-							if (englishCardId == 0)
-								englishCardId = cardId;
-							newMagicCard.setEnglishCardId(englishCardId);
-							newMagicCard.setLanguage(lang);
-							linfoParser.setCard(newMagicCard);
-							linfoParser.load(new SubCoreProgressMonitor(monitor, 40));
-							if (magicDb.getCard(newMagicCard.getCardId()) == null) {
-								magicDb.add(newMagicCard);
-								// System.err.println("Added " +
-								// newMagicCard.getName());
+						List<Integer> list = langParser.getLangCardIds();
+						if (list.size() > 0) {
+							for (Integer integer : list) {
+								int langId = integer;
+								MagicCard newMagicCard = (MagicCard) magicCard.cloneCard();
+								newMagicCard.setCardId(langId);
+								int englishCardId = card.getEnglishCardId();
+								if (englishCardId == 0)
+									englishCardId = cardId;
+								newMagicCard.setEnglishCardId(englishCardId);
+								newMagicCard.setLanguage(lang);
+								linfoParser.setCard(newMagicCard);
+								linfoParser.load(new SubCoreProgressMonitor(monitor, 40));
+								if (magicDb.getCard(newMagicCard.getCardId()) == null) {
+									magicDb.add(newMagicCard);
+									// System.err.println("Added " +
+									// newMagicCard.getName());
+								}
 							}
+
 						} else {
 							MagicLogger.log("Cannot load " + lang + " of " + cardId);
 							monitor.worked(40);

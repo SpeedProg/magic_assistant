@@ -53,6 +53,6 @@ public class ParseGathererCardLanguagesTest extends TestCase {
 		assertEquals(196420, parser.getLangCardId());
 		parser.setCardId(220517);
 		parser.load(ICoreProgressMonitor.NONE);
-		assertEquals(0, parser.getLangCardId());
+		assertEquals(0, parser.getLangCardIds().size());
 	}
 }
