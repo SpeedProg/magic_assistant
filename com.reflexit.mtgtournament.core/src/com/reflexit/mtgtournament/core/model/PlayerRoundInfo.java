@@ -60,6 +60,7 @@ public class PlayerRoundInfo {
 		if (round == null) throw new NullPointerException();
 		this.round = round;
 		setPlayer(player);
+		r = PlayerGameResult._NONE;
 	}
 
 	@Override
