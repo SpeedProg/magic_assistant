@@ -89,9 +89,10 @@ public class ImageCache {
 					try {
 						String path = ImageCreator.getInstance().createCardPath(card, true, false);
 						final Image image = ImageCreator.getInstance().createCardImage(path, false);
-						if (image != null)
+						if (image != null) {
 							map.put(card, image);
-						callback.run();
+							callback.run();
+						}
 					} catch (IOException e) {
 						MagicUIActivator.log(e);
 					}
