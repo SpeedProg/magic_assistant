@@ -71,10 +71,14 @@ public class MagicColumnCollection extends ColumnCollection {
 	}
 
 	public GroupColumn getGroupColumn() {
+		if (groupColumn == null)
+			groupColumn = createGroupColumn();
 		return groupColumn;
 	}
 
 	public SetColumn getSetColumn() {
+		if (setColumn == null)
+			setColumn = createSetColumn();
 		return setColumn;
 	}
 

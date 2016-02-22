@@ -828,6 +828,7 @@ public enum MagicCardField implements ICardField {
 	// end of fields
 	;
 	private final String tag;
+	private final String property;
 	private final boolean phys;
 	private ICardVisitor aggregator;
 
@@ -840,12 +841,14 @@ public enum MagicCardField implements ICardField {
 	}
 
 	MagicCardField(boolean physical) {
-		tag = name().toLowerCase(Locale.ENGLISH);
+		property = name().toLowerCase(Locale.ENGLISH);
+		tag = property;
 		phys = physical;
 		aggregator = getAggregator();
 	}
 
 	MagicCardField(String javaField, boolean physical) {
+		property = name().toLowerCase(Locale.ENGLISH);
 		tag = javaField;
 		phys = physical;
 		aggregator = getAggregator();
@@ -882,6 +885,10 @@ public enum MagicCardField implements ICardField {
 	 */
 	public String getTag() {
 		return tag;
+	}
+
+	public String getProperty() {
+		return property;
 	}
 
 	/**

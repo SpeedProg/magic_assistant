@@ -29,6 +29,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IActivityManager;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.themes.ITheme;
@@ -163,7 +164,7 @@ public class MagicUIActivator extends AbstractUIPlugin {
 		Image image = registry.get(key);
 		if (image == null) {
 			ImageDescriptor descriptor = imageDescriptorFromPlugin(PLUGIN_ID, key);
-			if (descriptor == null) {
+			if (descriptor == null && Workbench.getInstance() != null) {
 				ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 				return sharedImages.getImage(key);
 			}
