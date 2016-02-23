@@ -569,8 +569,10 @@ public class CardDescView extends ViewPart implements ISelectionListener, IShowI
 		final IMagicCard card = getCard(sel);
 		if (panel == null || panel.getCard() == card || sel.isEmpty())
 			return;
-		MagicLogger.trace("cancelling " + loadCardJob.jCard);
-		this.loadCardJob.cancel();
+		if (loadCardJob != null) {
+			MagicLogger.trace("cancelling " + loadCardJob.jCard);
+			this.loadCardJob.cancel();
+		}
 		MagicLogger.traceStart("image " + card);
 		this.loadCardJob = new LoadCardJob(card);
 		this.loadCardJob.schedule();

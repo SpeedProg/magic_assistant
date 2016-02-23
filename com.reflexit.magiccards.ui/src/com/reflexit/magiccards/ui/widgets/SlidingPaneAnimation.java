@@ -37,9 +37,7 @@ public class SlidingPaneAnimation {
 		Display display = new Display();
 		final Shell shell = new Shell(display, SWT.CLOSE | SWT.RESIZE | SWT.DOUBLE_BUFFERED);
 		shell.setSize(600, 600);
-
 		final Composite composite2 = new Composite(shell, SWT.PUSH);
-
 		// contents
 		composite2.setLayout(new GridLayout());
 		composite2.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
@@ -81,7 +79,8 @@ public class SlidingPaneAnimation {
 		// pushControl(composite2, 0, 1);
 		// }
 		// });
-		setAnimationLayoutOn(shell); // after childrent creates, set their layout
+		setAnimationLayoutOn(shell); // after childrent creates, set their
+										// layout
 		// properties
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -134,14 +133,14 @@ public class SlidingPaneAnimation {
 			public void run() {
 				if (comp.isDisposed())
 					return;
-				runner.endEffect();
+				IEffect effect = runner.getEffect();
+				effect.doEffect(effect.getLength());
 				comp.moveAbove(null); // show control
 				comp.setFocus();
 				// comp.getParent().layout(true, true);
 			}
 		};
-		IEffect effect1 = new MoveControlEffect(comp, startX, endX, startY, endY, effectTime, movement,
-				onStop, onStop);
+		IEffect effect1 = new MoveControlEffect(comp, startX, endX, startY, endY, effectTime, movement, onStop, onStop);
 		runner.runEffect(effect1);
 	}
 
@@ -159,7 +158,8 @@ public class SlidingPaneAnimation {
 			public void run() {
 				if (comp.isDisposed())
 					return;
-				runner.endEffect();
+				IEffect effect = runner.getEffect();
+				effect.doEffect(effect.getLength());
 				comp.moveBelow(null); // hide control
 				// comp.getParent().layout(true, true);
 			}
@@ -176,12 +176,12 @@ public class SlidingPaneAnimation {
 	public void waitForAnimation() {
 		Display display = Display.getCurrent();
 		if (display != null)
-			while (runner.isRunning()) {
+			while (!runner.getEffect().isDone()) {
 				if (!display.readAndDispatch())
 					display.sleep();
 			}
 		else
-			while (runner.isRunning()) {
+			while (!runner.getEffect().isDone()) {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
