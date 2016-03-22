@@ -30,6 +30,8 @@ import com.reflexit.magiccards.core.model.MagicCardComparatorTest;
 import com.reflexit.magiccards.core.model.MagicCardFilterTest;
 import com.reflexit.magiccards.core.model.MagicCardListTest;
 import com.reflexit.magiccards.core.model.MagicCardTest;
+import com.reflexit.magiccards.core.model.MagicCardTest_failure_1;
+import com.reflexit.magiccards.core.model.MagicCardTest_failure_2;
 import com.reflexit.magiccards.core.model.PlayingDeckTest;
 import com.reflexit.magiccards.core.model.SortOrderTest;
 import com.reflexit.magiccards.core.model.nav.CardElementTest;
@@ -57,6 +59,8 @@ public class AllLocalTests {
 		suite.addTest(new JUnit4TestAdapter(ExportImportSuite.class));
 		// core
 		suite.addTestSuite(MagicCardTest.class);
+		suite.addTestSuite(MagicCardTest_failure_1.class);
+		suite.addTestSuite(MagicCardTest_failure_2.class);
 		suite.addTestSuite(DbMultiFileCardStoreTest.class);
 		suite.addTestSuite(MultiFileCollectionStoreTest.class);
 		suite.addTestSuite(CardOrganizerTest.class);

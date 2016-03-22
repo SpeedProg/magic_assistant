@@ -5,5 +5,8 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/trove-3.0.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/home/elaskavaia/Programs/EclipseNeon/eclipse/plugins/org.evosuite.plugins.eclipse.deps_1.0.2.201512261016/lib/evosuite.jar"/>
+	<classpathentry kind="src" path="evosuite-tests"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

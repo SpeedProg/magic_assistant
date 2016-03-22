@@ -162,7 +162,7 @@ public class MagicCard extends AbstractMagicCard {
 	public int hashCode() {
 		if (this.id != 0)
 			return this.id;
-		return this.name != null ? this.name.hashCode() : super.hashCode();
+		return this.name != null ? this.name.hashCode() : 0;
 	}
 
 	@Override
@@ -186,9 +186,11 @@ public class MagicCard extends AbstractMagicCard {
 				return part.equals(part2);
 			return part2 == null;
 		} else {
-			if (this.name != null)
+			if (this.name != null) {
 				if (!this.name.equals(ma.name))
 					return false;
+			} else if (ma.name != null)
+				return false;
 			if (this.edition != null)
 				return this.edition.equals(ma.edition);
 			return ma.edition == null;
