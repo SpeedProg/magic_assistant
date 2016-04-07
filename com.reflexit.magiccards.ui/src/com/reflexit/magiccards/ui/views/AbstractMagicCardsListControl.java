@@ -73,6 +73,7 @@ import com.reflexit.magiccards.ui.actions.ShowPreferencesAction;
 import com.reflexit.magiccards.ui.actions.SortAction;
 import com.reflexit.magiccards.ui.actions.SortByAction;
 import com.reflexit.magiccards.ui.actions.UnsortAction;
+import com.reflexit.magiccards.ui.actions.ViewAsAction;
 import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
@@ -105,6 +106,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	private Label statusLine;
 	private Composite topToolBar;
 	protected GroupByAction actionGroupBy;
+	protected ViewAsAction actionViewAs;
 	protected Action actionShowFilter;
 	protected Action actionResetFilter;
 	protected Action actionShowFind;
@@ -432,7 +434,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	}
 
 	private HashMap<String, String> storeToMap(IPreferenceStore store) {
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		Collection col = FilterField.getAllIds();
 		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
@@ -539,6 +541,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 
 	@Override
 	public void fillLocalToolBar(IToolBarManager manager) {
+		if (actionViewAs != null)
+			manager.add(this.actionViewAs);
 		if (actionGroupBy != null)
 			manager.add(this.actionGroupBy);
 		if (actionSortBy != null)

@@ -773,7 +773,12 @@
            class="com.reflexit.magiccards.ui.views.analyzers.SplitTreeDeckPage"
            id="com.reflexit.magiccards.ui.views.analyzers.SplitTreeDeckPage"
            name="Groups">
-     </page>   		
+     </page>
+          <page
+                class="com.reflexit.magiccards.ui.gallery.GalleryDeckPage"
+                id="com.reflexit.magiccards.ui.gallery.page2"
+                name="Gallery">
+          </page>   		
         <page name="Info" id="info"
         class="com.reflexit.magiccards.ui.views.analyzers.InfoPage"
         />
@@ -792,6 +797,12 @@
                       id="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
                       name="Export">
                 </page>
+                
+                          <page
+                class="com.reflexit.magiccards.ui.views.analyzers.SuperDeckPage"
+                id="com.reflexit.magiccards.ui.views.analyzers.SuperDeckPage"
+                name="Super">
+          </page>   
   </extension>
 
 <extension point="org.eclipse.ui.themes">
@@ -907,14 +918,6 @@ id="org.eclipse.ui.views.ProgressView">
      
      
       
-   <extension
-         point="com.reflexit.magiccards.ui.deckPage">
-      <page
-            class="com.reflexit.magiccards.ui.gallery.GalleryDeckPage"
-            id="com.reflexit.magiccards.ui.gallery.page2"
-            name="Gallery">
-      </page>
-   </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
        <page

@@ -5,4 +5,8 @@ public enum Presentation {
 	public String getLabel() {
 		return name();
 	}
+
+	public String key() {
+		return name();
+	}
 }

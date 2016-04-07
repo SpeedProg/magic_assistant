@@ -4,13 +4,10 @@ import java.util.Collection;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -32,28 +29,7 @@ public class GroupByAction extends Action {
 		this.store = store;
 		this.groups = groups;
 		setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"));
-		setMenuCreator(new IMenuCreator() {
-			private Menu listMenu;
-
-			@Override
-			public void dispose() {
-				if (listMenu != null)
-					listMenu.dispose();
-			}
-
-			@Override
-			public Menu getMenu(Control parent) {
-				if (listMenu != null)
-					listMenu.dispose();
-				listMenu = createMenuManager().createContextMenu(parent);
-				return listMenu;
-			}
-
-			@Override
-			public Menu getMenu(Menu parent) {
-				return null;
-			}
-		});
+		setMenuCreator(new MenuCreator(this::createMenuManager));
 	}
 
 	public void setFilter(MagicCardFilter filter) {
@@ -79,8 +55,7 @@ public class GroupByAction extends Action {
 	}
 
 	public MenuManager createMenuManager() {
-		MenuManager groupMenu = new MenuManager("Group By",
-				MagicUIActivator.getImageDescriptor("icons/clcl16/group_by.png"), null);
+		MenuManager groupMenu = new MenuManager(getText(), getImageDescriptor(), null);
 		groupMenu.setRemoveAllWhenShown(true);
 		groupMenu.addMenuListener(new IMenuListener() {
 			@Override

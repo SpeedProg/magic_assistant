@@ -1,12 +1,14 @@
 package com.reflexit.magiccards.ui.views.analyzers;
 
-import org.eclipse.jface.action.IToolBarManager;
+import java.util.Arrays;
+
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter;
+import com.reflexit.magiccards.ui.actions.ViewAsAction;
 import com.reflexit.magiccards.ui.views.AbstractGroupPageCardsViewPage;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.Presentation;
@@ -14,7 +16,6 @@ import com.reflexit.magiccards.ui.views.ViewPageContribution;
 import com.reflexit.magiccards.ui.views.lib.DeckListControl;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
-import com.reflexit.magiccards.ui.views.lib.PresentationComboContributionItem;
 
 public class SuperDeckPage extends AbstractGroupPageCardsViewPage implements IDeckPage, IMagicCardListControl {
 	public SuperDeckPage() {
@@ -48,23 +49,27 @@ public class SuperDeckPage extends AbstractGroupPageCardsViewPage implements IDe
 		}
 
 		@Override
-		public void fillLocalToolBar(IToolBarManager manager) {
-			manager.add(new PresentationComboContributionItem(getPresentation().getLabel()) {
-				@Override
-				protected void onSelect(String text) {
-					int i = getPageGroup().getPageIndex(text);
-					getPageGroup().setActivePageIndex(i);
-					getDeckView().activate();
-				}
-			});
-			super.fillLocalToolBar(manager);
-		}
-
-		@Override
 		protected void makeActions() {
 			super.makeActions();
+			this.actionViewAs = new ViewAsAction(Arrays.asList(Presentation.values()), this::onViewChange) {
+				@Override
+				public boolean isChecked(Object object) {
+					String cur = getColumnsPreferenceStore().getString("view");
+					if (cur != null && cur.equals(((Presentation) object).key())) {
+						return true;
+					}
+					return super.isChecked();
+				}
+			};
 			if (getPresentation() == Presentation.TABLE)
 				getGroupAction().setEnabled(false);
+		}
+
+		private void onViewChange(Presentation selected) {
+			getColumnsPreferenceStore().setValue("view", selected.key());
+			int i = getPageGroup().getPageIndex(selected.key());
+			getPageGroup().setActivePageIndex(i);
+			getDeckView().activate();
 		}
 	}
 

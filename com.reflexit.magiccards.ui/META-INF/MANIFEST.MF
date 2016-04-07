@@ -21,7 +21,8 @@ Require-Bundle: com.reflexit.magiccards.core,
  org.eclipse.ui.forms,
  org.eclipse.ui.navigator,
  org.eclipse.equinox.event,
- org.eclipse.nebula.widgets.gallery
+ org.eclipse.nebula.widgets.gallery,
+ org.eclipse.jface
 Export-Package: com.reflexit.magiccards.ui,
  com.reflexit.magiccards.ui.actions,
  com.reflexit.magiccards.ui.commands,
