@@ -27,6 +27,8 @@ public class SWTMABot extends SWTWorkbenchBot {
 	}
 
 	public SWTBotDeckView deck(String title) {
-		return new SWTBotDeckView(title, this);
+		SWTBotDeckView swtBotDeckView = new SWTBotDeckView(title, this);
+		swtBotDeckView.show();
+		return swtBotDeckView;
 	}
 }

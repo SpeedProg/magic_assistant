@@ -18,13 +18,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
 import com.reflexit.magicassistant.swtbot.utils.DndUtil;
 import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.reflexit.magiccards.ui.views.Presentation;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class CreateDeck extends AbstractSwtBotTest {
 	private SWTBotView dbView;
-	private SWTBotView deckView;
+	private SWTBotDeckView deckView;
 
 	@Before
 	public void init() {
@@ -46,7 +48,9 @@ public class CreateDeck extends AbstractSwtBotTest {
 
 	@Override
 	public SWTBotView createDeck(String deckName) {
-		deckView = super.createDeck(deckName);
+		super.createDeck(deckName);
+		deckView = bot.deck(deckName);
+		deckView.switchPresentation(Presentation.TREE);
 		return deckView;
 	}
 

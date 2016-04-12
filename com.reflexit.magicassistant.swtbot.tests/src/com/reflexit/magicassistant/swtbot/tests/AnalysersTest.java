@@ -81,7 +81,6 @@ public class AnalysersTest extends AbstractSwtBotTest {
 		bot.button("Next >").click();
 		bot.button("Finish").click();
 		SWTBotDeckView deckView = bot.deck("imported");
-		deckView.show();
 		deckView.switchPresentation(Presentation.TREE);
 		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
 

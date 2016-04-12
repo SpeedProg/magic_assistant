@@ -14,25 +14,13 @@ public class SWTBotDeckView extends SWTBotView {
 	}
 
 	public void switchPresentation(Presentation pres) {
-		// oolbarButton("View As").contextMenu(pres.getLabel()).click();
 		bot().cTabItem("Cards").activate();
 		setFocus();
 		SWTBotToolbarDropDownButton groupBy = toolbarDropDownButton("View As");
-		groupBy.click();
-		bot.sleep(30);
+		// groupBy.click();
 		String label = pres.getLabel();
-		System.err.println("clicking on " + label);
 		final SWTBotMenu menuItem = groupBy.menuItem(label);
-		// menuItem.setFocus();
 		menuItem.click();
-		// bot.sleep(100);
-		// syncExec(new Runnable() {
-		// @Override
-		// public void run() {
-		// Menu menu = menuItem.widget.getParent();
-		// SWTAutomationUtils.hideMenuRec(menu);
-		// }
-		// });
 	}
 
 	protected void syncExec(final Runnable runnable) {

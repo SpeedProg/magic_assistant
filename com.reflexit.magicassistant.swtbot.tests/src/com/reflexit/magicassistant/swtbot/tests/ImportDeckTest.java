@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Before;
@@ -15,8 +14,10 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
+import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
+import com.reflexit.magiccards.ui.views.Presentation;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ImportDeckTest extends AbstractSwtBotTest {
@@ -62,8 +63,8 @@ public class ImportDeckTest extends AbstractSwtBotTest {
 		bot.radio("Clipboard").click();
 		bot.button("Next >").click();
 		bot.button("Finish").click();
-		SWTBotView deckView = bot.viewByTitle("imported");
-		deckView.show();
+		SWTBotDeckView deckView = bot.deck("imported");
+		deckView.switchPresentation(Presentation.TREE);
 		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
 	}
 
@@ -83,8 +84,8 @@ public class ImportDeckTest extends AbstractSwtBotTest {
 		bot.sleep(100);
 		bot.button("Next >").click();
 		bot.button("Finish").click();
-		SWTBotView deckView = bot.viewByTitle("im1");
-		deckView.show();
+		SWTBotDeckView deckView = bot.deck("imported");
+		deckView.switchPresentation(Presentation.TREE);
 		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
 	}
 }
