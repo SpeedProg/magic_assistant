@@ -49,10 +49,6 @@ public class MagicDbView extends AbstractSingleControlCardsView {
 	}
 
 	class MagicDbListControl extends AbstractMagicCardsListControl {
-		public MagicDbListControl() {
-			super();
-		}
-
 		@Override
 		protected String getPreferencePageId() {
 			return MagicDbView.this.getPreferencePageId();
@@ -212,7 +208,7 @@ public class MagicDbView extends AbstractSingleControlCardsView {
 
 	@Override
 	public boolean show(ShowInContext context) {
-		ArrayList<Object> l = new ArrayList<Object>();
+		ArrayList<Object> l = new ArrayList<>();
 		for (Object o : ((IStructuredSelection) context.getSelection()).toList()) {
 			if (o instanceof IMagicCard) {
 				l.add(((IMagicCard) o).getBase());

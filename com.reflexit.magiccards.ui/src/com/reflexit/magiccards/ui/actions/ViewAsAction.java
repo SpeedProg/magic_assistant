@@ -26,7 +26,6 @@ public class ViewAsAction extends DropDownAction<Presentation> {
 
 	@Override
 	public boolean isChecked(Object element) {
-		System.err.println("is checked " + element + " " + getSelected());
 		return element.equals(getSelected());
 	}
 }

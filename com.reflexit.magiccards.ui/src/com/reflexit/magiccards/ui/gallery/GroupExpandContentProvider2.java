@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+
 import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -33,7 +34,6 @@ public class GroupExpandContentProvider2 implements ITreeContentProvider {
 			return;
 		this.input = newInput;
 		this.top = getTopLevel(newInput);
-
 		// viewer.refresh();
 	}
 
@@ -91,7 +91,7 @@ public class GroupExpandContentProvider2 implements ITreeContentProvider {
 		if (element instanceof IMagicCard) {
 			return TreeViewerContentProvider.EMPTY_CHILDREN;
 		}
-		System.err.println("Unknonwn chold " + element);
+		System.err.println("Unknonwn child " + element);
 		return res;
 	}
 

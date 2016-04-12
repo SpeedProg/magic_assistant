@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.function.Consumer;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
@@ -8,6 +10,10 @@ import org.eclipse.swt.widgets.Composite;
 public class StackPageGroup extends ViewPageGroup {
 	private Composite stack;
 	private StackLayout layout;
+
+	public StackPageGroup(Consumer<IViewPage> beforeActivate, Consumer<IViewPage> afterActivate) {
+		super(beforeActivate, afterActivate);
+	}
 
 	@Override
 	public void createContent(Composite parent) {

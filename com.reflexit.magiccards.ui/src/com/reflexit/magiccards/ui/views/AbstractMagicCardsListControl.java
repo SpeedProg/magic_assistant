@@ -20,6 +20,8 @@ import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -107,6 +109,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	private Composite topToolBar;
 	protected GroupByAction actionGroupBy;
 	protected ViewAsAction actionViewAs;
+	protected Action actionDoubleClick;
 	protected Action actionShowFilter;
 	protected Action actionResetFilter;
 	protected Action actionShowFind;
@@ -587,6 +590,13 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 
 	protected void hookDoubleClickAction() {
 		// override to hook
+		if (actionDoubleClick != null)
+			viewer.addDoubleClickListener(new IDoubleClickListener() {
+				@Override
+				public void doubleClick(DoubleClickEvent event) {
+					actionDoubleClick.run();
+				}
+			});
 	}
 
 	protected String getName() {
@@ -601,8 +611,6 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	@Override
 	protected void makeActions() {
 		super.makeActions();
-		// double click
-		hookDoubleClickAction();
 		this.actionShowFilter = new ImageAction("Filter...", "icons/clcl16/filter_ps.png", "Opens a Card Filter Dialog",
 				this::runShowFilter);
 		this.actionResetFilter = new ImageAction("Reset Filter", "icons/clcl16/reset_filter.gif",
@@ -618,6 +626,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		};
 		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/gear.png"));
 		this.actionShowFind = new SearchCardAction(this::runFind);
+		// double click
+		hookDoubleClickAction();
 	}
 
 	public ColumnCollection getSortColumnCollection() {

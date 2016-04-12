@@ -22,7 +22,6 @@ public class DropDownAction<T> extends Action implements IPlainLabelProvider {
 		setImageDescriptor(desc);
 		setMenuCreator(new MenuCreator(this::createMenuManager));
 		selected = getDefault();
-		System.err.println("cons");
 	}
 
 	@Override
@@ -35,7 +34,6 @@ public class DropDownAction<T> extends Action implements IPlainLabelProvider {
 	}
 
 	protected void populateMenu(IMenuManager groupMenu) {
-		System.err.println("popuate " + getSelected() + " " + this);
 		for (T pres : elements) {
 			groupMenu.add(createItemAction(pres));
 		}
@@ -68,7 +66,6 @@ public class DropDownAction<T> extends Action implements IPlainLabelProvider {
 
 	protected void actionOnSelectItem(T pres) {
 		selected = pres;
-		System.err.println("sel " + pres);
 		if (reload != null)
 			reload.accept(selected);
 	}

@@ -36,4 +36,5 @@ public class PreferenceConstants extends CorePreferenceConstants {
 	public static final String LAST_SELECTION = PREFIX + ".cardselection";
 	public static final String GROUP_FIELD = FilterField.GROUP_FIELD.toString();
 	public static final String SORT_ORDER = PREFIX + ".sortorder";
+	public static final String PRESENTATION_VIEW = PREFIX + ".viewas";
 }

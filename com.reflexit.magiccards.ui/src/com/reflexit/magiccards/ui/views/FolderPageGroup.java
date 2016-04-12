@@ -1,5 +1,7 @@
 package com.reflexit.magiccards.ui.views;
 
+import java.util.function.Consumer;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -12,6 +14,10 @@ import org.eclipse.swt.widgets.Display;
 
 public class FolderPageGroup extends ViewPageGroup {
 	private CTabFolder folder;
+
+	public FolderPageGroup(Consumer<IViewPage> beforeActivate, Consumer<IViewPage> afterActivate) {
+		super(beforeActivate, afterActivate);
+	}
 
 	@Override
 	public void createContent(Composite parent) {

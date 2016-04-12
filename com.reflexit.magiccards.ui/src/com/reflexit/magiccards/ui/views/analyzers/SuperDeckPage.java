@@ -6,9 +6,11 @@ import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.model.MagicCardFilter;
 import com.reflexit.magiccards.ui.actions.ViewAsAction;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.views.AbstractGroupPageCardsViewPage;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.Presentation;
@@ -27,6 +29,17 @@ public class SuperDeckPage extends AbstractGroupPageCardsViewPage implements IDe
 		addPage(Presentation.SPLITTREE);
 		addPage(Presentation.TREE);
 		addPage(Presentation.GALLERY);
+	}
+
+	@Override
+	protected void createPageContents(Composite parent) {
+		super.createPageContents(parent);
+		String cur = getLocalPreferenceStore().getString(PreferenceConstants.PRESENTATION_VIEW);
+		if (cur != null) {
+			Presentation pres = Presentation.valueOf(cur);
+			int i = getPageGroup().getPageIndex(pres.getLabel());
+			getPageGroup().setActivePageIndex(i);
+		}
 	}
 
 	protected void addPage(Presentation pres) {
@@ -54,7 +67,7 @@ public class SuperDeckPage extends AbstractGroupPageCardsViewPage implements IDe
 			this.actionViewAs = new ViewAsAction(Arrays.asList(Presentation.values()), this::onViewChange) {
 				@Override
 				public boolean isChecked(Object object) {
-					String cur = getColumnsPreferenceStore().getString("view");
+					String cur = getLocalPreferenceStore().getString(PreferenceConstants.PRESENTATION_VIEW);
 					if (cur != null && cur.equals(((Presentation) object).key())) {
 						return true;
 					}
@@ -66,8 +79,8 @@ public class SuperDeckPage extends AbstractGroupPageCardsViewPage implements IDe
 		}
 
 		private void onViewChange(Presentation selected) {
-			getColumnsPreferenceStore().setValue("view", selected.key());
-			int i = getPageGroup().getPageIndex(selected.key());
+			getLocalPreferenceStore().setValue(PreferenceConstants.PRESENTATION_VIEW, selected.key());
+			int i = getPageGroup().getPageIndex(selected.getLabel());
 			getPageGroup().setActivePageIndex(i);
 			getDeckView().activate();
 		}

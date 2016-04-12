@@ -1,7 +1,5 @@
 package com.reflexit.magiccards.ui.gallery;
 
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 
@@ -9,6 +7,7 @@ import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.SimpleAction;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.MagicDbView;
@@ -45,13 +44,9 @@ public class GalleryView extends MagicDbView {
 			}
 
 			@Override
-			protected void hookDoubleClickAction() {
-				viewer.addDoubleClickListener(new IDoubleClickListener() {
-					@Override
-					public void doubleClick(DoubleClickEvent event) {
-						runDoubleClick();
-					}
-				});
+			protected void makeActions() {
+				actionDoubleClick = new SimpleAction(() -> runDoubleClick());
+				super.makeActions();
 			}
 
 			@Override

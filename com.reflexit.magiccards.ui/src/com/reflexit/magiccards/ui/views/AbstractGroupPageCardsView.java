@@ -32,15 +32,7 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 	}
 
 	protected ViewPageGroup createPageGroup() {
-		return new FolderPageGroup() {
-			@Override
-			public void activate() {
-				IViewPage activePage = pageGroup.getActivePage();
-				preActivate(activePage);
-				super.activate();
-				postActivate(activePage);
-			}
-		};
+		return new FolderPageGroup(this::preActivate, this::postActivate);
 	}
 
 	protected abstract void createPages();
@@ -77,8 +69,6 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 
 	@Override
 	protected void activate() {
-		if (pageGroup.getActivePageIndex() < 0)
-			pageGroup.setActivePageIndex(0);
 		pageGroup.activate();
 	}
 
@@ -102,7 +92,7 @@ public abstract class AbstractGroupPageCardsView extends AbstractCardsView {
 	}
 
 	public void setSelection(IStructuredSelection structuredSelection) {
-		ArrayList<Object> l = new ArrayList<Object>();
+		ArrayList<Object> l = new ArrayList<>();
 		for (Object o : structuredSelection.toList()) {
 			if (o instanceof MagicCard) {
 				l.addAll(((MagicCard) o).getRealCards().getChildrenList());

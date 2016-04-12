@@ -32,7 +32,6 @@ import com.reflexit.magiccards.ui.dialogs.DeckFilterDialog;
 import com.reflexit.magiccards.ui.preferences.DeckViewPreferencePage;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.FolderPageGroup;
-import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
@@ -50,15 +49,7 @@ public class DeckView extends AbstractMyCardsView {
 
 	@Override
 	protected ViewPageGroup createPageGroup() {
-		return new FolderPageGroup() {
-			@Override
-			public void activate() {
-				IViewPage activePage = getPageGroup().getActivePage();
-				preActivate(activePage);
-				super.activate();
-				postActivate(activePage);
-			}
-		};
+		return new FolderPageGroup(this::preActivate, this::postActivate);
 	}
 
 	@Override

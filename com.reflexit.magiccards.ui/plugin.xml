@@ -759,7 +759,13 @@
   </extension>
   <extension
         point="com.reflexit.magiccards.ui.deckPage">
-                  <page
+                             
+          <page
+                class="com.reflexit.magiccards.ui.views.analyzers.SuperDeckPage"
+                id="com.reflexit.magiccards.ui.views.analyzers.SuperDeckPage"
+                name="Cards">
+          </page>  
+            <!--      <page
            class="com.reflexit.magiccards.ui.views.analyzers.TreeDeckPage"
            id="com.reflexit.magiccards.ui.views.analyzers.TreeDeckPage"
            name="Cards">
@@ -778,7 +784,7 @@
                 class="com.reflexit.magiccards.ui.gallery.GalleryDeckPage"
                 id="com.reflexit.magiccards.ui.gallery.page2"
                 name="Gallery">
-          </page>   		
+          </page>   		-->
         <page name="Info" id="info"
         class="com.reflexit.magiccards.ui.views.analyzers.InfoPage"
         />
@@ -797,12 +803,7 @@
                       id="com.reflexit.magiccards.ui.views.analyzers.WizardsHtmlPage"
                       name="Export">
                 </page>
-                
-                          <page
-                class="com.reflexit.magiccards.ui.views.analyzers.SuperDeckPage"
-                id="com.reflexit.magiccards.ui.views.analyzers.SuperDeckPage"
-                name="Super">
-          </page>   
+ 
   </extension>
 
 <extension point="org.eclipse.ui.themes">

@@ -1,14 +1,10 @@
 package com.reflexit.magicassistant.swtbot.tests;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -19,46 +15,33 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.reflexit.magicassistant.swtbot.model.SWTMABot;
 import com.reflexit.magicassistant.swtbot.utils.SWTAutomationUtils;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 public abstract class AbstractSwtBotTest {
-	protected static SWTWorkbenchBot bot;
+	protected static SWTMABot bot;
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		bot = new SWTWorkbenchBot();
-		System.setProperty("junit.testing", "true");
+		bot = new SWTMABot();
 		WebUtils.setWorkOffline(true);
 	}
 
 	@Before
 	public void setUp() {
-		IPreferenceStore mdbStore = PreferenceInitializer.getMdbStore();
-		PreferenceInitializer.setToDefault(mdbStore);
-		PreferenceInitializer.setToDefault(PreferenceInitializer.getFilterStore(MagicDbViewPreferencePage.PPID));
-		mdbStore.setValue(PreferenceConstants.GROUP_FIELD, "");
-		IPreferenceStore deckStore = PreferenceInitializer.getDeckStore();
-		PreferenceInitializer.setToDefault(deckStore);
-		deckStore.setValue(PreferenceConstants.GROUP_FIELD, "");
-		try {
-			bot.resetWorkbench();
-		} catch (Exception e) {
-			// ignore
-		}
+		bot.resetPrefs();
 	}
 
 	protected void removeAllDecks() {
@@ -72,25 +55,6 @@ public abstract class AbstractSwtBotTest {
 	protected void editionsFilter(String setName) {
 		IPreferenceStore mdbStore = PreferenceInitializer.getFilterStore(MagicDbViewPreferencePage.PPID);
 		mdbStore.setValue(Editions.getInstance().getPrefConstantByName(setName), true);
-	}
-
-	public void clickViewToolBarItemByTooltip(String viewName, String tooltip) {
-		SWTBotView viewByTitle = bot.viewByTitle(viewName);
-		viewByTitle.show();
-		viewByTitle.setFocus();
-		// viewByTitle.toolbarButton("Opens a Card Filter Dialog").click();
-		clickToolBarItemByTooltip(tooltip);
-	}
-
-	public void clickToolBarItemByTooltip(String tooltip) {
-		List<SWTBotToolbarButton> toolbarButtons = bot.activeView().getToolbarButtons();
-		for (Iterator iterator = toolbarButtons.iterator(); iterator.hasNext();) {
-			SWTBotToolbarButton swtBotToolbarButton = (SWTBotToolbarButton) iterator.next();
-			if (swtBotToolbarButton.getToolTipText().contains(tooltip)) {
-				swtBotToolbarButton.click();
-				break;
-			}
-		}
 	}
 
 	public void clickMenuItem(final SWTBotMenu menuItem) {

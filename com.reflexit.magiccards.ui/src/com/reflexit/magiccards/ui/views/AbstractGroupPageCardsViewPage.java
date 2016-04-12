@@ -28,15 +28,7 @@ public abstract class AbstractGroupPageCardsViewPage extends AbstractViewPage {
 	}
 
 	protected ViewPageGroup createPageGroup() {
-		return new StackPageGroup() {
-			@Override
-			public void activate() {
-				IViewPage activePage = pageGroup.getActivePage();
-				preActivate(activePage);
-				super.activate();
-				postActivate(activePage);
-			}
-		};
+		return new StackPageGroup(this::preActivate, this::postActivate);
 	}
 
 	protected abstract void createPages();

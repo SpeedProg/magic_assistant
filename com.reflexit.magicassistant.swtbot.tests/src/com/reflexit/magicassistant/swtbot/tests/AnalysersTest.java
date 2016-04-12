@@ -15,17 +15,19 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
+import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class AnalysersTest extends AbstractSwtBotTest {
 	private static LinkedHashMap<String, Integer> deck = new LinkedHashMap<>();
 	public @Rule TemporaryFolder folder = new TemporaryFolder();
-	private static boolean imported = false;
+	public static boolean imported = false;
 
 	@BeforeClass
 	public static void deck() {
@@ -65,6 +67,7 @@ public class AnalysersTest extends AbstractSwtBotTest {
 			DeckView.openCollection(col, null);
 			return;
 		}
+		imported = true;
 		removeAllDecks();
 		syncExec(() -> CopySupport.runCopy(getImportData()));
 		bot.menu("File").menu("Import...").click();
@@ -77,10 +80,11 @@ public class AnalysersTest extends AbstractSwtBotTest {
 		bot.radio("Clipboard").click();
 		bot.button("Next >").click();
 		bot.button("Finish").click();
-		SWTBotView deckView = bot.viewByTitle("imported");
+		SWTBotDeckView deckView = bot.deck("imported");
 		deckView.show();
+		deckView.switchPresentation(Presentation.TREE);
 		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
-		imported = true;
+
 	}
 
 	@Test

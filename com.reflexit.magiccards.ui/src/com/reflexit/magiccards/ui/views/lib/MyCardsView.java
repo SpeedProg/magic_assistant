@@ -1,5 +1,6 @@
 package com.reflexit.magiccards.ui.views.lib;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -7,17 +8,19 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.swt.widgets.Composite;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.actions.ViewAsAction;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
+import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.FolderPageGroup;
-import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.Presentation;
+import com.reflexit.magiccards.ui.views.StackPageGroup;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
 
@@ -49,36 +52,37 @@ public class MyCardsView extends AbstractMyCardsView {
 		}
 
 		@Override
-		public void fillLocalToolBar(IToolBarManager manager) {
-			// manager.add(new
-			// PresentationComboContributionItem(getPresentation().getLabel()) {
-			// @Override
-			// protected void onSelect(String text) {
-			// getPageGroup().activate(text);
-			// }
-			// });
-			super.fillLocalToolBar(manager);
-		}
-
-		@Override
 		protected void makeActions() {
 			super.makeActions();
+			this.actionViewAs = new ViewAsAction(Arrays.asList(Presentation.values()), this::onViewChange) {
+				@Override
+				public boolean isChecked(Object object) {
+					String cur = getLocalPreferenceStore().getString(PreferenceConstants.PRESENTATION_VIEW);
+					if (cur != null && cur.equals(((Presentation) object).key())) {
+						return true;
+					}
+					return super.isChecked();
+				}
+			};
 			if (getPresentation() == Presentation.TABLE)
 				getGroupAction().setEnabled(false);
 		}
+
+		private void onViewChange(Presentation selected) {
+			getLocalPreferenceStore().setValue(PreferenceConstants.PRESENTATION_VIEW, selected.key());
+			int i = getPageGroup().getPageIndex(selected.getLabel());
+			getPageGroup().setActivePageIndex(i);
+			getView().activate();
+		}
+	}
+
+	public MyCardsView getView() {
+		return this;
 	}
 
 	@Override
 	protected ViewPageGroup createPageGroup() {
-		return new FolderPageGroup() {
-			@Override
-			public void activate() {
-				IViewPage activePage = getPageGroup().getActivePage();
-				preActivate(activePage);
-				super.activate();
-				postActivate(activePage);
-			}
-		};
+		return new StackPageGroup(this::preActivate, this::postActivate);
 	}
 
 	@Override
@@ -90,7 +94,18 @@ public class MyCardsView extends AbstractMyCardsView {
 	}
 
 	protected void addPage(Presentation pres, String name) {
-		getPageGroup().add(new ViewPageContribution(pres.name(), name, null, new MyCardPresentation(pres)));
+		getPageGroup().add(new ViewPageContribution(pres.name(), pres.getLabel(), null, new MyCardPresentation(pres)));
+	}
+
+	@Override
+	protected void createMainControl(Composite parent) {
+		super.createMainControl(parent);
+		String cur = getLocalPreferenceStore().getString(PreferenceConstants.PRESENTATION_VIEW);
+		if (cur != null) {
+			Presentation pres = Presentation.valueOf(cur);
+			int i = getPageGroup().getPageIndex(pres.getLabel());
+			getPageGroup().setActivePageIndex(i);
+		}
 	}
 
 	@Override
