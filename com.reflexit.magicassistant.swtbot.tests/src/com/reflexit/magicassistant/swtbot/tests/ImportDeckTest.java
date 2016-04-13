@@ -84,7 +84,7 @@ public class ImportDeckTest extends AbstractSwtBotTest {
 		bot.sleep(100);
 		bot.button("Next >").click();
 		bot.button("Finish").click();
-		SWTBotDeckView deckView = bot.deck("imported");
+		SWTBotDeckView deckView = bot.deck("im1");
 		deckView.switchPresentation(Presentation.TREE);
 		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
 	}

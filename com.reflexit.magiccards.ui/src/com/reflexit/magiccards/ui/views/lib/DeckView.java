@@ -199,7 +199,7 @@ public class DeckView extends AbstractMyCardsView {
 				// System.err.println("DeckView " + getPartName() + " got " +
 				// event);
 				if (event.getType() == CardEvent.REMOVE_CONTAINER) {
-					if (deck != null && deck.getLocation().equals(dataLocation)) {
+					if (deck.getLocation().equals(dataLocation)) {
 						close();
 						deck.close();
 						deck = null;
