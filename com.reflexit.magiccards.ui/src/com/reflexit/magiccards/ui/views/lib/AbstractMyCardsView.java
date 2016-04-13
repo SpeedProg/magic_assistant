@@ -47,7 +47,6 @@ import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.AbstractGroupPageCardsView;
-import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
 
 /**
@@ -69,15 +68,7 @@ public abstract class AbstractMyCardsView extends AbstractGroupPageCardsView imp
 
 	@Override
 	protected ViewPageGroup createPageGroup() {
-		return new ViewPageGroup() {
-			@Override
-			public void activate() {
-				IViewPage activePage = getPageGroup().getActivePage();
-				preActivate(activePage);
-				super.activate();
-				postActivate(activePage);
-			}
-		};
+		return new ViewPageGroup(this::preActivate, this::postActivate);
 	}
 
 	@Override

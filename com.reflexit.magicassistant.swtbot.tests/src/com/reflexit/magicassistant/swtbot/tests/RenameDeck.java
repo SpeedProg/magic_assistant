@@ -14,8 +14,9 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
-import com.reflexit.magiccards.ui.views.lib.DeckView;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +28,7 @@ public class RenameDeck extends AbstractSwtBotTest {
 		// create a deck
 		createDeck("bbb");
 		// drag a drop card in the new deck
-		SWTBotView deckView = bot.viewById(DeckView.ID);
+
 		SWTBotView dbView = bot.viewById(MagicDbView.ID);
 		SWTBotTableItem row = selectFirstRowInViewT(dbView);
 		SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
@@ -36,7 +37,8 @@ public class RenameDeck extends AbstractSwtBotTest {
 		KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance("="));
 		// new DndUtil(bot.getDisplay()).dragAndDrop(row, deckView);
 		bot.sleep(200);
-		deckView.setFocus();
+		SWTBotDeckView deckView = bot.deck();
+		deckView.switchPresentation(Presentation.TREE);
 		assertEquals(name, getFirstRowInViewTree(deckView).cell(0));
 		String ntype = getFirstRowInViewTree(deckView).cell(3);
 		assertEquals(type, ntype);
@@ -55,7 +57,7 @@ public class RenameDeck extends AbstractSwtBotTest {
 		bot.button("OK").click();
 		bot.waitUntil(Conditions.shellCloses(sshell), 1000);
 		decks.getNode("ccc (Active)").select();
-		deckView = bot.viewById(DeckView.ID);
+		deckView = bot.deck();
 		assertEquals(name, getFirstRowInViewTree(deckView).cell(0));
 		assertEquals(type, getFirstRowInViewTree(deckView).cell(3));
 	}

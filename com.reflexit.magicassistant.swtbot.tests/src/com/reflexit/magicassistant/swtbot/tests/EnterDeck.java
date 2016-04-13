@@ -15,9 +15,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.collector.CollectorView;
-import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
@@ -105,7 +106,8 @@ public class EnterDeck extends AbstractSwtBotTest {
 		dbView.show();
 		dbView.bot().comboBox().setText("");
 		// dbView.bot().text(1).setText("Alara Reborn");
-		SWTBotView deckView = bot.viewById(DeckView.ID);
+		SWTBotDeckView deckView = bot.deck();
+		deckView.switchPresentation(Presentation.TABLE);
 		for (String name : deck.keySet()) {
 			dbView.bot().text().setFocus();
 			dbView.bot().text().setText(name);
@@ -118,7 +120,7 @@ public class EnterDeck extends AbstractSwtBotTest {
 			KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance("m"));
 			bot.sleep(100);
 			dbView.bot().text().setText("");
-			selectFirstRowInView(deckView);
+			selectFirstRowInViewT(deckView);
 		}
 		collView.setFocus();
 		bot.sleep(500);

@@ -22,9 +22,6 @@ public class ViewPageGroup {
 	private Consumer<IViewPage> beforeActivate;
 	private Consumer<IViewPage> afterActivate;
 
-	public ViewPageGroup() {
-	}
-
 	public ViewPageGroup(Consumer<IViewPage> beforeActivate, Consumer<IViewPage> afterActivate) {
 		this.beforeActivate = beforeActivate;
 		this.afterActivate = afterActivate;
