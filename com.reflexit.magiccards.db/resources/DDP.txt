@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-401718|Eldrazi Spawn| |Token Creature-- Eldrazi Spawn|0|1|Sacrifice this creature: Add {1} to your mana pool.|Duel Decks: Zendikar vs. Eldrazi|Common|Aleksi Briclot|76|Sacrifice this creature: Add {1} to your mana pool.|
-401680|Forest| |Basic Land - Forest| | |G|Duel Decks: Zendikar vs. Eldrazi|Land|John Avon|38|G|
-401715|Mountain| |Basic Land - Mountain| | |R|Duel Decks: Zendikar vs. Eldrazi|Land|James Paick|73|R|
-401677|Plains| |Basic Land - Plains| | |W|Duel Decks: Zendikar vs. Eldrazi|Land|John Avon|35|W|
-401712|Swamp| |Basic Land - Swamp| | |B|Duel Decks: Zendikar vs. Eldrazi|Land|Véronique Meignaud|70|B|
+401718|Eldrazi Spawn||Token Creature-- Eldrazi Spawn|0|1|Sacrifice this creature: Add {1} to your mana pool.|Duel Decks: Zendikar vs. Eldrazi|Common|Aleksi Briclot|76|Sacrifice this creature: Add {1} to your mana pool.|
+401680|Forest||Basic Land - Forest|||G|Duel Decks: Zendikar vs. Eldrazi|Land|John Avon|38|G|
+401715|Mountain||Basic Land - Mountain|||R|Duel Decks: Zendikar vs. Eldrazi|Land|James Paick|73|R|
+401677|Plains||Basic Land - Plains|||W|Duel Decks: Zendikar vs. Eldrazi|Land|John Avon|35|W|
+401712|Swamp||Basic Land - Swamp|||B|Duel Decks: Zendikar vs. Eldrazi|Land|Véronique Meignaud|70|B|
 401644|Affa Guard Hound|{2}{W}|Creature - Hound|2|2|Flash<br>When Affa Guard Hound enters the battlefield, target creature gets +0/+3 until end of turn.|Duel Decks: Zendikar vs. Eldrazi|Uncommon|Ryan Pancoast|2|Flash<br>When Affa Guard Hound enters the battlefield, target creature gets +0/+3 until end of turn.|
 401709|Akoum Refuge||Land|||Akoum Refuge enters the battlefield tapped.<br>When Akoum Refuge enters the battlefield, you gain 1 life.<br>{T}: Add {B} or {R} to your mana pool.|Duel Decks: Zendikar vs. Eldrazi|Uncommon|Fred Fields|67|Akoum Refuge enters the battlefield tapped.<br>When Akoum Refuge enters the battlefield, you gain 1 life.<br>{T}: Add {B} or {R} to your mana pool.|
 401684|Artisan of Kozilek|{9}|Creature - Eldrazi|10|9|When you cast Artisan of Kozilek, you may return target creature card from your graveyard to the battlefield.<br>Annihilator 2 <i>(Whenever this creature attacks, defending player sacrifices two permanents.)</i>|Duel Decks: Zendikar vs. Eldrazi|Uncommon|Jason Felix|42|When you cast Artisan of Kozilek, you may return target creature card from your graveyard to the battlefield.<br>Annihilator 2 <i>(Whenever this creature attacks, defending player sacrifices two permanents.)</i>|

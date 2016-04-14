@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-405235|Forest| |Basic Land - Forest| | |G|Commander 2015|Land|Steven Belledin|340|G|
-405266|Island| |Basic Land - Island| | |U|Commander 2015|Land|Florian de Gesincourt|328|U|
-405309|Mountain| |Basic Land - Mountain| | |R|Commander 2015|Land|Florian de Gesincourt|336|R|
-405343|Plains| |Basic Land - Plains| | |W|Commander 2015|Land|Nils Hamm|324|W|
-405405|Swamp| |Basic Land - Swamp| | |B|Commander 2015|Land|Cliff Childs|332|B|
+405235|Forest||Basic Land - Forest|||G|Commander 2015|Land|Steven Belledin|340|G|
+405266|Island||Basic Land - Island|||U|Commander 2015|Land|Florian de Gesincourt|328|U|
+405309|Mountain||Basic Land - Mountain|||R|Commander 2015|Land|Florian de Gesincourt|336|R|
+405343|Plains||Basic Land - Plains|||W|Commander 2015|Land|Nils Hamm|324|W|
+405405|Swamp||Basic Land - Swamp|||B|Commander 2015|Land|Cliff Childs|332|B|
 405117|Acidic Slime|{3}{G}{G}|Creature - Ooze|2|2|Deathtouch <i>(Any amount of damage this deals to a creature is enough to destroy it.)</i><br>When Acidic Slime enters the battlefield, destroy target artifact, enchantment, or land.|Commander 2015|Uncommon|Karl Kopinski|173|Deathtouch <i>(Any amount of damage this deals to a creature is enough to destroy it.)</i><br>When Acidic Slime enters the battlefield, destroy target artifact, enchantment, or land.|
 405118|Act of Aggression|{3}{RP}{RP}|Instant|||<i>({RP} can be paid with either {R} or 2 life.)</i><br>Gain control of target creature an opponent controls until end of turn. Untap that creature. It gains haste until end of turn.|Commander 2015|Uncommon|Whit Brachna|141|<i>({RP} can be paid with either {R} or 2 life.)</i><br>Gain control of target creature an opponent controls until end of turn. Untap that creature. It gains haste until end of turn.|
 405119|Ætherize|{3}{U}|Instant|||Return all attacking creatures to their owner's hand.|Commander 2015|Uncommon|Ryan Barger|85|Return all attacking creatures to their owner's hand.|

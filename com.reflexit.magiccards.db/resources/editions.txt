@@ -1,33 +1,33 @@
-Limited Edition Alpha|LEA|1E,A|August 1993|Core|||Alpha Edition,Alpha
-Limited Edition Beta|LEB|2E,B|October 1993|Core|||Beta Edition,Beta
-Unlimited Edition|2ED|2U,U|December 1993|Core|||Unlimited
+Limited Edition Alpha|LEA|1E,A|August 1993|Core|Limited Edition Alpha||Alpha Edition,Alpha
+Limited Edition Beta|LEB|2E,B|October 1993|Core|Limited Edition Beta||Beta Edition,Beta
+Unlimited Edition|2ED|2U,U|December 1993|Core|Unlimited Edition||Unlimited
 Arabian Nights|ARN|AN|December 1993|Expansion|None||
-Revised Edition|3ED|3E,R|April 1994|Core|||Revised
+Revised Edition|3ED|3E,R|April 1994|Core|Revised Edition||Revised
 Antiquities|ATQ|AQ|March 1994|Expansion|None||
 Legends|LEG|LE,LG|June 1994|Expansion|None||
 The Dark|DRK|DK|August 1994|Expansion|None||
 Fallen Empires|FEM|FE|November 1994|Expansion|None||
-Fourth Edition|4ED|4E|April 1995|Core|||4th Edition
+Fourth Edition|4ED|4E|April 1995|Core|Fourth Edition||4th Edition
 Ice Age|ICE|IA|June 1995|Expansion|Ice Age Block||
-Chronicles|CHR|CH|July 1995|Starter|||
+Chronicles|CHR|CH|July 1995|Starter|Chronicles||
 Homelands|HML|HM,HL|October 1995|Expansion|None||
 Alliances|ALL|AL|June 1996|Expansion|Ice Age Block||
 Mirage|MIR|MI|October 1996|Expansion|Mirage Block||
 Visions|VIS|VI|February 1997|Expansion|Mirage Block||
-Fifth Edition|5ED|5E|March 1997|Core|||5th Edition
+Fifth Edition|5ED|5E|March 1997|Core|Fifth Edition||5th Edition
 Weatherlight|WTH|WL|June 1997|Expansion|Mirage Block||
-Portal|POR|PO,PT|June 1997|Starter|||
-Vanguard|VAN|VG|August 1997|Modifiers|||
+Portal|POR|PO,PT|June 1997|Starter|Portal||
+Vanguard|VAN|VG|August 1997|Modifiers|Vanguard||
 Tempest|TMP|TE|October 1997|Expansion|Tempest Block||
 Stronghold|STH|ST,SH|March 1998|Expansion|Tempest Block||
-Anthologies|ATH|AT|November 1998|Starter|||
+Anthologies|ATH|AT|November 1998|Starter|Anthologies||
 Exodus|EXO|EX|June 1998|Expansion|Tempest Block||
 Portal Second Age|PO2|P2,P02|June 1998|Starter|Portal||
 Unglued|UGL|UG|August 1998|Un_set|Un-sets||
 Urza's Saga|USG|UZ,US|October 1998|Expansion|Urza Block||
-Battle Royale Box Set|BRB|BR|November 1999|Starter|||
+Battle Royale Box Set|BRB|BR|November 1999|Starter|Battle Royale Box Set||
 Urza's Legacy|ULG|GU,UL|February 1999|Expansion|Urza Block||
-Classic Sixth Edition|6ED|6E|April 1999|Core|||6th Edition,Sixth Edition
+Classic Sixth Edition|6ED|6E|April 1999|Core|Classic Sixth Edition||6th Edition,Sixth Edition
 Portal Three Kingdoms|PTK|PK|May 1999|Starter|Portal||
 Urza's Destiny|UDS|CG,UD|June 1999|Expansion|Urza Block||
 Starter 1999|S99|P3,ST,S1|July 1999|Starter|Starter||
@@ -36,16 +36,16 @@ Nemesis|NMS|NE|February 2000|Expansion|Masques Block||
 Prophecy|PCY|PR,PY|June 2000|Expansion|Masques Block||
 Starter 2000|S00|P4,S2|July 2000|Starter|Starter||
 Invasion|INV|IN|October 2000|Expansion|Invasion Block||
-Beatdown Box Set|BTD|BD|December 2000|Starter|||
+Beatdown Box Set|BTD|BD|December 2000|Starter|Beatdown Box Set||
 Planeshift|PLS|PS|February 2001|Expansion|Invasion Block||
-Seventh Edition|7ED|7E|April 2001|Core|||7th Edition
+Seventh Edition|7ED|7E|April 2001|Core|Seventh Edition||7th Edition
 Apocalypse|APC|AP|June 2001|Expansion|Invasion Block||
 Odyssey|ODY|OD|October 2001|Expansion|Odyssey Block||
 Torment|TOR|TO|February 2002|Expansion|Odyssey Block||
 Judgment|JUD|JU|May 2002|Expansion|Odyssey Block||
 Onslaught|ONS|ON|October 2002|Expansion|Onslaught Block||
 Legions|LGN||February 2003|Expansion|Onslaught Block||
-Eighth Edition|8ED|8E|July 2003|Core||Modern|8th Edition
+Eighth Edition|8ED|8E|July 2003|Core|Eighth Edition|Modern|8th Edition
 Scourge|SCG|SC|May 2003|Expansion|Onslaught Block||EDITIONS_SIZE
 Mirrodin|MRD|MR|October 2003|Expansion|Mirrodin Block|Modern|
 Champions of Kamigawa|CHK|COK|October 2004|Expansion|Kamigawa Block|Modern|
@@ -54,17 +54,17 @@ Fifth Dawn|5DN|FD|June 2004|Expansion|Mirrodin Block|Modern|
 Unhinged|UNH||November 2004|Un_set|Un-sets||
 Betrayers of Kamigawa|BOK||February 2005|Expansion|Kamigawa Block|Modern|
 Saviors of Kamigawa|SOK||June 2005|Expansion|Kamigawa Block|Modern|
-Ninth Edition|9ED|9E|July 2005|Core||Modern|9th Edition
+Ninth Edition|9ED|9E|July 2005|Core|Ninth Edition|Modern|9th Edition
 Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica Block|Modern|Ravnica
 Guildpact|GPT||February 2006|Expansion|Ravnica Block|Modern|
 Dissension|DIS||May 2006|Expansion|Ravnica Block|Modern|
 Coldsnap|CSP|CS|July 2006|Expansion|Ice Age Block|Modern|
-Time Spiral "Timeshifted"|TSB||October 2006|Starter|||Timeshifted,"Timeshifted"
-Promo set for Gatherer|PPR||October 2006|Online|||
+Time Spiral "Timeshifted"|TSB||October 2006|Starter|Time Spiral "Timeshifted"||Timeshifted,"Timeshifted"
+Promo set for Gatherer|PPR||October 2006|Online|Promo set for Gatherer||
 Time Spiral|TSP||October 2006|Expansion|Time Spiral Block|Modern|
 Planar Chaos|PLC||February 2007|Expansion|Time Spiral Block|Modern|
 Future Sight|FUT||May 2007|Expansion|Time Spiral Block|Modern|
-Tenth Edition|10E||July 2007|Core||Modern|10th Edition
+Tenth Edition|10E||July 2007|Core|Tenth Edition|Modern|10th Edition
 Masters Edition|MED|DM|September 2007|Online|Masters Editions||
 Lorwyn|LRW|LWN|October 2007|Expansion|Lorwyn Block|Modern|
 Duel Decks: Elves vs. Goblins|EVG||November 2007|Starter|Duel Decks||
@@ -77,15 +77,15 @@ Duel Decks: Jace vs. Chandra|DD2|JVC|November 2008|Starter|Duel Decks||
 Conflux|CON||February 2009|Expansion|Alara Block|Modern|
 Duel Decks: Divine vs. Demonic|DDC|DVD|April 2009|Starter|Duel Decks||
 Alara Reborn|ARB||April 2009|Expansion|Alara Block|Modern|
-Magic 2010|M10||July 2009|Core||Modern|
+Magic 2010|M10||July 2009|Core|Magic 2010|Modern|
 Masters Edition III|ME3||September 2009|Online|Masters Editions||
 Duel Decks: Garruk vs. Liliana|DDD|GVL|October 2009|Starter|Duel Decks||
 Zendikar|ZEN||October 2009|Expansion|Zendikar Block|Modern|
 Premium Deck Series: Slivers|H09|PDS|November 2009|Starter|Premium Deck Series||
 Worldwake|WWK||February 2010|Expansion|Zendikar Block|Modern|
 Rise of the Eldrazi|ROE||April 2010|Expansion|Zendikar Block|Modern|
-Archenemy|ARC||June 2010|Starter|||
-Magic 2011|M11||July 2010|Core||Modern|
+Archenemy|ARC||June 2010|Starter|Archenemy||
+Magic 2011|M11||July 2010|Core|Magic 2011|Modern|
 Duel Decks: Elspeth vs. Tezzeret|DDF||September 2010|Starter|Duel Decks||
 Duel Decks: Phyrexia vs. the Coalition|DDE|PVC|March 2010|Starter|Duel Decks||
 Scars of Mirrodin|SOM||October 2010|Expansion|Scars of Mirrodin Block|Modern|
@@ -96,7 +96,7 @@ Duel Decks: Knights vs. Dragons|DDG||April 2011|Starter|Duel Decks||
 New Phyrexia|NPH||May 2011|Expansion|Scars of Mirrodin Block|Modern|
 From the Vault: Dragons|DRB||August 2008|Starter|From the Vault||
 From the Vault: Legends|V11||August 2011|Starter|From the Vault||
-Magic 2012|M12||July 2011|Core||Modern|
+Magic 2012|M12||July 2011|Core|Magic 2012|Modern|
 Duel Decks: Ajani vs. Nicol Bolas|DDH|AVN|September 2011|Starter|Duel Decks||
 Planechase|HOP|PCH|September 2009|Expansion|Planechase||
 From the Vault: Relics|V10|FVR|August 2010|Starter|From the Vault||
@@ -108,7 +108,7 @@ Duel Decks: Venser vs. Koth|DDI||March 2012|Starter|Duel Decks||
 Premium Deck Series: Graveborn|PD3||November 2011|Starter|Premium Deck Series||
 Avacyn Restored|AVR||May 2012|Expansion|Innistrad Block|Modern|
 Planechase 2012 Edition|PC2||June 2012|Expansion|Planechase||Planechase 2012
-Magic 2013|M13||July 2012|Core||Modern|
+Magic 2013|M13||July 2012|Core|Magic 2013|Modern|
 Commander's Arsenal|CM1||November 2012|Expansion|Commander||
 Duel Decks: Izzet vs. Golgari|DDJ||September 2012|Starter|Duel Decks||
 From the Vault: Realms|V12||August 2012|Starter|From the Vault||
@@ -116,8 +116,8 @@ Return to Ravnica|RTR||October 2012|Expansion|Return to Ravnica Block|Modern|
 Duel Decks: Sorin vs. Tibalt|DDK||March 2013|Starter|Duel Decks||
 Gatecrash|GTC||February 2013|Expansion|Return to Ravnica Block|Modern|
 Dragon's Maze|DGM||May 2013|Expansion|Return to Ravnica Block|Modern|
-Modern Masters|MMA||June 2013|Starter|||
-Magic 2014 Core Set|M14||July 2013|Core||Modern|Magic 2014
+Modern Masters|MMA||June 2013|Starter|Modern Masters||
+Magic 2014 Core Set|M14||July 2013|Core|Magic 2014 Core Set|Modern|Magic 2014
 Duel Decks: Heroes vs. Monsters|DDL||September 2013|Starter|Duel Decks||
 From the Vault: Twenty|V13||August 2013|Starter|From the Vault||
 Theros|THS||September 2013|Expansion|Theros Block|Modern|
@@ -126,27 +126,30 @@ Born of the Gods|BNG||February 2014|Expansion|Theros Block|Modern|
 Duel Decks: Jace vs. Vraska|DDM||March 2014|Starter|Duel Decks||
 Journey into Nyx|JOU||May 2014|Expansion|Theros Block|Modern|
 Modern Event Deck 2014|MD1||May 2014|Starter|Event Decks||
-Magic: The Gathering—Conspiracy|CNS||June 2014|Expansion|Other non-standard-legal sets||Conspiracy,Magic: The Gathering - Conspiracy
+Magic: The Gathering—Conspiracy|CNS||June 2014|Expansion|Conspiracy||Conspiracy,Magic: The Gathering - Conspiracy
 Vintage Masters|VMA||June 2014|Online|Masters Editions||
-Magic 2015 Core Set|M15||July 2014|Core||Modern|Magic 2015
+Magic 2015 Core Set|M15||July 2014|Core|Magic 2015 Core Set|Modern|Magic 2015
 Duel Decks: Speed vs. Cunning|DDN||September 2014|Starter|Duel Decks||
-From the Vault: Annihilation (2014)|V14||September 2014|Starter|From the Vault||From the Vault: Annihilation
-Khans of Tarkir|KTK||September 2014|Expansion|Khans of Tarkir Block|Standard|
+From the Vault: Annihilation (2014)|V14||August 2014|Starter|From the Vault||From the Vault: Annihilation
+Khans of Tarkir|KTK||September 2014|Expansion|Khans of Tarkir Block|Modern|
 Commander 2014|C14||November 2014|Expansion|Commander||
-Fate Reforged|FRF||January 2015|Expansion|Khans of Tarkir Block|Standard|
+Fate Reforged|FRF||January 2015|Expansion|Khans of Tarkir Block|Modern|
 Duel Decks Anthology, Divine vs. Demonic|DD3_DVD||February 2015|Starter|Duel Decks||
 Duel Decks Anthology, Elves vs. Goblins|DD3_EVG||February 2015|Starter|Duel Decks||
 Duel Decks Anthology, Garruk vs. Liliana|DD3_GVL||February 2015|Starter|Duel Decks||
 Duel Decks Anthology, Jace vs. Chandra|DD3_JVC||February 2015|Starter|Duel Decks||
 Dragons of Tarkir|DTK||March 2015|Expansion|Khans of Tarkir Block|Standard|
 Duel Decks: Elspeth vs. Kiora|DDO||February 2015|Starter|Duel Decks||Duel Decks: Kiora vs. Elspeth
-Ugin's Fate promos|FRF_UGIN||March 2015|Starter|||
-Modern Masters 2015 Edition|MM2||May 2015|Starter|||Modern Masters 2015
+Ugin's Fate promos|FRF_UGIN||March 2015|Starter|Ugin's Fate promos||
+Modern Masters 2015 Edition|MM2||May 2015|Starter|Modern Masters 2015 Edition||Modern Masters 2015
 Tempest Remastered|TPR||May 2015|Online|Masters Editions||
 From the Vault: Angels|V15||August 2015|Starter|From the Vault||
-Magic Origins|ORI||July 2015|Core||Standard|Magic Origins
+Magic Origins|ORI||July 2015|Core|Magic Origins|Standard|Magic Origins
 Battle for Zendikar|BFZ||October 2015|Expansion|Battle for Zendikar Block|Standard|
 Commander 2015|C15||November 2015|Expansion|Commander||
 Duel Decks: Zendikar vs. Eldrazi|DDP||August 2015|Starter|Duel Decks||
-Zendikar Expeditions|EXP||November 2015|Expansion|||
+Zendikar Expeditions|EXP||October 2015|Expansion|Battle for Zendikar Block||
 Oath of the Gatewatch|OGW||January 2016|Expansion|Battle for Zendikar Block|Standard|
+Duel Decks: Blessed vs. Cursed|DDQ||February 2016|Starter|Duel Decks||
+Shadows over Innistrad|SOI||April 2016|Expansion|Shadows over Innistrad Block|Standard|
+Welcome Deck 2016|W16||April 2016|Starter|Welcome Deck 2016||

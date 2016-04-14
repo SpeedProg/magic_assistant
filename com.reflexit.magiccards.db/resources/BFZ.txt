@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-401885|Forest| |Basic Land - Forest| | |G|Battle for Zendikar|Land|Sam Burley|271|G|
-401918|Island| |Basic Land - Island| | |U|Battle for Zendikar|Land|Sam Burley|256|U|
-401957|Mountain| |Basic Land - Mountain| | |R|Battle for Zendikar|Land|Sam Burley|266|R|
-401988|Plains| |Basic Land - Plains| | |W|Battle for Zendikar|Land|Sam Burley|251|W|
-402053|Swamp| |Basic Land - Swamp| | |B|Battle for Zendikar|Land|Sam Burley|261|B|
+401885|Forest||Basic Land - Forest|||G|Battle for Zendikar|Land|Sam Burley|271|G|
+401918|Island||Basic Land - Island|||U|Battle for Zendikar|Land|Sam Burley|256|U|
+401957|Mountain||Basic Land - Mountain|||R|Battle for Zendikar|Land|Sam Burley|266|R|
+401988|Plains||Basic Land - Plains|||W|Battle for Zendikar|Land|Sam Burley|251|W|
+402053|Swamp||Basic Land - Swamp|||B|Battle for Zendikar|Land|Sam Burley|261|B|
 401803|Adverse Conditions|{3}{U}|Instant|||Devoid <i>(This card has no color.)</i><br>Tap up to two target creatures. Those creatures don't untap during their controller's next untap step. Put a 1/1 colorless Eldrazi Scion creature token onto the battlefield. It has "Sacrifice this creature: Add {1} to your mana pool."|Battle for Zendikar|Uncommon|Jason Rainville|54|Devoid <i>(This card has no color.)</i><br>Tap up to two target creatures. Those creatures don't untap during their controller's next untap step. Put a 1/1 colorless Eldrazi Scion creature token onto the battlefield. It has "Sacrifice this creature: Add {1} to your mana pool."|
 401804|Akoum Firebird|{2}{R}{R}|Creature - Phoenix|3|3|Flying, haste<br>Akoum Firebird attacks each turn if able.<br>Landfall- Whenever a land enters the battlefield under your control, you may pay {4}{R}{R}. If you do, return Akoum Firebird from your graveyard to the battlefield.|Battle for Zendikar|Mythic Rare|Chris Rahn|138|Flying, haste<br>Akoum Firebird attacks each turn if able.<br>Landfall- Whenever a land enters the battlefield under your control, you may pay {4}{R}{R}. If you do, return Akoum Firebird from your graveyard to the battlefield.|
 401805|Akoum Hellkite|{4}{R}{R}|Creature - Dragon|4|4|Flying<br>Landfall- Whenever a land enters the battlefield under your control, Akoum Hellkite deals 1 damage to target creature or player. If that land is a Mountain, Akoum Hellkite deals 2 damage to that creature or player instead.|Battle for Zendikar|Rare|Jaime Jones|139|Flying<br>Landfall- Whenever a land enters the battlefield under your control, Akoum Hellkite deals 1 damage to target creature or player. If that land is a Mountain, Akoum Hellkite deals 2 damage to that creature or player instead.|
