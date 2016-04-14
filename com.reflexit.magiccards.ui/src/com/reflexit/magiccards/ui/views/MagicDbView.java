@@ -137,6 +137,7 @@ public class MagicDbView extends AbstractSingleControlCardsView {
 		String curset = null;
 		File dir = new File("/tmp/madatabase");
 		FileUtils.deleteTree(dir);
+		dir.mkdirs();
 		Editions editions = Editions.getInstance();
 		PrintStream ps = null;
 		for (IMagicCard magicCard : store) {
