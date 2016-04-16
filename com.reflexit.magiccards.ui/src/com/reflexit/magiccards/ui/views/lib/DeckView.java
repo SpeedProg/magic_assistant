@@ -161,6 +161,8 @@ public class DeckView extends AbstractMyCardsView {
 				setTitleImage(MagicUIActivator.getDefault().getImage("icons/lib32.png"));
 			}
 		}
+		// used in drop adapter
+		getPartControl().setData("deck", deck);
 	}
 
 	@Override

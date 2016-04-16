@@ -18,15 +18,19 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.Location;
+import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.ILocatable;
 import com.reflexit.magiccards.ui.MagicUIActivator;
@@ -86,7 +90,22 @@ public class MagicCardDropAdapter extends ViewerDropAdapter implements DropTarge
 		if (input instanceof ILocatable) {
 			ILocatable target = (ILocatable) input;
 			Location targetLocation = target.getLocation();
-			return targetLocation;
+			if (targetLocation != null)
+				return targetLocation;
+		}
+		DropTarget target = (DropTarget) curEvent.widget;
+		Control control = target.getControl();
+		CardCollection deck = null;
+		while (control != null && !(control instanceof Shell)) {
+			deck = (CardCollection) control.getData("deck");
+			if (deck != null)
+				break;
+			control = control.getParent();
+		}
+		if (deck != null) {
+			Location targetLocation = deck.getLocation();
+			if (targetLocation != null)
+				return targetLocation;
 		}
 		return null;
 	}

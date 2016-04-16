@@ -80,6 +80,10 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 		activate();
 	}
 
+	protected Composite getPartControl() {
+		return partControl;
+	}
+
 	protected void activate() {
 		clearActionBars();
 		contributeToActionBars();
