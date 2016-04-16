@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views;
 
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -20,7 +19,6 @@ public abstract class AbstractGroupPageCardsViewPage extends AbstractViewPage {
 	private Composite main;
 	private ViewPageGroup pageGroup;
 	private SelectionProviderIntermediate selectionProviderBridge = new SelectionProviderIntermediate();
-	private MenuManager sharedContextMenuManager;
 
 	public AbstractGroupPageCardsViewPage() {
 		pageGroup = createPageGroup();
@@ -89,13 +87,6 @@ public abstract class AbstractGroupPageCardsViewPage extends AbstractViewPage {
 
 	protected void registerSelectionProvider() {
 		selectionProviderBridge.setSelectionProviderDelegate(pageGroup.getActivePage().getSelectionProvider());
-	}
-
-	@Override
-	public MenuManager getContextMenuManager() {
-		if (sharedContextMenuManager == null)
-			sharedContextMenuManager = createContextMenuManager();
-		return sharedContextMenuManager;
 	}
 
 	@Override

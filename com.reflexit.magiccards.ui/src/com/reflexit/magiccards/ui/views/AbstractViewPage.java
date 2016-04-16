@@ -121,7 +121,7 @@ public abstract class AbstractViewPage implements IViewPage {
 	}
 
 	protected MenuManager createContextMenuManager() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		MenuManager menuMgr = new MenuManager("#PopupMenu-Shared");
 		setContextMenuManager(menuMgr);
 		return menuMgr;
 	}

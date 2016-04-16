@@ -64,7 +64,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	protected Action actionRefresh;
 	protected Action actionCopy;
 	protected Action buyCards;
-	private HashMap<String, IHandlerActivation> activations = new HashMap<String, IHandlerActivation>();
+	private HashMap<String, IHandlerActivation> activations = new HashMap<>();
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
@@ -107,7 +107,7 @@ public abstract class AbstractCardsView extends ViewPart implements IShowInTarge
 	}
 
 	protected MenuManager createContextMenuManager() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		MenuManager menuMgr = new MenuManager("#PopupMenu-View");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override

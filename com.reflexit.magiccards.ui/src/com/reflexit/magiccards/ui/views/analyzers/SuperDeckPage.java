@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views.analyzers;
 
 import java.util.Arrays;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -44,6 +45,12 @@ public class SuperDeckPage extends AbstractGroupPageCardsViewPage implements IDe
 
 	protected void addPage(Presentation pres) {
 		getPageGroup().add(new ViewPageContribution("", pres.getLabel(), null, new DeckPagePresentation(pres)));
+	}
+
+	@Override
+	public void setContextMenuManager(MenuManager menuMgr) {
+		super.setContextMenuManager(menuMgr);
+		getPageGroup().getActivePage().setContextMenuManager(menuMgr);
 	}
 
 	class DeckPagePresentation extends DeckListControl {
