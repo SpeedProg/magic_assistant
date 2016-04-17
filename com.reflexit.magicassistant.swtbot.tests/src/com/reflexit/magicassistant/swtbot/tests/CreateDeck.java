@@ -102,6 +102,19 @@ public class CreateDeck extends AbstractSwtBotTest {
 	}
 
 	@Test
+	public void testPlusGallery() throws Exception {
+		createDeck("deckPlusGal");
+		deckView.switchPresentation(Presentation.GALLERY);
+		// drag a drop card in the new deck
+		SWTBotTableItem row = selectFirstRowInDb();
+		String name = row.getText(0);
+		// add card using + shortcut (well = actually)
+		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.toKeys(0, '='));
+		bot.sleep(500);
+		selectFirstRowInView(deckView).cell(0);
+	}
+
+	@Test
 	public void testCutAndPaste() throws Exception {
 		createDeck("deckPaste");
 		// drag a drop card in the new deck
