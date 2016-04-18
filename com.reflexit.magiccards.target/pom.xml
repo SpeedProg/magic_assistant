@@ -10,7 +10,7 @@
 		<relativePath>../com.reflexit.magiccards.parent</relativePath>
 	</parent>
 
-	<artifactId>rcp_mars</artifactId>
+	<artifactId>rcp_neon</artifactId>
 	<packaging>eclipse-target-definition</packaging>
 
 </project>
