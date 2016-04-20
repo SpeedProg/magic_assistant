@@ -19,11 +19,16 @@ import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.model.RootTreeViewerContentProvider;
 
 public class CollectorListControl extends AbstractMagicCardsListControl {
 	public static final ICardField[] DEF_GROUP = new ICardField[] { MagicCardField.SET, MagicCardField.LANG,
 			MagicCardField.RARITY };
+
+	public CollectorListControl() {
+		super(Presentation.TREE);
+	}
 
 	@Override
 	public IMagicColumnViewer createViewer(Composite parent) {

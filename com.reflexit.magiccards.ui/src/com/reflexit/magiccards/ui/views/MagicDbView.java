@@ -14,7 +14,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ShowInContext;
 
@@ -49,14 +48,13 @@ public class MagicDbView extends AbstractSingleControlCardsView {
 	}
 
 	class MagicDbListControl extends AbstractMagicCardsListControl {
-		@Override
-		protected String getPreferencePageId() {
-			return MagicDbView.this.getPreferencePageId();
+		public MagicDbListControl() {
+			super(Presentation.SPLITTREE);
 		}
 
 		@Override
-		public IMagicColumnViewer createViewer(Composite parent) {
-			return new SplitViewer(parent, getPreferencePageId());
+		protected String getPreferencePageId() {
+			return MagicDbView.this.getPreferencePageId();
 		}
 
 		@Override

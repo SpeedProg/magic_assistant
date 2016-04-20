@@ -26,6 +26,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 	private IMagicCard card;
 
 	public PrintingListControl() {
+		super(true);
 	}
 
 	@Override
@@ -106,7 +107,7 @@ public class PrintingListControl extends AbstractMagicCardsListControl {
 		Collection<IMagicCard> candidates = store.getCandidates(englishName);
 		LinkedHashSet<IMagicCard> res = new LinkedHashSet<>();
 		res.addAll(candidates);
-		ArrayList<IMagicCard> res2 = new ArrayList<IMagicCard>();
+		ArrayList<IMagicCard> res2 = new ArrayList<>();
 		for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
 			IMagicCard next = iterator.next();
 			try {

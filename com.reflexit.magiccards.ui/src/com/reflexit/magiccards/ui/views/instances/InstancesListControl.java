@@ -24,6 +24,10 @@ import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
 public class InstancesListControl extends AbstractMagicCardsListControl {
+	public InstancesListControl() {
+		super(true);
+	}
+
 	private IMagicCard card;
 
 	@Override
@@ -100,7 +104,7 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 	}
 
 	public Collection<IMagicCard> searchInStore(ICardStore<IMagicCard> store) {
-		LinkedHashSet<IMagicCard> res = new LinkedHashSet<IMagicCard>();
+		LinkedHashSet<IMagicCard> res = new LinkedHashSet<>();
 		if (card == null || card == MagicCard.DEFAULT || card.getName() == null)
 			return res;
 		String englishName = card.getName();
@@ -129,7 +133,7 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 			}
 		}
 		if (multilang) {
-			ArrayList<IMagicCard> res2 = new ArrayList<IMagicCard>();
+			ArrayList<IMagicCard> res2 = new ArrayList<>();
 			for (Iterator<IMagicCard> iterator = store.iterator(); iterator.hasNext();) {
 				IMagicCard next = iterator.next();
 				try {

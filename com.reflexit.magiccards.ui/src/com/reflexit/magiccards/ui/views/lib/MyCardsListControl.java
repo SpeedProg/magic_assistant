@@ -28,6 +28,7 @@ public abstract class MyCardsListControl extends AbstractMagicCardsListControl {
 	}
 
 	public MyCardsListControl() {
+		super(false);
 	}
 
 	@Override

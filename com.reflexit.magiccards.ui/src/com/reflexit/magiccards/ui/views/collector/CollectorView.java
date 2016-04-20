@@ -45,10 +45,6 @@ public class CollectorView extends AbstractMyCardsView {
 		getPageGroup().add(new ViewPageContribution("", "Main", null, page));
 	}
 
-	protected CollectorListControl createViewControl() {
-		return new CollectorListControl();
-	}
-
 	@Override
 	protected IViewPage getActivePage() {
 		return page;

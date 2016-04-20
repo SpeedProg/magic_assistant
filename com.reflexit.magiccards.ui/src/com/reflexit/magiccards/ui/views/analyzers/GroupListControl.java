@@ -12,6 +12,7 @@ import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.columns.AbstractColumn;
 import com.reflexit.magiccards.ui.views.columns.ColumnCollection;
 import com.reflexit.magiccards.ui.views.columns.CountColumn;
@@ -72,12 +73,12 @@ public abstract class GroupListControl extends AbstractMagicCardsListControl {
 	}
 
 	public GroupListControl() {
-		super();
+		super(Presentation.TREE);
 	}
 
 	@Override
 	protected IFilteredCardStore<ICard> doGetFilteredStore() {
-		return new MemoryFilteredCardStore<ICard>();
+		return new MemoryFilteredCardStore<>();
 	}
 
 	@Override

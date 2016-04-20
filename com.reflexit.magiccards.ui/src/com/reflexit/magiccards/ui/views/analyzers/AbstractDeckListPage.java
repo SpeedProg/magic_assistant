@@ -10,10 +10,15 @@ import com.reflexit.magiccards.core.model.storage.IStorage;
 import com.reflexit.magiccards.core.model.storage.IStorageInfo;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
+import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.lib.DeckView;
 import com.reflexit.magiccards.ui.views.lib.IDeckPage;
 
 public abstract class AbstractDeckListPage extends AbstractMagicCardsListControl implements IDeckPage {
+	public AbstractDeckListPage() {
+		super(Presentation.TREE);
+	}
+
 	public ICardStore<IMagicCard> getCardStore() {
 		if (getViewPart() != null && getDeckView().getCardCollection() != null)
 			return getDeckView().getCardCollection().getStore();

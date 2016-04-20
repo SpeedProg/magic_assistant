@@ -1,6 +1,5 @@
 package com.reflexit.magiccards.ui.views.lib;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -15,27 +14,20 @@ import com.reflexit.magiccards.core.model.Location;
 import com.reflexit.magiccards.core.model.Locations;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
-import com.reflexit.magiccards.ui.actions.ViewAsAction;
 import com.reflexit.magiccards.ui.preferences.LibViewPreferencePage;
-import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.utils.WaitUtils;
-import com.reflexit.magiccards.ui.views.Presentation;
-import com.reflexit.magiccards.ui.views.StackPageGroup;
+import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.ViewPageContribution;
-import com.reflexit.magiccards.ui.views.ViewPageGroup;
 
 public class MyCardsView extends AbstractMyCardsView {
 	public static final String ID = "com.reflexit.magiccards.ui.views.lib.MyCardsView";
 	private IFilteredCardStore mystore;
+	private MyCardsListControl page;
 
 	public MyCardsView() {
 	}
 
 	class MyCardPresentation extends MyCardsListControl {
-		public MyCardPresentation(Presentation type) {
-			super(type);
-		}
-
 		@Override
 		public IFilteredCardStore doGetFilteredStore() {
 			return mystore;
@@ -54,25 +46,6 @@ public class MyCardsView extends AbstractMyCardsView {
 		@Override
 		protected void makeActions() {
 			super.makeActions();
-			this.actionViewAs = new ViewAsAction(Arrays.asList(Presentation.values()), this::onViewChange) {
-				@Override
-				public boolean isChecked(Object object) {
-					String cur = getLocalPreferenceStore().getString(PreferenceConstants.PRESENTATION_VIEW);
-					if (cur != null && cur.equals(((Presentation) object).key())) {
-						return true;
-					}
-					return super.isChecked();
-				}
-			};
-			if (getPresentation() == Presentation.TABLE)
-				getGroupAction().setEnabled(false);
-		}
-
-		private void onViewChange(Presentation selected) {
-			getLocalPreferenceStore().setValue(PreferenceConstants.PRESENTATION_VIEW, selected.key());
-			int i = getPageGroup().getPageIndex(selected.getLabel());
-			getPageGroup().setActivePageIndex(i);
-			getView().activate();
 		}
 	}
 
@@ -81,31 +54,19 @@ public class MyCardsView extends AbstractMyCardsView {
 	}
 
 	@Override
-	protected ViewPageGroup createPageGroup() {
-		return new StackPageGroup(this::preActivate, this::postActivate);
+	protected void createPages() {
+		page = new MyCardPresentation();
+		getPageGroup().add(new ViewPageContribution("", "Main", null, page));
 	}
 
 	@Override
-	protected void createPages() {
-		addPage(Presentation.TREE, "Cards");
-		addPage(Presentation.TABLE, "List");
-		addPage(Presentation.SPLITTREE, "Groups");
-		addPage(Presentation.GALLERY, "Gallery");
-	}
-
-	protected void addPage(Presentation pres, String name) {
-		getPageGroup().add(new ViewPageContribution(pres.name(), pres.getLabel(), null, new MyCardPresentation(pres)));
+	protected IViewPage getActivePage() {
+		return page;
 	}
 
 	@Override
 	protected void createMainControl(Composite parent) {
 		super.createMainControl(parent);
-		String cur = getLocalPreferenceStore().getString(PreferenceConstants.PRESENTATION_VIEW);
-		if (cur != null) {
-			Presentation pres = Presentation.valueOf(cur);
-			int i = getPageGroup().getPageIndex(pres.getLabel());
-			getPageGroup().setActivePageIndex(i);
-		}
 	}
 
 	@Override

@@ -259,8 +259,12 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 		CardGroup top = (CardGroup) types.getChildAtIndex(0);
 		CardGroup ncre = (CardGroup) top.getChildAtIndex(1);
 		CardGroup cre = (CardGroup) top.getChildAtIndex(2);
-		if (ncre.getRarity().equals(cre.getRarity())) {
-			rarity.setText(ncre.getRarity());
+		String ncreRarity = ncre.getRarity();
+		String creRarity = cre.getRarity();
+		if (ncreRarity != null && ncreRarity.equals(creRarity)) {
+			rarity.setText(ncreRarity);
+		} else if (ncreRarity == null && creRarity != null) {
+			rarity.setText(creRarity);
 		} else {
 			rarity.setText("*");
 		}
@@ -271,7 +275,7 @@ public class DeckLegalityPage2 extends AbstractDeckListPage {
 	public void setFStore() {
 		if (getCardStore() == null)
 			return;
-		MemoryFilteredCardStore<ICard> mstore = new MemoryFilteredCardStore<ICard>();
+		MemoryFilteredCardStore<ICard> mstore = new MemoryFilteredCardStore<>();
 		Location loc = getCardStore().getLocation();
 		MagicCardFilter filter = (MagicCardFilter) getDeckView().getFilter().clone();
 		ICardStore mainStore = DataManager.getInstance().getCardStore(loc.toMainDeck());

@@ -32,6 +32,15 @@ public class GroupByAction extends Action {
 		setMenuCreator(new MenuCreator(this::createMenuManager));
 	}
 
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		if (enabled)
+			setToolTipText(getText());
+		else
+			setToolTipText(getText() + ": disabled because table presentation does not support groupping");
+	}
+
 	public void setFilter(MagicCardFilter filter) {
 		this.filter = filter;
 	}

@@ -12,7 +12,7 @@
 		<tycho.version>0.25.0</tycho.version>
 	</properties>
 
-	<repositories>
+<!--	<repositories>
 		<repository>
 			<id>neon</id>
 			<url>http://download.eclipse.org/releases/neon</url>
@@ -25,7 +25,7 @@
 			<layout>p2</layout>
 		</repository>
 
-	</repositories>
+	</repositories>-->
 
 	<modules>
 		<module>../com.reflexit.magiccards.target</module>

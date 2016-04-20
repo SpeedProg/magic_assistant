@@ -2,6 +2,7 @@ package com.reflexit.magiccards.ui.views;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -101,7 +102,6 @@ import com.reflexit.magiccards.ui.widgets.QuickFilterControl;
  */
 public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		implements IMagicCardListControl, ICardEventListener {
-	private Presentation presentation = Presentation.TABLE;
 	protected static final DataManager DM = DataManager.getInstance();
 	private QuickFilterControl quickFilter;
 	private SearchControl searchControl;
@@ -118,6 +118,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	protected IMagicViewer viewer;
 	protected ISelection revealSelection;
 	protected IFilteredCardStore<ICard> fstore;
+	private Presentation presentation = Presentation.TABLE;
+	private final boolean fixedPresentation;
 	private ISelectionChangedListener statusSelectionListener = new ISelectionChangedListener() {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
@@ -135,15 +137,23 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	private String statusMessage = "";
 	private boolean isFiltered = false;
 	private boolean isGroupped = false;
+	private Composite mainControl;
 
 	public AbstractMagicCardsListControl(Presentation pres) {
 		this.presentation = pres;
+		this.fixedPresentation = true;
 	}
 
-	public AbstractMagicCardsListControl() {
+	public AbstractMagicCardsListControl(boolean fixed) {
+		this.presentation = Presentation.TABLE;
+		this.fixedPresentation = fixed;
 	}
 
 	public void setPresentation(Presentation presentation) {
+		if (fixedPresentation) {
+			MagicUIActivator.log(new Exception("Cannot call set presentation on static presentation view"));
+			return;
+		}
 		this.presentation = presentation;
 	}
 
@@ -151,14 +161,40 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		return presentation;
 	}
 
+	protected void switchPresentation(Presentation selected) {
+		if (fixedPresentation) {
+			MagicUIActivator.log(new Exception("Cannot call switch presentation on static presentation view"));
+			return;
+		}
+		setPresentation(selected);
+		createTableControl(mainControl);
+		if (getGroupAction() != null) {
+			boolean cangroup = getPresentation() != Presentation.TABLE;
+			getGroupAction().setEnabled(cangroup);
+		}
+		mainControl.layout(true, true);
+		refreshViewer();
+	}
+
 	public void createMainControl(Composite area) {
-		Composite partControl = new Composite(area, SWT.NONE);
-		partControl.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 0).create());
-		partControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		if (!fixedPresentation) {
+			String cur = getColumnsPreferenceStore().getString(PreferenceConstants.PRESENTATION_VIEW);
+			if (cur != null) {
+				try {
+					Presentation pres = Presentation.valueOf(cur);
+					setPresentation(pres);
+				} catch (RuntimeException e) {
+					// ignore
+				}
+			}
+		}
+		mainControl = new Composite(area, SWT.NONE);
+		mainControl.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 0).create());
+		mainControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		// partControl.setBackground(partControl.getDisplay().getSystemColor(SWT.COLOR_CYAN));
-		createTopBar(partControl);
-		createTableControl(partControl);
-		createSearchControl(partControl);
+		createTopBar(mainControl);
+		createTableControl(mainControl);
+		createSearchControl(mainControl);
 		getSelectionProvider().addSelectionChangedListener(statusSelectionListener);
 	}
 
@@ -490,6 +526,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		// control.setBackground(control.getDisplay().getSystemColor(SWT.COLOR_CYAN));
 		this.viewer.hookContext(PerspectiveFactoryMagic.TABLES_CONTEXT);
 		this.viewer.hookSortAction(this::sort);
+		if (searchControl != null)
+			this.viewer.getControl().moveAbove(searchControl.getControl());
 		return control;
 	}
 
@@ -626,8 +664,14 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		};
 		this.actionShowPrefs.setImageDescriptor(MagicUIActivator.getImageDescriptor("icons/clcl16/gear.png"));
 		this.actionShowFind = new SearchCardAction(this::runFind);
+		if (!fixedPresentation)
+			this.actionViewAs = new ViewAsAction(Arrays.asList(Presentation.values()), getColumnsPreferenceStore(),
+					this::switchPresentation);
 		// double click
 		hookDoubleClickAction();
+		// disable group by
+		if (getPresentation() == Presentation.TABLE)
+			getGroupAction().setEnabled(false);
 	}
 
 	public ColumnCollection getSortColumnCollection() {
