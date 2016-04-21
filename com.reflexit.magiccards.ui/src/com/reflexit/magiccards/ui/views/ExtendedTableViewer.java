@@ -57,6 +57,11 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 		setColumnCollection(collection);
 	}
 
+	public ExtendedTableViewer(Composite parent, String id) {
+		this(parent, SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.VIRTUAL);
+		setColumnCollection(doGetColumnCollection(id));
+	}
+
 	@Override
 	public void setLabelProvider(IBaseLabelProvider labelProvider) {
 		super.setLabelProvider(labelProvider);
@@ -67,11 +72,6 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 	protected void setColumnCollection(ColumnCollection collection) {
 		manager.setCollumns(collection);
 		createContents();
-	}
-
-	public ExtendedTableViewer(Composite parent, String id) {
-		this(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER | SWT.VIRTUAL);
-		setColumnCollection(doGetColumnCollection(id));
 	}
 
 	public void applyColumnProperties() {

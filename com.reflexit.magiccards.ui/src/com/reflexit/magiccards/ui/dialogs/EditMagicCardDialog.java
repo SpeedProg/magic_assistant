@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.abs.ICardField;
@@ -97,8 +98,7 @@ public class EditMagicCardDialog extends MagicDialog {
 	private void reloadImage(String path) {
 		if (img != null)
 			img.dispose();
-		img = ImageCreator.getInstance().createCardImage(
-				path, false);
+		img = ImageCreator.getInstance().createCardImage(path, false);
 		imageButton.setImage(img);
 		imageButton.getParent().layout(true);
 	}
@@ -141,18 +141,17 @@ public class EditMagicCardDialog extends MagicDialog {
 				int id = card.getCardId();
 				int enId = card.getEnglishCardId();
 				if (id <= 0 || enId > 0) {
-					if (card.getRealCards().size() > 0) {
+					CardGroup realCards = card.getRealCards();
+					if (realCards != null && realCards.size() > 0) {
 						throw new UnsupportedOperationException(
-								"Cannot delete this card, it has instances: " + card.getRealCards().size());
+								"Cannot delete this card, it has instances: " + realCards.size());
 					}
 					if (MessageDialog.openConfirm(getParentShell(), "Delete",
-							"Are you sure you want to delete "
-									+ card.getName() + " from database?")) {
+							"Are you sure you want to delete " + card.getName() + " from database?")) {
 						DataManager.getInstance().getMagicDBStore().remove(card);
 					}
 				} else {
-					throw new UnsupportedOperationException(
-							"Cannot delete this card, it is synced to gatherer");
+					throw new UnsupportedOperationException("Cannot delete this card, it is synced to gatherer");
 				}
 				close();
 			} else
@@ -200,8 +199,7 @@ public class EditMagicCardDialog extends MagicDialog {
 		if (WebUtils.isWorkOffline())
 			return;
 		try {
-			CardCache.saveCachedFile(new File(localPath),
-					new URL(store.getString(MagicCardField.IMAGE_URL.name())));
+			CardCache.saveCachedFile(new File(localPath), new URL(store.getString(MagicCardField.IMAGE_URL.name())));
 			reloadImage(localPath);
 		} catch (IOException e) {
 			MagicUIActivator.log(e);
