@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
-import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
+import com.reflexit.magicassistant.swtbot.model.SWTBotMagicView;
 import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.views.Presentation;
@@ -63,7 +63,7 @@ public class ImportDeckTest extends AbstractSwtBotTest {
 		bot.radio("Clipboard").click();
 		bot.button("Next >").click();
 		bot.button("Finish").click();
-		SWTBotDeckView deckView = bot.deck("imported");
+		SWTBotMagicView deckView = bot.deck("imported");
 		deckView.switchPresentation(Presentation.TREE);
 		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
 	}
@@ -84,7 +84,7 @@ public class ImportDeckTest extends AbstractSwtBotTest {
 		bot.sleep(100);
 		bot.button("Next >").click();
 		bot.button("Finish").click();
-		SWTBotDeckView deckView = bot.deck("im1");
+		SWTBotMagicView deckView = bot.deck("im1");
 		deckView.switchPresentation(Presentation.TREE);
 		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
 	}

@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
-import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
+import com.reflexit.magicassistant.swtbot.model.SWTBotMagicView;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
@@ -80,7 +80,7 @@ public class AnalysersTest extends AbstractSwtBotTest {
 		bot.radio("Clipboard").click();
 		bot.button("Next >").click();
 		bot.button("Finish").click();
-		SWTBotDeckView deckView = bot.deck("imported");
+		SWTBotMagicView deckView = bot.deck("imported");
 		deckView.switchPresentation(Presentation.TREE);
 		assertEquals("Grixis Sojourners", getFirstRowInViewTree(deckView).cell(0));
 

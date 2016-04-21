@@ -14,7 +14,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
+import com.reflexit.magicassistant.swtbot.model.SWTBotMagicView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
@@ -37,7 +37,7 @@ public class RenameDeck extends AbstractSwtBotTest {
 		KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance("="));
 		// new DndUtil(bot.getDisplay()).dragAndDrop(row, deckView);
 		bot.sleep(200);
-		SWTBotDeckView deckView = bot.deck();
+		SWTBotMagicView deckView = bot.deck();
 		deckView.switchPresentation(Presentation.TREE);
 		assertEquals(name, getFirstRowInViewTree(deckView).cell(0));
 		String ntype = getFirstRowInViewTree(deckView).cell(3);

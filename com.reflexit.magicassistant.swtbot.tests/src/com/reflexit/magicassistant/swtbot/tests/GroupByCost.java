@@ -2,13 +2,12 @@ package com.reflexit.magicassistant.swtbot.tests;
 
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarDropDownButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.reflexit.magicassistant.swtbot.model.SWTBotMagicView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
 import static org.eclipse.swtbot.swt.finder.SWTBotAssert.assertMatchesRegex;
@@ -35,13 +34,9 @@ public class GroupByCost extends AbstractSwtBotTest {
 	 */
 	@Test
 	public void testGroupByCost() throws Exception {
-		SWTBotView dbView = bot.viewById(MagicDbView.ID);
+		SWTBotMagicView dbView = bot.viewById(MagicDbView.ID);
 		assertMatchesRegex("Anathemancer", bot.table().cell(0, 0));
-		SWTBotToolbarDropDownButton groupBy = dbView.toolbarDropDownButton("Group By");
-		groupBy.click();
-		bot.sleep(10);
-		final SWTBotMenu menuItem = groupBy.menuItem("Cost");
-		clickMenuItem(menuItem);
+		dbView.clickToolbarDropDownButtonMenu("Group By", "Cost");
 		dbView.show();
 		bot.sleep(1000);
 		SWTBotTree tree = bot.tree(0);

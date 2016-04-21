@@ -8,15 +8,12 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarDropDownButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
-import com.reflexit.magiccards.ui.views.MagicDbView;
+import com.reflexit.magicassistant.swtbot.model.SWTBotMagicView;
 import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.collector.CollectorView;
 import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
@@ -24,13 +21,13 @@ import com.reflexit.magiccards.ui.views.nav.CardsNavigatorView;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class EnterDeck extends AbstractSwtBotTest {
 	private LinkedHashMap<String, Integer> deck = new LinkedHashMap<>();
-	private SWTBotView dbView;
-	private SWTBotView collView;
+	private SWTBotMagicView dbView;
+	private SWTBotMagicView collView;
 
 	@Before
 	public void init() {
 		SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
-		dbView = bot.viewById(MagicDbView.ID);
+		dbView = bot.db();
 		collView = bot.viewById(CollectorView.ID);
 	}
 
@@ -98,15 +95,11 @@ public class EnterDeck extends AbstractSwtBotTest {
 			decks.getNode("main (Active)").doubleClick();
 		}
 		dbView.setFocus();
-		SWTBotToolbarDropDownButton groupBy = dbView.toolbarDropDownButton("Group By");
-		groupBy.click();
-		bot.sleep(10);
-		final SWTBotMenu menuItem = groupBy.menuItem("None");
-		clickMenuItem(menuItem);
+		dbView.clickToolbarDropDownButtonMenu("Group By", "None");
 		dbView.show();
 		dbView.bot().comboBox().setText("");
 		// dbView.bot().text(1).setText("Alara Reborn");
-		SWTBotDeckView deckView = bot.deck();
+		SWTBotMagicView deckView = bot.deck();
 		deckView.switchPresentation(Presentation.TABLE);
 		for (String name : deck.keySet()) {
 			dbView.bot().text().setFocus();

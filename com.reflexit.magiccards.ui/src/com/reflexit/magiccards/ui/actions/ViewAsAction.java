@@ -17,7 +17,7 @@ public class ViewAsAction extends DropDownAction<Presentation> {
 	public ViewAsAction(Collection<Presentation> pres, IPreferenceStore store, Consumer<Presentation> onSelect) {
 		super(pres, "View As", MagicUIActivator.getImageDescriptor("icons/obj16/pres_tree16.png"), onSelect);
 		this.store = store;
-		setToolTipText("Change presentation of card list");
+		setToolTipText("View As");
 	}
 
 	@Override

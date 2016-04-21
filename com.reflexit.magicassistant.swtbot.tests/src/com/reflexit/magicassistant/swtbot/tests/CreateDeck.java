@@ -18,7 +18,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.reflexit.magicassistant.swtbot.model.SWTBotDeckView;
+import com.reflexit.magicassistant.swtbot.model.SWTBotMagicView;
 import com.reflexit.magicassistant.swtbot.utils.DndUtil;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 import com.reflexit.magiccards.ui.views.Presentation;
@@ -26,7 +26,7 @@ import com.reflexit.magiccards.ui.views.Presentation;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class CreateDeck extends AbstractSwtBotTest {
 	private SWTBotView dbView;
-	private SWTBotDeckView deckView;
+	private SWTBotMagicView deckView;
 
 	@Before
 	public void init() {
