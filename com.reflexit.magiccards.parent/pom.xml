@@ -72,7 +72,7 @@
 					<target>
 						<artifact>
 							<groupId>com.reflexit.magiccards</groupId>
-							<artifactId>rcp_neon</artifactId>
+							<artifactId>rcp_master</artifactId>
 							<version>1.5.0-SNAPSHOT</version>
 						</artifact>
 					</target>
