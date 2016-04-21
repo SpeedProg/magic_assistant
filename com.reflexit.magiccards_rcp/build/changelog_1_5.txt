@@ -1,4 +1,12 @@
 == changes in 1.5.0.0 ==
+* ScryGlass import
+* Bug 523 Duplicate entries in Instances view
+* Show In menu in all views
+* Table headers now have its own menu to enable/disable columns
+* Added Selection view - show selected cards in gallery mode
+* Bug 488 Hidden Cards problem
+* Presentations - for deck view presentation mode: table, gallery, tree, etc 
+* Gallery view - database view that shows only card images
 * Not a user feature but building now with Tycho/Maven
 * Bug: Fixed tree paining issue on linux gtk 3.10
 * Feature: added life counter for draw/play page
