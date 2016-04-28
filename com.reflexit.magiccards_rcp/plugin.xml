@@ -21,7 +21,7 @@
             name="Magic Assistant">
          <property
                name="windowImages"
-               value="../com.reflexit.magiccards_rcp/icons/m16.gif,../com.reflexit.magiccards_rcp/icons/m.gif">
+               value="icons/m16.gif,icons/m.gif,icons/m48.gif">
          </property>
          <property
                name="appName"
@@ -47,6 +47,10 @@
                name="cssTheme"
                value="com.reflexit.magiccards.light">
                <!-- "org.eclipse.e4.ui.css.theme.e4_classic" -->
+         </property>
+         <property
+               name="aboutImage"
+               value="splash.png">
          </property>
          <property
                name="preferenceCustomization"
