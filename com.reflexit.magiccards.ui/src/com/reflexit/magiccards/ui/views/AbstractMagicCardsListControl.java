@@ -252,7 +252,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 	}
 
 	public IPersistentPreferenceStore getPresentaionPreferenceStore() {
-		return PreferenceInitializer.getLocalStore(getPreferencePageId());
+		return getColumnsPreferenceStore();
 	}
 
 	public IMagicViewer getManager() {
@@ -839,11 +839,11 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		HashMap<String, String> map = storeToMap(store);
 		filter.update(map);
 		filter.setOnlyLastSet(store.getBoolean(EditionsFilterPreferencePage.LAST_SET));
-		String fields = getPresentaionPreferenceStore().getString(PreferenceConstants.GROUP_FIELD);
+		IPersistentPreferenceStore viewSettings = getPresentaionPreferenceStore();
+		String fields = viewSettings.getString(PreferenceConstants.GROUP_FIELD);
 		GroupOrder groupOrder = new GroupOrder(fields);
 		filter.setGroupOrder(groupOrder);
-		filter.setSortOrder(
-				SortOrder.valueOf(getPresentaionPreferenceStore().getString(PreferenceConstants.SORT_ORDER)));
+		filter.setSortOrder(SortOrder.valueOf(viewSettings.getString(PreferenceConstants.SORT_ORDER)));
 		isGroupped = filter.isGroupped();
 	}
 

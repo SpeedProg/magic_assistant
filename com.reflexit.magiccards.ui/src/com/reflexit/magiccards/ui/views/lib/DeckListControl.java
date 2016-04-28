@@ -5,7 +5,6 @@ import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
-import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
 import com.reflexit.magiccards.ui.views.Presentation;
 
 public class DeckListControl extends MyCardsListControl implements IDeckPage {
@@ -25,10 +24,5 @@ public class DeckListControl extends MyCardsListControl implements IDeckPage {
 	@Override
 	public IPersistentPreferenceStore getElementPreferenceStore() {
 		return new ScopedPreferenceStore(InstanceScope.INSTANCE, getPreferencePageId() + ".deck." + getName());
-	}
-
-	@Override
-	public IPersistentPreferenceStore getPresentaionPreferenceStore() {
-		return PreferenceInitializer.getLocalStore(getPresentationPreferenceId());
 	}
 }

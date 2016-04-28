@@ -13,6 +13,7 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.gallery.GalleryPreferencePage;
 import com.reflexit.magiccards.ui.views.Presentation;
 import com.reflexit.magiccards.ui.views.collector.CollectorListControl;
 
@@ -80,6 +81,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		getCollectorStore().setDefault(PreferenceConstants.GROUP_FIELD,
 				GroupOrder.createGroupKey(CollectorListControl.DEF_GROUP));
 		getCollectorStore().setDefault(PreferenceConstants.PRESENTATION_VIEW, Presentation.TREE.key());
+		// gallery
+		IPersistentPreferenceStore gallerySettings = getLocalStore(GalleryPreferencePage.getId());
+		gallerySettings.setDefault(PreferenceConstants.LOCAL_SHOW_QUICKFILTER, true);
+		gallerySettings.setDefault(PreferenceConstants.GROUP_FIELD, GroupOrder.createGroupKey(MagicCardField.SET));
+		gallerySettings.setDefault(PreferenceConstants.SORT_ORDER, MagicCardField.NAME.name());
 	}
 
 	public static IPreferenceStore getGlobalStore() {

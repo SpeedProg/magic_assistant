@@ -925,7 +925,7 @@ id="org.eclipse.ui.views.ProgressView">
              category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
              class="com.reflexit.magiccards.ui.gallery.GalleryPreferencePage"
              id="com.reflexit.magiccards.ui.gallery.GalleryPreferencePage"
-             name="View: Deck/Gallery">
+             name="View: Gallery">
        </page>
    </extension>
    <extension

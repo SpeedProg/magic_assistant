@@ -8,7 +8,6 @@ import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.actions.SimpleAction;
-import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
@@ -27,7 +26,7 @@ public class GalleryView extends MagicDbView {
 
 	@Override
 	protected String getPreferencePageId() {
-		return MagicDbViewPreferencePage.class.getName();
+		return GalleryPreferencePage.getId();
 	}
 
 	@Override

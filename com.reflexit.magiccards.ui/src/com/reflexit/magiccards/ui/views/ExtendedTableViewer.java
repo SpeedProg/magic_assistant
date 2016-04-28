@@ -170,7 +170,7 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 			}
 		};
 		hookSortAction(sortAction);
-		updatePresentation();
+		syncViewer();
 		createLabelProviders();
 		ColumnViewerToolTipSupport.enableFor(this, ToolTip.NO_RECREATE);
 		getTControl().setHeaderVisible(true);
@@ -390,13 +390,13 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 		if (getControl().isDisposed())
 			return;
 		super.inputChanged(input, oldInput);
-		updatePresentation();
+		syncViewer();
 	}
 
 	@Override
 	public void refresh() {
 		super.refresh();
-		updatePresentation();
+		syncViewer();
 	}
 
 	public void setColumnProperties(TableColumn[] acolumns) {
@@ -503,7 +503,7 @@ public class ExtendedTableViewer extends TableViewer implements IMagicColumnView
 		}
 	}
 
-	protected void updatePresentation() {
+	protected void syncViewer() {
 		try {
 			boolean grid = MagicUIActivator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_GRID);
 			setLinesVisible(grid);

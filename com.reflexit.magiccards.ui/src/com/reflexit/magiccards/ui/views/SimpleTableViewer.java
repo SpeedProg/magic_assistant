@@ -24,4 +24,10 @@ public class SimpleTableViewer extends ExtendedTableViewer {
 			getColumnViewer().setComparator(null);
 		}
 	}
+	// @Override
+	// protected void doUpdateItem(Widget widget, Object element, boolean
+	// fullMap) {
+	// System.err.println("request to update item: " + element);
+	// super.doUpdateItem(widget, element, fullMap);
+	// }
 }

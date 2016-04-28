@@ -12,7 +12,7 @@ public class GalleryPreferencePage extends FieldEditorPreferencePage implements 
 	public GalleryPreferencePage() {
 		super(GRID);
 		setPreferenceStore(PreferenceInitializer.getLocalStore(getId()));
-		setDescription("Deck View Preferences - Gallery Page");
+		setDescription("Gallery View Preferences");
 	}
 
 	public static String getId() {
