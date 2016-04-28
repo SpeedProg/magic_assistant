@@ -151,7 +151,7 @@ public class CardDescView extends ViewPart implements ISelectionListener, IShowI
 				}
 				if (updateExtras == false && updateRulings == false && updateSets == false)
 					return Status.OK_STATUS;
-				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
+				HashSet<ICardField> fieldMap = new HashSet<>();
 				if (updateRulings)
 					fieldMap.add(MagicCardField.RULINGS);
 				if (updateSets)
@@ -167,7 +167,7 @@ public class CardDescView extends ViewPart implements ISelectionListener, IShowI
 		}
 
 		public Set<ICardField> getAllExtraFields() {
-			HashSet<ICardField> res = new HashSet<ICardField>();
+			HashSet<ICardField> res = new HashSet<>();
 			res.add(MagicCardField.RATING);
 			res.add(MagicCardField.ARTIST);
 			res.add(MagicCardField.COLLNUM);
@@ -510,7 +510,7 @@ public class CardDescView extends ViewPart implements ISelectionListener, IShowI
 				});
 				return Status.OK_STATUS;
 			}
-		}.schedule();
+		}.schedule(5000);
 	}
 
 	@Override
