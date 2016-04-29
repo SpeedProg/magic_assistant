@@ -15,12 +15,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -37,13 +39,17 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
@@ -74,7 +80,7 @@ import com.reflexit.magiccards.ui.utils.WaitUtils;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
 import com.reflexit.magiccards.ui.views.MagicDbView;
 
-public class CardDescView extends ViewPart implements ISelectionListener, IShowInTarget {
+public class CardDescView extends ViewPart implements ISelectionListener, IShowInTarget, IShowInSource {
 	public static final String ID = CardDescView.class.getName();
 	private CardDescComposite panel;
 	private Label message;
@@ -356,7 +362,8 @@ public class CardDescView extends ViewPart implements ISelectionListener, IShowI
 		});
 		Menu menu = menuMgr.createContextMenu(getControl());
 		getControl().setMenu(menu);
-		// getSite().registerContextMenu(menuMgr, getViewer());
+		getSite().registerContextMenu(menuMgr, panel.getSelectionProvider());
+		getSite().setSelectionProvider(panel.getSelectionProvider());
 	}
 
 	private Control getControl() {
@@ -378,8 +385,22 @@ public class CardDescView extends ViewPart implements ISelectionListener, IShowI
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
+		fillShowInMenu(manager);
+		manager.add(open);
+		manager.add(sync);
+		manager.add(edit);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+
+	protected void fillShowInMenu(IMenuManager manager) {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+		IContributionItem showViewItem = ContributionItemFactory.VIEWS_SHOW_IN.create(window);
+		ImageDescriptor eyeImage = MagicUIActivator.getImageDescriptor("icons/clcl16/eye.png");
+		IMenuManager showInMenu = new MenuManager("Show In", eyeImage, "showin");
+		showInMenu.add(showViewItem);
+		manager.add(showInMenu);
 	}
 
 	void makeActions() {
@@ -607,5 +628,10 @@ public class CardDescView extends ViewPart implements ISelectionListener, IShowI
 	public boolean show(ShowInContext context) {
 		setSelection(context.getSelection());
 		return true;
+	}
+
+	@Override
+	public ShowInContext getShowInContext() {
+		return new ShowInContext(null, getSite().getSelectionProvider().getSelection());
 	}
 }

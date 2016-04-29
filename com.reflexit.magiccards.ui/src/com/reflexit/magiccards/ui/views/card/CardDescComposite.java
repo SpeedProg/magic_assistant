@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -20,6 +21,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
@@ -30,6 +32,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.sync.GatherHelper;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.ImageCreator;
+import com.reflexit.magiccards.ui.utils.StoredSelectionProvider;
 import com.reflexit.magiccards.ui.utils.SymbolConverter;
 import com.reflexit.magiccards.ui.views.columns.PowerColumn;
 
@@ -46,6 +49,7 @@ class CardDescComposite extends Composite {
 	private PowerColumn powerProvider;
 	private PowerColumn toughProvider;
 	int width = 223, hight = 310;
+	private StoredSelectionProvider selectionProvider = new StoredSelectionProvider();
 
 	public CardDescComposite(CardDescView cardDescView1, Composite parent, int style) {
 		super(parent, style | SWT.INHERIT_DEFAULT);
@@ -83,8 +87,7 @@ class CardDescComposite extends Composite {
 						int cardId = GatherHelper.extractCardIdFromURL(new URL(location));
 						if (cardId != 0) {
 							event.doit = false;
-							ICardStore<IMagicCard> magicDBStore = DataManager.getCardHandler()
-									.getMagicDBStore();
+							ICardStore<IMagicCard> magicDBStore = DataManager.getCardHandler().getMagicDBStore();
 							IMagicCard card2 = magicDBStore.getCard(cardId);
 							if (card2 != null) {
 								cardDescView.setSelection(new StructuredSelection(card2));
@@ -159,6 +162,19 @@ class CardDescComposite extends Composite {
 
 	public void setCard(IMagicCard card) {
 		this.card = card;
+		if (card == IMagicCard.DEFAULT || card == null) {
+			selectionProvider.setSelection(new StructuredSelection());
+		} else {
+			selectionProvider.setSelection(new StructuredSelection(card));
+		}
+	}
+
+	@Override
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		imageControl.setMenu(menu);
+		textBrowser.setMenu(menu);
+		textBackup.setMenu(menu);
 	}
 
 	protected void setLoadingImage(IMagicCard card) {
@@ -183,8 +199,7 @@ class CardDescComposite extends Composite {
 				String links = getLinks(card);
 				String oracle = getOracle(card, text);
 				String rulings = getCardRulingsHtml(card);
-				this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings,
-						textBrowser));
+				this.textBrowser.setText(SymbolConverter.wrapHtml(links + data + text + oracle + rulings, textBrowser));
 				swapVisibility(textBrowser, textBackup);
 				return;
 			}
@@ -301,5 +316,9 @@ class CardDescComposite extends Composite {
 
 	public IMagicCard getCard() {
 		return this.card;
+	}
+
+	public IPostSelectionProvider getSelectionProvider() {
+		return selectionProvider;
 	}
 }
