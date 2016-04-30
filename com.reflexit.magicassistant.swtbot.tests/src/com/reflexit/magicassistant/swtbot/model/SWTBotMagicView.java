@@ -21,9 +21,7 @@ public class SWTBotMagicView extends SWTBotView {
 			e.printStackTrace();
 		}
 	}
-	public SWTBotMagicView(String title, SWTWorkbenchBot bot) {
-		super(bot.viewByTitle(title).getReference(), bot);
-	}
+
 
 	public SWTBotMagicView(IViewReference partReference, SWTWorkbenchBot bot) {
 		super(partReference, bot);

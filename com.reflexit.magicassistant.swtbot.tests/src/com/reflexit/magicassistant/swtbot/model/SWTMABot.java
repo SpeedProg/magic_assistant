@@ -4,6 +4,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 
+import com.reflexit.magiccards.ui.gallery.GalleryView;
 import com.reflexit.magiccards.ui.preferences.MagicDbViewPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
@@ -31,7 +32,7 @@ public class SWTMABot extends SWTWorkbenchBot {
 	}
 
 	public SWTBotMagicView deck(String title) {
-		SWTBotMagicView swtBotDeckView = new SWTBotMagicView(title, this);
+		SWTBotMagicView swtBotDeckView = viewByTitle(title);
 		swtBotDeckView.show();
 		return swtBotDeckView;
 	}
@@ -46,9 +47,19 @@ public class SWTMABot extends SWTWorkbenchBot {
 		return new SWTBotMagicView(view.getReference(), this);
 	}
 
+	public SWTBotMagicView gallery() {
+		return viewById(GalleryView.ID);
+	}
+
 	@Override
 	public SWTBotMagicView viewById(String id) {
 		SWTBotView view = super.viewById(id);
+		return new SWTBotMagicView(view.getReference(), this);
+	}
+
+	@Override
+	public SWTBotMagicView viewByTitle(String title) {
+		SWTBotView view = super.viewById(title);
 		return new SWTBotMagicView(view.getReference(), this);
 	}
 }
