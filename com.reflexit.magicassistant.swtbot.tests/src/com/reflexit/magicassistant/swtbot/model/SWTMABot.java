@@ -59,7 +59,7 @@ public class SWTMABot extends SWTWorkbenchBot {
 
 	@Override
 	public SWTBotMagicView viewByTitle(String title) {
-		SWTBotView view = super.viewById(title);
+		SWTBotView view = super.viewByTitle(title);
 		return new SWTBotMagicView(view.getReference(), this);
 	}
 }
