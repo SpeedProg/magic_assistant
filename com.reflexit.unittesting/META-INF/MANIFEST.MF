@@ -204,4 +204,4 @@ Export-Package: com.reflexit.unittesting,
  org.powermock.tests.utils,
  org.powermock.tests.utils.impl
 Require-Bundle: org.junit;bundle-version="4.0.0",
- com.reflexit.magiccards.core;bundle-version="1.5.0"
+ com.reflexit.magiccards.core;bundle-version="1.5.1"

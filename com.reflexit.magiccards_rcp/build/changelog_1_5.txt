@@ -1,4 +1,11 @@
-== changes in 1.5.0.0 ==
+== changes in 1.5.1 ==
+* Added mana 13 symbols
+* Corrected flip card parser to adjust to gatherer changes
+* Corrected set legality parser to adjust to gatherer changes
+* Corrected price parser to adjust to marketprices site changes
+* Updated to latest Standard sets
+* Switched runtime to Neon
+== changes in 1.5.0 ==
 * ScryGlass import
 * Bug 523 Duplicate entries in Instances view
 * Show In menu in all views

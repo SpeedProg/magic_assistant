@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Magic Assistant" uid="com.reflexit.magiccards_rcp.product" id="com.reflexit.magiccards_rcp.product" application="com.reflexit.magiccards_rcp.application" version="1.5.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Magic Assistant" uid="com.reflexit.magiccards_rcp.product" id="com.reflexit.magiccards_rcp.product" application="com.reflexit.magiccards_rcp.application" version="1.5.1.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="splash.png"/>
@@ -73,7 +73,7 @@
    </plugins>
 
    <features>
-      <feature id="com.reflexit.magiccards.feature.rcp" version="1.5.0.qualifier"/>
+      <feature id="com.reflexit.magiccards.feature.rcp" version="1.5.1.qualifier"/>
    </features>
 
    <configurations>

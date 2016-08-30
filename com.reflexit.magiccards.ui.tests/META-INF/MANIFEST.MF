@@ -4,6 +4,6 @@ Bundle-Name: Magic Assistant Card Organizer UI Test
 Bundle-SymbolicName: com.reflexit.magiccards.ui.tests
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: REFLEXIT
-Fragment-Host: com.reflexit.magiccards.ui;bundle-version="1.5.0"
+Fragment-Host: com.reflexit.magiccards.ui;bundle-version="1.5.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.reflexit.unittesting
