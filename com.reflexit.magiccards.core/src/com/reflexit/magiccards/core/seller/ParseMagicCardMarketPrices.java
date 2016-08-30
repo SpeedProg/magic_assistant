@@ -33,14 +33,14 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	private static final Pattern setItemPattern = Pattern
 			.compile("<option[ ]*value=\\\"(\\d*?)\\\">(.*?)</option>");
 	private static final Pattern paginationPattern = Pattern
-			.compile("(\\d*)?\" onmouseover=\"showMsgBox\\('Last page'\\)\"");
+			.compile("resultsPage=(\\d+)\"[^<>]*rel=\"last\"");
 	/* Mapping between MCM and MA set name.
 	 * Key: MCN set name
 	 * Value: MA set name
 	 */
-	private static final Map<String, String> setNameMapping = new HashMap<String, String>();
-	private static final List<String> harperPrismPromosSingleCards = new ArrayList<String>();
-	private static final List<String> setName1ToNMappingDDAnthology = new ArrayList<String>();
+	private static final Map<String, String> setNameMapping = new HashMap<>();
+	private static final List<String> harperPrismPromosSingleCards = new ArrayList<>();
+	private static final List<String> setName1ToNMappingDDAnthology = new ArrayList<>();
 	static {
 		/* Known name mappings (relation 1:1) */
 		setNameMapping.put("Alpha", "Limited Edition Alpha");
@@ -98,7 +98,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	@Override
 	public Iterable<IMagicCard> updatePrices(final Iterable<IMagicCard> iterable,
 			final ICoreProgressMonitor monitor) throws IOException {
-		final Map<String, List<IMagicCard>> offlineSets = new HashMap<String, List<IMagicCard>>();
+		final Map<String, List<IMagicCard>> offlineSets = new HashMap<>();
 		for (IMagicCard magicCard : iterable) {
 			if (offlineSets.containsKey(magicCard.getSet())) {
 				offlineSets.get(magicCard.getSet()).add(magicCard);
@@ -127,7 +127,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 					if (cardname.equals(card.getEnglishName())) {
 						List<IMagicCard> addL = offlineSets.get("Harper Prism Promos");
 						if (addL == null) {
-							List<IMagicCard> l = new ArrayList<IMagicCard>();
+							List<IMagicCard> l = new ArrayList<>();
 							l.add(card);
 							offlineSets.put("Harper Prism Promos", l);
 						} else {
@@ -159,7 +159,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		Iterator<String> offlineSetNames = offlineSets.keySet().iterator();
 		monitor.worked(10);
 		// Create all needed actions
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = new ArrayList<>();
 		while (offlineSetNames.hasNext()) {
 			actions.add(new Action(monitor, offlineSetNames.next(), onlineSets, offlineSets));
 		}
@@ -207,7 +207,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	 */
 	private Map<String, String> processSetFile(URL url) throws IOException {
 		MagicLogger.debug("Getting online sets for provider [" + getName() + "] ...");
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, String> result = new HashMap<>();
 		try (
 				BufferedReader br = new BufferedReader(new InputStreamReader(WebUtils.openUrl(url)))) {
 			String line;
@@ -259,7 +259,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	 * @see CallableExecutor
 	 */
 	private class Action implements Callable<Map<String, Float>> {
-		private final Map<String, Float> prices = new HashMap<String, Float>();
+		private final Map<String, Float> prices = new HashMap<>();
 		private final String offlineSetName;
 		private final Map<String, String> onlineSets;
 		private final Map<String, List<IMagicCard>> offlineSets;
@@ -479,6 +479,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 				// (on the first pagination page).
 				// Get maximum pagination from first side, and fetch prices in one step
 				if (newMaxPagination < 0) {
+
 					Matcher paginationMatcher = paginationPattern.matcher(line);
 					if (paginationMatcher.find()) {
 						newMaxPagination = Integer.parseInt(paginationMatcher.group(1));
