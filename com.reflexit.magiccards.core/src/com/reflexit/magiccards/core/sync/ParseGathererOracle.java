@@ -13,6 +13,8 @@
 package com.reflexit.magiccards.core.sync;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -239,14 +241,14 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 
 	public void setCard(IMagicCard card) {
 		this.fromCard = card.getBase();
-		this.sets = new MemoryCardStore<MagicCard>();
+		this.sets = new MemoryCardStore<>();
 		this.resultTitle = null;
 	}
 
 	public void setFilter(Set<ICardField> fieldFilter) {
 		fieldMapFilter = fieldFilter;
 		if (fieldMapFilter == null) {
-			fieldMapFilter = new HashSet<ICardField>();
+			fieldMapFilter = new HashSet<>();
 			for (ICardField field : MagicCardField.allNonTransientFields(false)) {
 				fieldMapFilter.add(field);
 			}
@@ -304,7 +306,7 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 		if (inet == null)
 			return false;
 		int id = from.getCardId();
-		if (id != inet.getCardId())
+		if (id != inet.getCardId() && from.getGathererId() != inet.getCardId())
 			return false;
 		if (inet2 == null) // no second card
 			return true;
@@ -372,7 +374,7 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 		monitor.worked(30);
 		resultTitle = extractPatternValue(html0, titleNamePattern, false);
 		Matcher matcher0 = singleCardPattern.matcher(html0);
-		ArrayList<MagicCard> sides = new ArrayList<MagicCard>();
+		ArrayList<MagicCard> sides = new ArrayList<>();
 		while (matcher0.find()) {
 			String html = matcher0.group(1).trim();
 			sides.add(loadSide(html));
@@ -461,6 +463,11 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 		}
 		if (part.contains("@"))
 			return base;
+		try {
+			part = URLEncoder.encode(part, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// ignore
+		}
 		return base + "&part=" + part;
 	}
 
@@ -480,7 +487,7 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 
 	public void addFilter(MagicCardField field) {
 		if (fieldMapFilter == null)
-			fieldMapFilter = new HashSet<ICardField>();
+			fieldMapFilter = new HashSet<>();
 		fieldMapFilter.add(field);
 	}
 }

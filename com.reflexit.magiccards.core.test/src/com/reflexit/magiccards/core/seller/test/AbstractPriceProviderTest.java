@@ -25,7 +25,7 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 
 	@Override
 	protected void setUp() {
-		store = new MemoryCardStore<IMagicCard>();
+		store = new MemoryCardStore<>();
 		monitor = ICoreProgressMonitor.NONE;
 		db().initialize();
 		setParser(getPriceProvider());
@@ -63,7 +63,7 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 
 	protected List<IMagicCard> findCards(String set) {
 		Collection<IMagicCard> candidates = db().getCards();
-		List<IMagicCard> setCards = new ArrayList<IMagicCard>();
+		List<IMagicCard> setCards = new ArrayList<>();
 		if (candidates != null) {
 			for (IMagicCard mc : candidates) {
 				if (mc.getSet().equals(set)) {
@@ -126,7 +126,15 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 
 	public void testBulkTenthEdition() {
 		List<IMagicCard> cards = checkcards("Tenth Edition");
-		assertNotEquals(0, centPrice(cards.get(0)));
+		int count = 0;
+		for (IMagicCard mc : cards) {
+			int price = centPrice(mc);
+			System.err.println(mc + " => " + price);
+			if (price > 0)
+				count++;
+		}
+		assertNotEquals(0, count);
+		assertTrue(count > 100);
 	}
 
 	protected int centPrice(IMagicCard mc) {
@@ -135,8 +143,8 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 
 	public void xtestOneEach() {
 		IDbCardStore<IMagicCard> magicDBStore = db();
-		HashMap<String, IMagicCard> onemap = new HashMap<String, IMagicCard>();
-		HashMap<String, IMagicCard> twomap = new HashMap<String, IMagicCard>();
+		HashMap<String, IMagicCard> onemap = new HashMap<>();
+		HashMap<String, IMagicCard> twomap = new HashMap<>();
 		for (IMagicCard mc : magicDBStore) {
 			String set = mc.getSet();
 			if (set.startsWith("Masters"))
@@ -152,7 +160,7 @@ public abstract class AbstractPriceProviderTest extends TestCase {
 			}
 			twomap.put(set, mc);
 		}
-		ArrayList<IMagicCard> cards = new ArrayList<IMagicCard>();
+		ArrayList<IMagicCard> cards = new ArrayList<>();
 		cards.addAll(onemap.values());
 		cards.addAll(twomap.values());
 		for (IMagicCard mc : cards) {

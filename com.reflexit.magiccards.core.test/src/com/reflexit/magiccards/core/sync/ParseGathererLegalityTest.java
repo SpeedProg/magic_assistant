@@ -33,7 +33,6 @@ public class ParseGathererLegalityTest extends TestCase {
 		assertEquals(Legality.BANNED, map.get("Legacy"));
 		assertEquals(Legality.BANNED, map.get("Commander"));
 		assertEquals(Legality.RESTRICTED, map.get("Vintage"));
-		assertEquals(Legality.LEGAL, map.get("Freeform"));
 		assertEquals(Legality.NOT_LEGAL, map.get("Standard"));
 	}
 
@@ -53,7 +52,7 @@ public class ParseGathererLegalityTest extends TestCase {
 		LegalityMap map2 = LegalityMap.EMPTY
 				.put(Format.MODERN, Legality.RESTRICTED)
 				.put(Format.valueOf("Tribal Wars"), Legality.LEGAL);
-		Collection<LegalityMap> maps = new ArrayList<LegalityMap>();
+		Collection<LegalityMap> maps = new ArrayList<>();
 		maps.add(map1);
 		maps.add(map2);
 		LegalityMap deck = LegalityMap.calculateDeckLegality(maps);
@@ -66,7 +65,8 @@ public class ParseGathererLegalityTest extends TestCase {
 	public void testLegalitiesInet() {
 		ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
 		Editions editions = Editions.getInstance();
-		Edition ed = editions.getEditionByName("Fate Reforged");
-		assertEquals(Legality.LEGAL, ed.getLegalityMap().get(Format.STANDARD));
+		Edition ed = editions.getEditionByName("Oath of the Gatewatch");
+		LegalityMap map = ed.getLegalityMap();
+		assertEquals(Legality.LEGAL, map.get(Format.STANDARD));
 	}
 }
