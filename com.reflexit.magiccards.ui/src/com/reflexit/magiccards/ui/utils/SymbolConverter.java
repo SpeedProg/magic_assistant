@@ -25,7 +25,7 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
 public class SymbolConverter {
 	private static final int SYMBOL_SIZE = 15;
 	private static String bundleBase;
-	static Map<String, String> manaMap = new HashMap<String, String>();
+	static Map<String, String> manaMap = new HashMap<>();
 	static {
 		manaMap.put("{T}", "icons/tap.gif");
 		manaMap.put("{Q}", "icons/untap.gif");
@@ -66,6 +66,7 @@ public class SymbolConverter {
 		manaMap.put("{11}", "icons/mana/Symbol_11_mana.gif");
 		manaMap.put("{12}", "icons/mana/Symbol_12_mana.gif");
 		manaMap.put("{14}", "icons/mana/Symbol_14_mana.gif");
+		manaMap.put("{13}", "icons/mana/Symbol_13_mana.gif");
 		manaMap.put("{15}", "icons/mana/Symbol_15_mana.gif");
 		manaMap.put("{16}", "icons/mana/Symbol_16_mana.gif");
 		manaMap.put("{1000000}", "icons/mana/Symbol_1000000_mana.gif");
@@ -99,9 +100,8 @@ public class SymbolConverter {
 		String bgColor = "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
 		rgb = con.getForeground().getRGB();
 		String fgColor = "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
-		String style = "font-size:" + height + "pt;" + "background-color: " + bgColor + ";" + "color: "
-				+ fgColor + ";" + "font-family:"
-				+ fontName + ";";
+		String style = "font-size:" + height + "pt;" + "background-color: " + bgColor + ";" + "color: " + fgColor + ";"
+				+ "font-family:" + fontName + ";";
 		return style;
 	}
 
@@ -141,8 +141,7 @@ public class SymbolConverter {
 			return res;
 		while (text.length() > 0) {
 			boolean cut = false;
-			for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext()
-					&& text.length() > 0;) {
+			for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext() && text.length() > 0;) {
 				String sym = iterator.next();
 				if (sym.length() == 0)
 					throw new MagicException();
