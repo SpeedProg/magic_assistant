@@ -154,7 +154,8 @@ public class MagicDbView extends AbstractSingleControlCardsView {
 							header = true;
 						FileOutputStream fileOutputStream = new FileOutputStream(file, true);
 						ps = new PrintStream(fileOutputStream);
-					} catch (FileNotFoundException e) {
+					} catch (Exception e) {
+						System.err.println("while exporting " + card + " " + set);
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
