@@ -1,13 +1,11 @@
 package com.reflexit.magiccards.core.sync;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
-import com.reflexit.magiccards.core.exports.HtmlTableImportDelegate;
 import com.reflexit.magiccards.core.legality.Format;
 import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
@@ -24,22 +22,26 @@ public class ParseSetLegality extends AbstractParseHtmlPage {
 
 	/*-
 	 *
-	 *   <li>
-	<i>Mirrodin Besieged</i>
-	</li>
-
+	<span class="nameSet">
+	                        Eldritch Moon   </span>
 	 */
 	@Override
 	protected void loadHtml(String html, ICoreProgressMonitor monitor) {
 		String setsHtml = html;
 		setsHtml = setsHtml.replaceAll("\r?\n", " ");
 		setsHtml = setsHtml.replaceAll("</?b>", "");
-		Pattern setPattern = Pattern.compile("<li>\\s*(.+?)\\s*</li>");
+		Pattern setPattern = Pattern.compile("<span\\s+class=\"nameSet\">\\s*(.+?)\\s*</span>");
 		String value = extractPatternValue(setsHtml, setPattern, true);
 		String sets[] = value.split("\n");
 		Editions eds = Editions.getInstance();
+		if (sets.length > 1) {
+			for (Edition ed : eds.getEditions()) {
+				if (ed.getFormatString().contains("Standard"))
+					ed.setFormats("");
+			}
+		}
 		for (int k = 0; k < sets.length; k++) {
-			// 	<li><em>Dragons of Tarkir</em> (effective March 27, 2015)</li>
+			// <li><em>Dragons of Tarkir</em> (effective March 27, 2015)</li>
 			String string = sets[k].trim();
 			string = string.replaceAll("  ", " ");
 			string = string.replaceAll(" *\\(.*", "");
@@ -57,12 +59,17 @@ public class ParseSetLegality extends AbstractParseHtmlPage {
 				}
 			}
 		}
+		try {
+			eds.save();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	protected String getUrl() {
-		return "http://magic.wizards.com/en/gameinfo/gameplay/formats/"
-				+ format.name().toLowerCase(Locale.ENGLISH);
+		return "http://magic.wizards.com/en/content/standard-formats-magic-gathering";
 	}
 
 	public static void loadAllFormats(ICoreProgressMonitor monitor) {
@@ -70,16 +77,8 @@ public class ParseSetLegality extends AbstractParseHtmlPage {
 		int ticks = 100 * formats.size();
 		monitor.beginTask("Updating set formats", ticks);
 		try {
-			Editions eds = Editions.getInstance();
-			for (Edition ed : eds.getEditions()) {
-				ed.setFormats("");
-			}
-			for (Iterator iterator = formats.iterator(); iterator.hasNext();) {
-				String format = (String) iterator.next();
-				ParseSetLegality parser = new ParseSetLegality(format);
-				parser.load(new SubCoreProgressMonitor(monitor, ticks / formats.size()));
-			}
-			eds.save();
+			ParseSetLegality parser = new ParseSetLegality("Standard");
+			parser.load(new SubCoreProgressMonitor(monitor, ticks / formats.size()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,7 +87,7 @@ public class ParseSetLegality extends AbstractParseHtmlPage {
 	}
 
 	private static Collection<String> getFormats() {
-		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<String> res = new ArrayList<>();
 		res.add("Standard");
 		res.add("Modern");
 		// res.add("Legacy");
