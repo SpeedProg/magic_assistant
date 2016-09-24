@@ -4,7 +4,7 @@
 	<property name="master.dir" value="${buildDirectory}/.." />
 	<property name="export.dir" value="${master.dir}/export" />
 	<property name="bins.dir" value="${export.dir}/${buildId}" />
-	<property name="export.update.dir" value="${export.dir}/update/1.4" />
+	<property name="export.update.dir" value="${export.dir}/update/1.5" />
 	<property name="orig.workspace.root" value="${basedir}/../.." />
 	<pathconvert property="equinox.launcher.jar">
 		<first count="1">
@@ -190,7 +190,7 @@
 		<replace file="${buildDirectory}/plugins/com.reflexit.mtgtournament.ui/about.properties" token="xxxxxxxx" value="${ma.version}" />
 
 		<!-- Add change log into update description -->
-		<loadfile property="changeLog"   srcFile="${buildDirectory}/plugins/com.reflexit.magiccards_rcp/build/changelog.txt">
+		<loadfile property="changeLog"   srcFile="${buildDirectory}/plugins/com.reflexit.magiccards_rcp/build/changelog_1_5.txt">
 			<filterchain>
 				<suffixlines suffix="\n"/>
 				<striplinebreaks />
@@ -260,7 +260,7 @@
 	</target>
 	<target name="publish.update.site.full" depends="publish.repo">
 		<scp verbose="true"
-			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
+			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.5" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.update.dir}">
 
@@ -291,7 +291,7 @@
 	</target>
 	<target name="publish.update.site" depends="export.update.site">
 		<scp verbose="true"
-			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4" 
+			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.5" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.update.dir}">
 				<include name="**/com.reflexit**"/>
@@ -309,7 +309,7 @@
 	</target>
 	<target name="publish.update.site.beta">
 		<scp verbose="true"
-			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.4-beta" 
+			todir="elaskavaia,mtgbrowser@web.sourceforge.net:htdocs/update/1.5-beta" 
 			keyfile="${rsa.key}" trust="true">
 			<fileset dir="${export.update.dir}">
 				<include name="**/com.reflexit**"/>
