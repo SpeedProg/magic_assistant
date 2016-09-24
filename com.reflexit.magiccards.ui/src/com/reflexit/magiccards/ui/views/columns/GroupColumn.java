@@ -88,9 +88,18 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 	public String getText(Object element) {
 		if (element instanceof ICardGroup) {
 			String name = ((CardGroup) element).getName();
-			if (((ICardGroup) element).getFieldIndex() == MagicCardField.CMC) {
+			ICardField fieldIndex = ((ICardGroup) element).getFieldIndex();
+			if (fieldIndex == MagicCardField.CMC) {
 				if (!name.isEmpty() && Character.isDigit(name.charAt(0)))
 					name = "Cost " + name;
+			} else if (fieldIndex == MagicCardField.OWNERSHIP) {
+				if (name == null || name.equals("null"))
+					name = "Undefined";
+				else if (Boolean.valueOf(name)) {
+					name = "Own";
+				} else {
+					name = "Virtual";
+				}
 			}
 			if (!showCount) {
 				return name;

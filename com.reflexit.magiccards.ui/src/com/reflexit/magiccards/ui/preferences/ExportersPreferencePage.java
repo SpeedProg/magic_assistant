@@ -62,7 +62,7 @@ public class ExportersPreferencePage extends FieldEditorPreferencePage implement
 			protected void editElements(String[] selection) {
 				if (selection.length == 0)
 					return;
-				selection[0] = editType(selection[0]);
+				selection[0] = editElement(selection[0]);
 			}
 
 			@Override

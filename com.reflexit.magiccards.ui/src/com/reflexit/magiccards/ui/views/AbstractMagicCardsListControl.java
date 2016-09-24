@@ -81,6 +81,7 @@ import com.reflexit.magiccards.ui.commands.ShowFilterHandler;
 import com.reflexit.magiccards.ui.dnd.CopySupport;
 import com.reflexit.magiccards.ui.dnd.MagicCardTransfer;
 import com.reflexit.magiccards.ui.gallery.SplitGalleryViewer;
+import com.reflexit.magiccards.ui.preferences.CustomGroupsPreferencePage;
 import com.reflexit.magiccards.ui.preferences.EditionsFilterPreferencePage;
 import com.reflexit.magiccards.ui.preferences.PreferenceConstants;
 import com.reflexit.magiccards.ui.preferences.PreferenceInitializer;
@@ -693,6 +694,8 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		res.add(new GroupOrder(MagicCardField.SET, MagicCardField.RARITY));
 		res.add(new GroupOrder(MagicCardField.RARITY));
 		res.add(new GroupOrder(MagicCardField.NAME));
+		res.add(new GroupOrder(MagicCardField.OWNERSHIP, MagicCardField.NAME));
+		res.addAll(new CustomGroupsPreferencePage().getCurrentValue());
 		return res;
 	}
 

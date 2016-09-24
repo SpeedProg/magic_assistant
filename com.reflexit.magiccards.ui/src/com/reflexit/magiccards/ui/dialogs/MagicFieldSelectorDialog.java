@@ -21,6 +21,14 @@ public class MagicFieldSelectorDialog extends Dialog {
 		this.store = store;
 	}
 
+	protected void setPreferenceStore(PreferenceStore store) {
+		this.store = store;
+	}
+
+	public PreferenceStore getPreferenceStore() {
+		return store;
+	}
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Control area = super.createDialogArea(parent);
@@ -28,14 +36,21 @@ public class MagicFieldSelectorDialog extends Dialog {
 		// GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		// layoutData.horizontalSpan = 2;
 		// columns.setLayoutData(layoutData);
-		columnFieldEditor = new MagicFieldFieldEditor(CustomExportDelegate.ROW_FIELDS,
-				"Visible Columns and Order", columns);
+		columnFieldEditor = new MagicFieldFieldEditor(getPreferenceId(), getLabelText(), columns);
 		columnFieldEditor.setPreferenceStore(store);
 		columnFieldEditor.load();
 		GridData listData = new GridData(GridData.FILL_HORIZONTAL);
 		listData.heightHint = 200;
 		columnFieldEditor.getListControl(columns).setLayoutData(listData);
 		return area;
+	}
+
+	protected String getPreferenceId() {
+		return CustomExportDelegate.ROW_FIELDS;
+	}
+
+	protected String getLabelText() {
+		return "Visible Columns and Order";
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.events.CardEvent;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
+import com.reflexit.magiccards.ui.preferences.CustomGroupsPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.ExtendedTreeViewer;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
@@ -45,6 +46,9 @@ public class CollectorListControl extends AbstractMagicCardsListControl {
 		res.add(new GroupOrder(MagicCardField.SET));
 		res.add(new GroupOrder("Core/Block/Set/Lang/Rarity", MagicCardField.SET_CORE, MagicCardField.SET_BLOCK,
 				MagicCardField.SET, MagicCardField.LANG, MagicCardField.RARITY));
+		res.add(new GroupOrder(MagicCardField.OWNERSHIP, MagicCardField.SET));
+		res.add(new GroupOrder(MagicCardField.SET, MagicCardField.OWN_COUNT));
+		res.addAll(new CustomGroupsPreferencePage().getCurrentValue());
 		return res;
 	}
 

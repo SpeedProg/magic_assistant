@@ -45,7 +45,8 @@ public abstract class StringListFieldEditor extends ListEditor2 {
 	}
 
 	protected boolean removeElements(String[] selection) {
-		// override to react
+		if (selection.length == 0)
+			return false;
 		return true;
 	}
 
@@ -60,7 +61,15 @@ public abstract class StringListFieldEditor extends ListEditor2 {
 		selectionChanged();
 	}
 
-	protected abstract void editElements(String[] selection);
+	protected void editElements(String[] selection) {
+		if (selection.length == 0)
+			return;
+		selection[0] = editElement(selection[0]);
+	}
+
+	protected String editElement(String string) {
+		return string;
+	}
 
 	@Override
 	protected String createList(String[] items) {

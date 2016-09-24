@@ -20,6 +20,7 @@ import com.reflexit.magiccards.core.model.storage.ICardStore;
 import com.reflexit.magiccards.core.model.storage.IFilteredCardStore;
 import com.reflexit.magiccards.core.model.storage.MemoryFilteredCardStore;
 import com.reflexit.magiccards.ui.MagicUIActivator;
+import com.reflexit.magiccards.ui.preferences.CustomGroupsPreferencePage;
 import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.IMagicColumnViewer;
 
@@ -52,6 +53,7 @@ public class InstancesListControl extends AbstractMagicCardsListControl {
 		res.add(new GroupOrder(MagicCardField.SET));
 		res.add(new GroupOrder(MagicCardField.LOCATION));
 		res.add(new GroupOrder(MagicCardField.OWNERSHIP));
+		res.addAll(new CustomGroupsPreferencePage().getCurrentValue());
 		return res;
 	}
 

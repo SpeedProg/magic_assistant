@@ -53,7 +53,7 @@ public class CustomExportDelegate extends AbstractExportDelegatePerLine<IMagicCa
 
 	public static String[] getFormatLabels() {
 		String[] values = new String[] { "Java Message Format", "C Printf Format", //
-				"Separated Fields", "Separated with Quites Escape" };
+				"Separated Fields", "Separated with Quotes" };
 		return values;
 	}
 

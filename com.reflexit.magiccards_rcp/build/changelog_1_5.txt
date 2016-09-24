@@ -5,6 +5,8 @@
 * Corrected price parser to adjust to marketprices site changes
 * Updated to latest Standard sets
 * Switched runtime to Neon
+* Bug 554 Group By Ownership
+* Added preferences to define custom grouping 
 == changes in 1.5.0 ==
 * ScryGlass import
 * Bug 523 Duplicate entries in Instances view

@@ -62,6 +62,12 @@
              id="com.reflexit.magiccards.ui.preferences.FileLocationsPreferencePage"
              name="File Locations">
        </page>
+       <page
+             category="com.reflexit.magiccards.ui.preferences.MagicPreferencePage"
+             class="com.reflexit.magiccards.ui.preferences.CustomGroupsPreferencePage"
+             id="com.reflexit.magiccards.ui.preferences.CustomGroupsPreferencePage"
+             name="Custom Groups">
+       </page>
       
    </extension>
    <extension
