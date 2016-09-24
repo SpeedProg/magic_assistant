@@ -86,8 +86,8 @@
    </configurations>
 
    <repositories>
-      <repository location="http://mtgbrowser.sourceforge.net/update/1.4-beta" enabled="false" />
-      <repository location="http://mtgbrowser.sourceforge.net/update/1.4" enabled="true" />
+      <repository location="http://mtgbrowser.sourceforge.net/update/1.5-beta" enabled="false" />
+      <repository location="http://mtgbrowser.sourceforge.net/update/1.5" enabled="true" />
    </repositories>
 
 </product>

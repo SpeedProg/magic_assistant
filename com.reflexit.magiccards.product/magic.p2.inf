@@ -1,6 +1,6 @@
 instructions.configure=\
-   addRepository(name:Magic Assistant Update Site,type:0,location:http${#58}//mtgbrowser.sourceforge.net/update/1.4);\
-   addRepository(name:Magic Assistant Update Site,type:1,location:http${#58}//mtgbrowser.sourceforge.net/update/1.4);\
+   addRepository(name:Magic Assistant Update Site,type:0,location:http${#58}//mtgbrowser.sourceforge.net/update/1.5);\
+   addRepository(name:Magic Assistant Update Site,type:1,location:http${#58}//mtgbrowser.sourceforge.net/update/1.5);\
    setProgramProperty(propName:osgi.instance.area.default,propValue:@user.home/MagicAssistantWorkspace);
 properties.0.name = org.eclipse.equinox.p2.description
 properties.0.value = Magic Assistant\nSee what is new at http://www.magicassistant.ca/ChangeLog.html\n\

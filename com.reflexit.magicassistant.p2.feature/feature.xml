@@ -27,7 +27,7 @@ http://www.eclipse.org/legal/epl-v10.html
    </license>
 
    <url>
-      <update label="Magic Assistant Software Update" url="http://mtgbrowser.sourceforge.net/update/1.4"/>
+      <update label="Magic Assistant Software Update" url="http://mtgbrowser.sourceforge.net/update/1.5"/>
    </url>
 
    <requires>
