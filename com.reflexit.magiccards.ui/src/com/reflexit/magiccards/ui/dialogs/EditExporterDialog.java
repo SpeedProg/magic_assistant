@@ -63,8 +63,8 @@ public class EditExporterDialog extends MagicDialog {
 	protected void createBodyArea(Composite area1) {
 		getShell().setText(newexporter ? "New Exporter" : "Edit Exporter");
 		setTitle("Define Export Format");
-		setMessage("Define formatter ether by definintg java style formatter string or using field separator.\n"
-				+ "Define fields and their order using fields field.");
+		setMessage("Define formatter ether by defining formatter string or using field separator.\n"
+				+ "Define fields and their order using 'Fields' input control.");
 		Composite area = new Composite(area1, SWT.NONE);
 		area.setLayout(new GridLayout(4, false));
 		GridData gda = new GridData(GridData.FILL_HORIZONTAL);
@@ -74,19 +74,19 @@ public class EditExporterDialog extends MagicDialog {
 		createTextFieldEditor(area, "File Extension", PROP_EXT, "Default file extension for exported file");
 		createFormatterControl(area);
 		createTextFieldEditor(area, "Header", CustomExportDelegate.HEADER,
-				"Line separating multiple decks or file header, "
-						+ "leave empty to ommit.\n"
+				"Line separating multiple decks or file header, " + "leave empty to ommit.\n"
 						+ "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
 						+ "User can also disable it from export dialog using 'Generate header row' checkbox");
-		footer = createTextFieldEditor(area, "Footer", CustomExportDelegate.FOOTER, "File footer, "
-				+ "leave empty to ommit.\n"
-				+ "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
-				+ "User can also disable it from export dialog using 'Generate header row' checkbox");
+		footer = createTextFieldEditor(area, "Footer", CustomExportDelegate.FOOTER,
+				"File footer, " + "leave empty to ommit.\n"
+						+ "Support variable ${DECK.NAME} which is replaced with current deck name.\n"
+						+ "User can also disable it from export dialog using 'Generate header row' checkbox");
 		sbHeader = createTextFieldEditor(area, "Sideboard Header", CustomExportDelegate.SB_HEADER,
 				"Line separating sideboard from the deck, leave empty to ommit");
 		createTextFieldEditor(area, "Sideboard Field", CustomExportDelegate.SB_FIELD,
 				"When using separated field how to output sideboard field, i.e. Yes/No, true/false, SB");
-		// createTextFieldEditor(area, "Field Separator", CustomExportDelegate.FIELD_SEP,
+		// createTextFieldEditor(area, "Field Separator",
+		// CustomExportDelegate.FIELD_SEP,
 		// "Instead of formatter can use field separator");
 		createFieldsControl(area);
 		GridData ld1 = new GridData(GridData.FILL_BOTH);
@@ -101,8 +101,8 @@ public class EditExporterDialog extends MagicDialog {
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = ((GridLayout) area.getLayout()).numColumns;
 		fparent.setLayoutData(layoutData);
-		StringButtonFieldEditor fields = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS,
-				"Fields", fparent) {
+		StringButtonFieldEditor fields = new StringButtonFieldEditor(CustomExportDelegate.ROW_FIELDS, "Fields",
+				fparent) {
 			@Override
 			protected String changePressed() {
 				new MagicFieldSelectorDialog(getParentShell(), store).open();
@@ -142,17 +142,19 @@ public class EditExporterDialog extends MagicDialog {
 		footer.setEnabled(true);
 		sbHeader.setEnabled(true);
 		switch (index) {
-			case 0:
-				format.setToolTipText("Java Formatter for fields values, i.e '{0} x {1}', would result in '3 x Naturalize', if fields set to 'COUNT,NAME'");
-				break;
-			case 1:
-				format.setToolTipText("C printf formatter, i.e. '%d x %s', would result in '3 x Naturalize', if fields set to 'COUNT,NAME'");
-				break;
-			default:
-				format.setToolTipText("Separator for the fields, i.e. ',' or '|' or ' ', etc");
-				footer.setEnabled(false);
-				sbHeader.setEnabled(false);
-				break;
+		case 0:
+			format.setToolTipText(
+					"Java Formatter for fields values, i.e '{0} x {1}', would result in '3 x Naturalize', if fields set to 'COUNT,NAME'");
+			break;
+		case 1:
+			format.setToolTipText(
+					"C printf formatter, i.e. '%d x %s', would result in '3 x Naturalize', if fields set to 'COUNT,NAME'");
+			break;
+		default:
+			format.setToolTipText("Separator for the fields, i.e. ',' or '|' or ' ', etc");
+			footer.setEnabled(false);
+			sbHeader.setEnabled(false);
+			break;
 		}
 		format.setText(store.getString(CustomExportDelegate.ROW_FORMAT + "." + index));
 		formatLabel.setToolTipText(format.getToolTipText());
@@ -260,8 +262,7 @@ public class EditExporterDialog extends MagicDialog {
 	}
 
 	public void copyFromType(ReportType type) {
-		String[] preferenceNames = type.getProperties().keySet()
-				.toArray(new String[type.getProperties().size()]);
+		String[] preferenceNames = type.getProperties().keySet().toArray(new String[type.getProperties().size()]);
 		for (int i = 0; i < preferenceNames.length; i++) {
 			String key = preferenceNames[i];
 			store.setValue(key, type.getProperty(key));
