@@ -18,6 +18,7 @@ import com.reflexit.magiccards.core.model.aggr.FieldCount4Aggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldCreatureCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldLegalityMapAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldOwnCountAggregator;
+import com.reflexit.magiccards.core.model.aggr.FieldOwnTotalCountAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldOwnUniqueAggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldProggress4Aggregator;
 import com.reflexit.magiccards.core.model.aggr.FieldProggressAggregator;
@@ -699,6 +700,22 @@ public enum MagicCardField implements ICardField {
 			// ignore
 		}
 	}, // count of own card (normal count counts own and virtual)
+	OWN_TOTAL(null, true) {
+		@Override
+		public ICardVisitor getAggregator() {
+			return new FieldOwnTotalCountAggregator(this);
+		}
+
+		@Override
+		public Object getM(MagicCardPhysical card) {
+			return card.getOwnTotalAll();
+		}
+
+		@Override
+		protected void setM(MagicCardPhysical card, Object value) {
+			// ignore
+		}
+	}, // count of own card (normal count counts own and virtual)
 	OWN_UNIQUE(null, true) {
 		@Override
 		public ICardVisitor getAggregator() {
@@ -870,7 +887,7 @@ public enum MagicCardField implements ICardField {
 
 	public static ICardField[] allNonTransientFields(boolean phys) {
 		MagicCardField[] values = MagicCardField.values();
-		ArrayList<ICardField> res = new ArrayList<ICardField>();
+		ArrayList<ICardField> res = new ArrayList<>();
 		for (MagicCardField f : values) {
 			if (!f.isTransient()) {
 				if (phys || !f.phys)
