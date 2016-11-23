@@ -70,7 +70,7 @@ public class ParseGathererPrintedTest extends TestCase {
 	public void testDoubleCards() throws IOException {
 		magicDb = new MemoryCardStore<IMagicCard>();
 		MagicCard card = load(247159);
-		assertEquals("198", card.getCollNumber());
+		assertEquals("198a", card.getCollNumber());
 		assertEquals(198, card.getCollectorNumberId());
 		// assertEquals("Fire", card.getName());
 		// System.err.println(magicDb);

@@ -1,5 +1,7 @@
 package com.reflexit.magicassistant.swtbot.tests;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.LinkedHashMap;
 
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -108,12 +110,13 @@ public class EnterDeck extends AbstractSwtBotTest {
 			dbView.bot().table().setFocus();
 			selectFirstRowInViewT(dbView);
 			bot.sleep(100);
-			// KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance(0,
-			// SWT.INSERT));
-			KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance("m"));
+			KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance("="));
+			// KeyboardFactory.getSWTKeyboard().pressShortcut(KeyStroke.getInstance(SWT.CTRL,
+			// 0),
+			// Keystrokes.create('t')[1], Keystrokes.create('a')[1]);
 			bot.sleep(100);
 			dbView.bot().text().setText("");
-			selectFirstRowInViewT(deckView);
+			assertNotNull(selectFirstRowInViewT(deckView));
 		}
 		collView.setFocus();
 		bot.sleep(500);

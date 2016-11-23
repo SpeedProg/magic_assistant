@@ -314,7 +314,7 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 			return true; // ids are diffrent for pairs, so it is equals to first
 							// - good enought
 		// collector number
-		if (from.getSide() == inet.getSide())
+		if (from.getSide() == inet.getSide() && from.getPart() == null)
 			return true;
 		// ids are the same
 		String nameOrig = from.getName();

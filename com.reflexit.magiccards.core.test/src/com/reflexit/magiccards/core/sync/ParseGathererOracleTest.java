@@ -65,13 +65,13 @@ public class ParseGathererOracleTest extends TestCase {
 
 	public void testFlip() throws IOException {
 		MagicCard card = load(78687, "Budoka Gardener");
-		assertEquals("202", card.getCollNumber());
+		assertEquals("202a", card.getCollNumber());
 		assertEquals("Budoka Gardener", card.getName());
 	}
 
 	public void testFlip2() throws IOException {
 		MagicCard card = load(-78687, "Dokai, Weaver of Life");
-		assertEquals("202", card.getCollNumber());
+		assertEquals("202b", card.getCollNumber());
 		assertEquals("Dokai, Weaver of Life", card.getName());
 	}
 
@@ -87,7 +87,7 @@ public class ParseGathererOracleTest extends TestCase {
 		String origName = "Dead // Gone (Dead)";
 		card.setName(origName);
 		assertEquals(113, card.getCollectorNumberId());
-		assertEquals("113", card.getCollNumber());
+		assertEquals("113a", card.getCollNumber());
 		// oracle should not change name
 		assertEquals(origName, card.getName());
 	}
@@ -101,7 +101,7 @@ public class ParseGathererOracleTest extends TestCase {
 		assertEquals("Magic: The Gathering-Commander", card.getSet());
 		// FileUtils.saveString(parser.getHtml(), new File("c:/tmp/",
 		// card.getCollNumber() + ".html"));
-		assertEquals("198", card.getCollNumber());
+		assertEquals("198a", card.getCollNumber());
 		assertEquals(198, card.getCollectorNumberId());
 		assertTrue(card.getOracleText().startsWith("Fire deals"));
 		// System.err.println(magicDb);
@@ -113,7 +113,7 @@ public class ParseGathererOracleTest extends TestCase {
 		assertEquals("Cunning Bandit", card.getName());
 		// FileUtils.saveString(parser.getHtml(), new File("c:/tmp/", card.getCollNumber() + ".html"));
 		assertEquals(99, card.getCollectorNumberId());
-		assertEquals("99", card.getCollNumber());
+		assertEquals("99a", card.getCollNumber());
 		// System.err.println(magicDb);
 	}
 

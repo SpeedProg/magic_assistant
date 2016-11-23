@@ -10,9 +10,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.graphics.Image;
 
+import com.reflexit.magiccards.core.CachedImageNotFoundException;
 import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.abs.ICardGroup;
 import com.reflexit.magiccards.core.model.utils.MRUCache;
+import com.reflexit.magiccards.core.sync.WebUtils;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 
 /**
@@ -93,6 +95,9 @@ public class ImageCache {
 							map.put(card, image);
 							callback.run();
 						}
+					} catch (CachedImageNotFoundException e) {
+						if (!WebUtils.isWorkOffline())
+							MagicUIActivator.log(e);
 					} catch (IOException e) {
 						MagicUIActivator.log(e);
 					}

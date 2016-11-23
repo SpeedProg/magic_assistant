@@ -8,15 +8,18 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.utils.internal.Assert;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
@@ -154,6 +157,22 @@ public abstract class AbstractSwtBotTest {
 		SWTBot dbbot = view.bot();
 		SWTBotTable table = dbbot.table();
 		table.setFocus();
+		try {
+			new SWTBot().waitUntil(new DefaultCondition() {
+				@Override
+				public String getFailureMessage() {
+					return "Could not find table items";
+				}
+
+				@Override
+				public boolean test() throws Exception {
+					int count = table.rowCount();
+					return count != 0;
+				}
+			});
+		} catch (TimeoutException e) {
+			throw new WidgetNotFoundException("Timed out waiting for table items", e);
+		}
 		SWTBotTableItem row = table.getTableItem(0);
 		row.select();
 		row.setFocus();
