@@ -117,6 +117,13 @@
              label="Print Proxies HTML"
              xmlFormat="true">
        </deckFormat>
+             <deckFormat
+             exportDelegate="com.reflexit.magiccards.core.exports.PrintProxyHtmlExporMobileDelegate"
+             extension="html"
+             id="htmlProxyMobile"
+             label="Print Proxies HTML Mobile"
+             xmlFormat="true">
+       </deckFormat>
        <deckFormat
              exportDelegate="com.reflexit.magiccards.core.exports.CompactHtmlExportDelegate"
              extension="html"

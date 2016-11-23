@@ -28,6 +28,7 @@ import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
@@ -261,7 +262,7 @@ public class ExportDeckPage extends AbstractDeckPage {
 		if (getCardStore() == null)
 			return;
 		if (fstore == null) {
-			fstore = new MemoryFilteredCardStore<IMagicCard>();
+			fstore = new MemoryFilteredCardStore<>();
 			filter = fstore.getFilter();
 			actionSort.setFilter(filter);
 		}
@@ -368,7 +369,7 @@ public class ExportDeckPage extends AbstractDeckPage {
 					}
 					if (succ) {
 						try {
-							java.awt.Desktop.getDesktop().open(file);
+							Program.launch(file.getPath());
 						} catch (Throwable e) {
 							MagicUIActivator.log(e);
 						}

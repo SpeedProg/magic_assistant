@@ -96,8 +96,13 @@ public class PrintProxyHtmlExportDelegate extends AbstractExportDelegate<IMagicC
 	}
 
 	private void cardImage(MyXMLStreamWriter w, IMagicCard card) throws XMLStreamException {
+		String url = getCardImageUrl(card);
+		w.lineEl("img", "src", url, "alt", card.getName());
+	}
+
+	protected String getCardImageUrl(IMagicCard card) {
 		/*-
-		<img src="http://magiccards.info/scans/en/m14/102.jpg" alt="Proxy" />		
+		<img src="http://magiccards.info/scans/en/m14/102.jpg" alt="Name" />		
 		 */
 		String url = "";
 		try {
@@ -105,7 +110,7 @@ public class PrintProxyHtmlExportDelegate extends AbstractExportDelegate<IMagicC
 		} catch (MalformedURLException e) {
 			// oki
 		}
-		w.lineEl("img", "src", url, "alt", card.getName());
+		return url;
 	}
 
 	@Override
