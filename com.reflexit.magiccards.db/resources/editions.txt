@@ -157,3 +157,9 @@ Duel Decks Anthology, Elves vs. Dragons|DD3_EVG||February 2015|Starter|Duel Deck
 Conspiracy: Take the Crown|CN2||August 2016|Expansion|Conspiracy|Modern|
 Eldritch Moon|EMN||July 2016|Expansion|Shadows over Innistrad Block|Modern|
 Eternal Masters|EMA||June 2016|Starter|Eternal Masters||
+Commander 2016|C16||November 2016|Starter|Commander||
+Duel Decks: Nissa vs. Ob Nixilis|DDR||September 2016|Starter|Duel Decks||
+From the Vault: Lore|V16||August 2016|Starter|From the Vault||
+Kaladesh|KLD||September 2016|Starter|Kaladesh Block|Standard|
+Masterpiece Series: Kaladesh Inventions|MPS_KLD||January 2017|Reprint|Masterpiece Series: Kaladesh Inventions||
+Planechase Anthology|PCA||November 2016|Starter|Planechase||
