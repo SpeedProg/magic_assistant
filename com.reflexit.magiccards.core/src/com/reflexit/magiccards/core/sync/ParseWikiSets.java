@@ -37,7 +37,7 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
  */
 public class ParseWikiSets extends AbstractParseHtmlPage {
 	private static final String SET_QUERY_URL_BASE = "https://en.wikipedia.org/wiki/";
-	private Collection<String> allParsed = new LinkedHashSet<String>();
+	private Collection<String> allParsed = new LinkedHashSet<>();
 
 	@Override
 	protected String getUrl() {
@@ -77,13 +77,18 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 		// 3 Compilations/reprint sets
 		// 4 Non stanard
 		// 5 Intro
-		loadTable(tables[1], "Core");
-		loadTable(tables[2], "Expansion");
-		loadTable(tables[3], "Starter");
-		loadTable(tables[4], "Expansion");
-		loadTable(tables[5], "Starter");
-		loadTable(tables[6], "Un_set");
-		loadTable(tables[7], "Online");
+		if (tables.length != 14)
+			System.err.println("Error: Not expected tables number " + tables.length);
+		int i = 1;
+		loadTable(tables[i++], "Core", 1);
+		loadTable(tables[i++], "Expansion", 2);
+		int j = 2;
+		for (; i < tables.length; i++) {
+			if (loadTable(tables[i], "Starter", j + 1)) {
+				j++;
+			}
+		}
+		i++; // skip
 		Editions editions = Editions.getInstance();
 		for (Edition ed : editions.getEditions()) {
 			if (!allParsed.contains(ed.getName())) {
@@ -92,7 +97,13 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 		}
 	}
 
-	protected void loadTable(String string, String type) {
+	protected boolean loadTable(String string, String type, int j) {
+		if (j == 4)
+			type = "Expansion";
+		else if (j == 6)
+			type = "Un_set";
+		else if (j == 7)
+			type = "Online";
 		List<String> lines = splitArray("tr", string);
 		List<String> headers = null;
 		int setIndex = 0;
@@ -108,6 +119,10 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 				if (headers == null) {
 					headers = purifyList(ths);
 					// System.err.println("th -> " + headers);
+					if (headers.size() == 0 || !headers.get(0).equals("Set")) {
+						System.err.println("Error: dropping table " + headers);
+						return false; // drop that table
+					}
 					for (int i = 0; i < headers.size(); i++) {
 						if (headers.get(i).equalsIgnoreCase("Release date")) {
 							releaseIndex = i;
@@ -121,7 +136,7 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 					String name = columns.get(setIndex);
 					name = name.replaceAll(" Cycle/Block", " Block");
 					name = name.replaceAll(".* or ", "");
-					// name = name.replaceAll(" Block", "");
+					name = name.replaceAll("block", "Block");
 					block = name;
 					// System.err.println(columns);
 				} else {
@@ -144,7 +159,8 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 					}
 					String oldMain = edition.getMainAbbreviation();
 					if (!oldMain.equals(code) && !code.contains("/")) {
-						System.err.println("Error: Main abbreviation mismatch " + code + " " + edition + " " + oldMain);
+						System.err.println(
+								"Error: Main abbreviation mismatch " + code + " " + edition + " was " + oldMain);
 						edition.setMainAbbreviation(code);
 						// File file = new File(
 						// "/home/elaskavaia/git/mtgbrowser-git/com.reflexit.magiccards.db/resources/",
@@ -164,22 +180,24 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 						}
 					}
 					if (!edition.getType().equals(type)) {
-						System.err.println("Error: Type mismatch " + type + " " + edition + " " + edition.getType());
+						System.err
+								.println("Error: Type mismatch " + type + " " + edition + " was " + edition.getType());
 						edition.setType(type);
 					}
 					if (block != null && !edition.getBlock().equals(block)) {
-						// System.err.println(
-						// "mismatch block '" + block + "' " + edition + " was '" + edition.getBlock() + "'");
+						System.err.println("Error: Block mismatch '" + block + "' " + edition + " was '"
+								+ edition.getBlock() + "'");
 						edition.setBlock(block);
 					}
 					// System.err.println(name + " " + code + " " + date);
 				}
 			}
 		}
+		return true;
 	}
 
 	public static List<String> purifyList(List<String> tbody) {
-		List<String> fields = new ArrayList<String>(tbody.size());
+		List<String> fields = new ArrayList<>(tbody.size());
 		for (String in : tbody) {
 			fields.add(purifyItem(in));
 		}

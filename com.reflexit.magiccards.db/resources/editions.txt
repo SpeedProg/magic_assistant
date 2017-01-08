@@ -32,7 +32,7 @@ Portal Three Kingdoms|PTK|PK|May 1999|Starter|Portal||
 Urza's Destiny|UDS|CG,UD|June 1999|Expansion|Urza Block||
 Starter 1999|S99|P3,ST,S1|July 1999|Starter|Starter||
 Mercadian Masques|MMQ|MM|October 1999|Expansion|Masques Block||
-Nemesis|NMS|NE,NEM|February 2000|Expansion|Masques Block||
+Nemesis|NEM|NE,NMS|February 2000|Expansion|Masques Block||
 Prophecy|PCY|PR,PY|June 2000|Expansion|Masques Block||
 Starter 2000|S00|P4,S2|July 2000|Starter|Starter||
 Invasion|INV|IN|October 2000|Expansion|Invasion Block||
@@ -84,7 +84,7 @@ Zendikar|ZEN||October 2009|Expansion|Zendikar Block|Modern|
 Premium Deck Series: Slivers|H09|PDS|November 2009|Starter|Premium Deck Series||
 Worldwake|WWK||February 2010|Expansion|Zendikar Block|Modern|
 Rise of the Eldrazi|ROE||April 2010|Expansion|Zendikar Block|Modern|
-Archenemy|ARC||June 2010|Starter|Archenemy||
+Archenemy|ARC||June 2010|Expansion|Archenemy||
 Magic 2011|M11||July 2010|Core|Magic 2011|Modern|
 Duel Decks: Elspeth vs. Tezzeret|DDF||September 2010|Starter|Duel Decks||
 Duel Decks: Phyrexia vs. the Coalition|DDE|PVC|March 2010|Starter|Duel Decks||
@@ -109,7 +109,7 @@ Premium Deck Series: Graveborn|PD3||November 2011|Starter|Premium Deck Series||
 Avacyn Restored|AVR||May 2012|Expansion|Innistrad Block|Modern|
 Planechase 2012 Edition|PC2||June 2012|Expansion|Planechase||Planechase 2012
 Magic 2013|M13||July 2012|Core|Magic 2013|Modern|
-Commander's Arsenal|CM1|CMA|November 2012|Expansion|Commander||
+Commander's Arsenal|CMA|CM1|November 2012|Expansion|Commander||
 Duel Decks: Izzet vs. Golgari|DDJ||September 2012|Starter|Duel Decks||
 From the Vault: Realms|V12||August 2012|Starter|From the Vault||
 Return to Ravnica|RTR||October 2012|Expansion|Return to Ravnica Block|Modern|
@@ -141,7 +141,7 @@ Duel Decks Anthology, Jace vs. Chandra|DD3_JVC||February 2015|Starter|Duel Decks
 Dragons of Tarkir|DTK||March 2015|Expansion|Khans of Tarkir Block|Modern|
 Duel Decks: Elspeth vs. Kiora|DDO||February 2015|Starter|Duel Decks||Duel Decks: Kiora vs. Elspeth
 Ugin's Fate promos|FRF_UGIN||March 2015|Starter|Ugin's Fate promos||
-Modern Masters 2015 Edition|MM2||May 2015|Starter|Modern Masters 2015 Edition||Modern Masters 2015
+Modern Masters 2015 Edition|MM2||May 2015|Starter|Modern Masters||Modern Masters 2015
 Tempest Remastered|TPR||May 2015|Online|Masters Editions||
 From the Vault: Angels|V15||August 2015|Starter|From the Vault||
 Magic Origins|ORI||July 2015|Core|Magic Origins|Modern|Magic Origins
@@ -157,9 +157,9 @@ Duel Decks Anthology, Elves vs. Dragons|DD3_EVG||February 2015|Starter|Duel Deck
 Conspiracy: Take the Crown|CN2||August 2016|Expansion|Conspiracy|Modern|
 Eldritch Moon|EMN||July 2016|Expansion|Shadows over Innistrad Block|Modern|
 Eternal Masters|EMA||June 2016|Starter|Eternal Masters||
-Commander 2016|C16||November 2016|Starter|Commander||
+Commander 2016|C16||November 2016|Expansion|Commander||
 Duel Decks: Nissa vs. Ob Nixilis|DDR||September 2016|Starter|Duel Decks||
 From the Vault: Lore|V16||August 2016|Starter|From the Vault||
-Kaladesh|KLD||September 2016|Starter|Kaladesh Block|Standard|
+Kaladesh|KLD||September 2016|Expansion|Kaladesh Block|Standard|
 Masterpiece Series: Kaladesh Inventions|MPS_KLD||January 2017|Reprint|Masterpiece Series: Kaladesh Inventions||
-Planechase Anthology|PCA||November 2016|Starter|Planechase||
+Planechase Anthology|PCA||November 2016|Expansion|Planechase||
