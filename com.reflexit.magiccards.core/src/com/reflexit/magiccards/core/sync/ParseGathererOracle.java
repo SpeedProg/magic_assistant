@@ -72,7 +72,7 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 	                    </div>
 
 	 */
-	private static Pattern rulingPattern = Pattern.compile("<td.*?rulingText.*?5px;\">(.+?)</td>");
+	private static Pattern rulingPattern = Pattern.compile("<td.*?rulingText\"[^>]*>(.+?)</td>");
 	private static Pattern ratingPattern = Pattern.compile("class=\"textRatingValue\">([0-9.]{1,5})</span");
 	private static Pattern artistPattern = Pattern
 			.compile("ArtistCredit\"\\sclass=\"value\">.*?\">(.*?)</a>");

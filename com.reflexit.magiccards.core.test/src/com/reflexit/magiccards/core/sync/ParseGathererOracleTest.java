@@ -181,4 +181,19 @@ public class ParseGathererOracleTest extends TestCase {
 		Object object = card.get(MagicCardField.COLOR_IDENTITY);
 		assertEquals("{B}{G}", object);
 	}
+
+	public void testRunings() throws IOException {
+		MagicCard card = load(221185, "Homicidal Brute");
+		String rulings = card.getRulings();
+		System.err.println(rulings);
+		assertNotNull(rulings);
+	}
+	
+	public void testRunings2() throws IOException {
+		MagicCard card = load(423479, "Warstorm Surge");
+		String rulings = card.getRulings();
+		System.err.println(rulings);
+		assertNotNull(rulings);
+	}
+
 }
