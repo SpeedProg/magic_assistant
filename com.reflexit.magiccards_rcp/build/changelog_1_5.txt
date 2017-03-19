@@ -1,3 +1,9 @@
+== changes in 1.5.1.X ==
+* added 2 more sets Aether Revolt and Modern Masters 2017 Edition
+* Bug 574 NullPointerException in Card Info view
+* Bug 572 Aether Vial (Masterpiece)
+* Fixed patterns for gatherer parsing
+* Fixed wiki parsing for sets
 == changes in 1.5.1 ==
 * Added mana 13 symbols
 * Corrected flip card parser to adjust to gatherer changes
