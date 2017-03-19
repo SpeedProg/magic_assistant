@@ -20,6 +20,7 @@ import com.reflexit.magiccards.core.exports.HtmlTableImportDelegate;
 import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.exports.ImportSource;
 import com.reflexit.magiccards.core.exports.ImportUtils;
+import com.reflexit.magiccards.core.exports.ImportUtils.LookupHash;
 import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -46,13 +47,11 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	private static ParseTcgPlayerPrices[] providers = new ParseTcgPlayerPrices[Type.values().length];
-
 	static {
 		for (Type type : Type.values()) {
 			providers[type.ordinal()] = new ParseTcgPlayerPrices(type);
 		}
 	}
-
 	private Type type;
 
 	private ParseTcgPlayerPrices() {
@@ -69,7 +68,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 
 	static synchronized void initSetMap() {
 		if (setMap == null) {
-			setMap = new HashMap<String, String>();
+			setMap = new HashMap<>();
 			Editions ed = Editions.getInstance();
 			ed.getEditions();
 			for (Iterator<Edition> iterator = ed.getEditions().iterator(); iterator.hasNext();) {
@@ -115,7 +114,6 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 						processedSets++;
 						for (MagicCard magicCard : map.keySet()) {
 							float price = map.get(magicCard);
-							ImportUtils.getFixedName(magicCard);// fix Aether
 							MagicCard ref = ImportUtils.findRef(magicCard, db);
 							if (ref != null) {
 								if (price == 0)
@@ -160,11 +158,13 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 		return iterable;
 	}
 
-	private Map<MagicCard, Float> getSetPrices(String origset) {
+	private Map<MagicCard, Float> getSetPrices(final String origset) {
 		getSetAliasesMap();
-		final HashMap<MagicCard, Float> res = new HashMap<MagicCard, Float>();
+		final HashMap<MagicCard, Float> res = new HashMap<>();
 		try {
 			HtmlTableImportDelegate delegate = new HtmlTableImportDelegate() {
+				private LookupHash lookup;
+
 				@Override
 				protected ICardField getFieldByName(String hd) {
 					ICardField fieldByName = super.getFieldByName(hd);
@@ -181,12 +181,34 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 				}
 
 				@Override
+				public void doRun(ICoreProgressMonitor monitor) throws IOException {
+					lookup = new ImportUtils.LookupHash(DataManager.getInstance().getMagicDBStore());
+					super.doRun(monitor);
+					lookup = null;
+				}
+
+				@Override
 				public void setFieldValue(MagicCardPhysical card, ICardField field, int i, String value) {
 					if (field == MagicCardField.DBPRICE) {
 						value = value.replace("$", "");
 						res.put(card.getBase(), Float.valueOf(value));
 					} else
 						super.setFieldValue(card, field, i, value);
+				}
+
+				@Override
+				protected String resolveName(String value, MagicCardPhysical card) {
+					String name = super.resolveName(value, card);
+					List<IMagicCard> candidates = lookup.getCandidates(name, origset);
+					if (candidates.size() == 0) {
+						candidates = lookup.getCandidates(name.replace("Ae", "Æ"));
+						if (candidates.size() > 0) {
+							name = candidates.get(0).getName();
+						}
+					} else {
+						name = candidates.get(0).getName();
+					}
+					return name;
 				}
 			};
 			Collection<String> trysets = getSetOptions(origset);
@@ -245,7 +267,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 	}
 
 	private Collection<String> getSetOptions(String setm) {
-		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<String> res = new ArrayList<>();
 		String set = getSetAliasesMap().get(setm);
 		if (set != null) {
 			res.add(set);
@@ -278,7 +300,7 @@ public class ParseTcgPlayerPrices extends AbstractPriceProvider {
 
 	private URL createCardUrl(IMagicCard magicCard, String set) throws MalformedURLException {
 		String name = magicCard.getName();
-		name = name.replaceAll("Æ", "AE");
+		name = name.replaceAll("Æ", "Ae");
 		name = name.replaceAll("ö", "o");
 		name = name.replaceAll(" \\(.*$", "");
 		String url = "http://partner.tcgplayer.com/x3/phl.asmx/p?v=3&pk=" + PARTNER_KEY + "&s=" + set + "&p=" + name;
