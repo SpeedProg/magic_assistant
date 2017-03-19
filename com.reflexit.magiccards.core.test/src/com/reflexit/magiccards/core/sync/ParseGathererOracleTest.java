@@ -163,7 +163,8 @@ public class ParseGathererOracleTest extends TestCase {
 
 	public void testSets() throws IOException {
 		MagicCard card = load(193767); // Serra Angel
-		assertTrue(magicDb.size() > 8);
+
+		assertTrue("Serra Angel was " + magicDb.size(), magicDb.size() > 8);
 	}
 
 	public void testColorIndicator() throws IOException {

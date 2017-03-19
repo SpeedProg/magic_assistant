@@ -228,7 +228,7 @@ public class DataManagerTest extends TestCase {
 	}
 
 	private Collection list(Object... args) {
-		ArrayList list = new ArrayList<Object>();
+		ArrayList list = new ArrayList<>();
 		for (Object object : args) {
 			list.add(object);
 		}
@@ -277,6 +277,7 @@ public class DataManagerTest extends TestCase {
 	@Test
 	public void testRemoveMagicCardPhysical() {
 		MagicCard base = card.getBase();
+		card.setOwn(true);
 		int x = base.getOwnCount();
 		assertEquals(1, deck1.getStore().size());
 		dm.remove(card);
