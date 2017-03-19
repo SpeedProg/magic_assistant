@@ -32,7 +32,7 @@ Portal Three Kingdoms|PTK|PK|May 1999|Starter|Portal||
 Urza's Destiny|UDS|CG,UD|June 1999|Expansion|Urza Block||
 Starter 1999|S99|P3,ST,S1|July 1999|Starter|Starter||
 Mercadian Masques|MMQ|MM|October 1999|Expansion|Masques Block||
-Nemesis|NEM|NE,NMS|February 2000|Expansion|Masques Block||
+Nemesis|NMS|NE,NEM|February 2000|Expansion|Masques Block||
 Prophecy|PCY|PR,PY|June 2000|Expansion|Masques Block||
 Starter 2000|S00|P4,S2|July 2000|Starter|Starter||
 Invasion|INV|IN|October 2000|Expansion|Invasion Block||
@@ -145,17 +145,17 @@ Modern Masters 2015 Edition|MM2||May 2015|Starter|Modern Masters||Modern Masters
 Tempest Remastered|TPR||May 2015|Online|Masters Editions||
 From the Vault: Angels|V15||August 2015|Starter|From the Vault||
 Magic Origins|ORI||July 2015|Core|Magic Origins|Modern|Magic Origins
-Battle for Zendikar|BFZ||October 2015|Expansion|Battle for Zendikar Block|Modern|
+Battle for Zendikar|BFZ||October 2015|Expansion|Battle for Zendikar Block|Standard|
 Commander 2015|C15||November 2015|Expansion|Commander||
 Duel Decks: Zendikar vs. Eldrazi|DDP||August 2015|Starter|Duel Decks||
 Zendikar Expeditions|EXP||November 2015|Expansion|Zendikar Expeditions||
-Oath of the Gatewatch|OGW|OTG|January 2016|Expansion|Battle for Zendikar Block|Modern|
+Oath of the Gatewatch|OGW|OTG|January 2016|Expansion|Battle for Zendikar Block|Standard|
 Duel Decks: Blessed vs. Cursed|DDQ||February 2016|Starter|Duel Decks||
-Shadows over Innistrad|SOI||April 2016|Expansion|Shadows over Innistrad Block|Modern|
+Shadows over Innistrad|SOI||April 2016|Expansion|Shadows over Innistrad Block|Standard|
 Welcome Deck 2016|W16||April 2016|Starter|Welcome Deck 2016||
 Duel Decks Anthology, Elves vs. Dragons|DD3_EVG||February 2015|Starter|Duel Decks||
 Conspiracy: Take the Crown|CN2||August 2016|Expansion|Conspiracy|Modern|
-Eldritch Moon|EMN||July 2016|Expansion|Shadows over Innistrad Block|Modern|
+Eldritch Moon|EMN||July 2016|Expansion|Shadows over Innistrad Block|Standard|
 Eternal Masters|EMA||June 2016|Starter|Eternal Masters||
 Commander 2016|C16||November 2016|Expansion|Commander||
 Duel Decks: Nissa vs. Ob Nixilis|DDR||September 2016|Starter|Duel Decks||
@@ -163,3 +163,5 @@ From the Vault: Lore|V16||August 2016|Starter|From the Vault||
 Kaladesh|KLD||September 2016|Expansion|Kaladesh Block|Standard|
 Masterpiece Series: Kaladesh Inventions|MPS_KLD||January 2017|Reprint|Masterpiece Series: Kaladesh Inventions||
 Planechase Anthology|PCA||November 2016|Expansion|Planechase||
+Aether Revolt|AER||January 2017|Expansion|Kaladesh Block|Standard|
+Modern Masters 2017 Edition|MM3||March 2017|Starter|Modern Masters||
