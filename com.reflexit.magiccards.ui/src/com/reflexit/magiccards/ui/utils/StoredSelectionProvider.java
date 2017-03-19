@@ -5,13 +5,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
 
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.events.ListenerList;
 
 /**
- * Provides default implementation of storedSelection provider which manager a single
- * storedSelection and sectionListeners (and post storedSelection listeners)
+ * Provides default implementation of storedSelection provider which manager a
+ * single storedSelection and sectionListeners (and post storedSelection
+ * listeners)
  * 
  * @author Alena
  * 
@@ -56,7 +58,7 @@ public class StoredSelectionProvider implements IPostSelectionProvider {
 		for (int i = 0; i < listeners.length; i++) {
 			ISelectionChangedListener listener = (ISelectionChangedListener) listeners[i];
 			try {
-				listener.selectionChanged(event);
+				Display.getDefault().asyncExec(() -> listener.selectionChanged(event));
 			} catch (Throwable t) {
 				MagicLogger.log(t);
 			}

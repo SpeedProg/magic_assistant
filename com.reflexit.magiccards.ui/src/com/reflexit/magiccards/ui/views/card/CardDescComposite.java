@@ -173,7 +173,8 @@ class CardDescComposite extends Composite {
 	public void setMenu(Menu menu) {
 		super.setMenu(menu);
 		imageControl.setMenu(menu);
-		textBrowser.setMenu(menu);
+		if (textBrowser != null)
+			textBrowser.setMenu(menu);
 		textBackup.setMenu(menu);
 	}
 
