@@ -77,7 +77,7 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 		// 3 Compilations/reprint sets
 		// 4 Non stanard
 		// 5 Intro
-		if (tables.length != 14)
+		if (tables.length < 11)
 			System.err.println("Error: Not expected tables number " + tables.length);
 		int i = 1;
 		loadTable(tables[i++], "Core", 1);
