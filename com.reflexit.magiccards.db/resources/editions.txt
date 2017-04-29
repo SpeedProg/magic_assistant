@@ -58,7 +58,7 @@ Ninth Edition|9ED|9E|July 2005|Core|Ninth Edition|Modern|9th Edition
 Ravnica: City of Guilds|RAV||October 2005|Expansion|Ravnica Block|Modern|Ravnica
 Guildpact|GPT||February 2006|Expansion|Ravnica Block|Modern|
 Dissension|DIS||May 2006|Expansion|Ravnica Block|Modern|
-Coldsnap|CSP|CS|July 2006|Expansion|Ice Age Block|Modern|
+Coldsnap|CSP|CS|July 2006|Expansion|Coldsnap|Modern|
 Time Spiral "Timeshifted"|TSB||October 2006|Reprint|Time Spiral "Timeshifted"||Timeshifted,"Timeshifted"
 Promo set for Gatherer|PPR||October 2006|Online|Promo set for Gatherer||
 Time Spiral|TSP||October 2006|Expansion|Time Spiral Block|Modern|
@@ -165,3 +165,7 @@ Masterpiece Series: Kaladesh Inventions|MPS_KLD||January 2017|Reprint|Masterpiec
 Planechase Anthology|PCA||November 2016|Expansion|Planechase||
 Aether Revolt|AER||January 2017|Expansion|Kaladesh Block|Standard|
 Modern Masters 2017 Edition|MM3||March 2017|Starter|Modern Masters||
+Amonkhet|AKH||April 2017|Expansion|Amonkhet Block|Standard|
+Duel Decks: Mind vs. Might|DDS||March 2017|Starter|Duel Decks||
+Masterpiece Series: Amonkhet Invocations|MPS_AKH||April 2017|Reprint|Masterpiece Series: Amonkhet Invocations||
+Welcome Deck 2017|W17||April 2017|Starter|Welcome Deck 2017||

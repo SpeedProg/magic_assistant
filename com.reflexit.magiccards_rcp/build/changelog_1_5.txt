@@ -1,5 +1,6 @@
 == changes in 1.5.1.20170429 ==
 * Bug 579 Basic Lands Will Not Load
+* New sets out of the box Amonkhet, Duel Decks: Mind vs. Might, Masterpiece Series: Amonkhet Invocations, Welcome Deck 2017
 == changes in 1.5.1.X ==
 * added 2 more sets Aether Revolt and Modern Masters 2017 Edition
 * Bug 574 NullPointerException in Card Info view
