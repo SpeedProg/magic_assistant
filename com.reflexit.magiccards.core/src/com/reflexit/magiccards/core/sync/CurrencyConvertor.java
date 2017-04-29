@@ -35,7 +35,7 @@ public class CurrencyConvertor {
 		return loadRate(from + to);
 	}
 
-	public static synchronized double loadRate(String cu) {
+	public static double loadRate(String cu) {
 		double res = doLoadRate(cu);
 		if (res == 0) {
 			try {
@@ -48,7 +48,7 @@ public class CurrencyConvertor {
 		return res;
 	}
 
-	protected static double doLoadRate(String cu) {
+	protected static synchronized double doLoadRate(String cu) {
 		try {
 			URL url = getURL(cu);
 			CsvImporter importer = new CsvImporter(WebUtils.openUrl(url), ',');
