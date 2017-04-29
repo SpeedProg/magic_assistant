@@ -26,8 +26,8 @@ import com.reflexit.magiccards.core.exports.CsvImporter;
 public class CurrencyConvertor {
 	public static Currency USD = Currency.getInstance("USD");
 	private static final String FILE = "currency.txt";
-	private static HashMap<String, Double> rates = new HashMap<String, Double>();
-	private static HashMap<String, Date> dates = new HashMap<String, Date>();
+	private static HashMap<String, Double> rates = new HashMap<>();
+	private static HashMap<String, Date> dates = new HashMap<>();
 	private static Currency currency = USD;
 	private static SimpleDateFormat DATE_PARSER = new SimpleDateFormat("MM/dd/yyyy hh:mmaa", Locale.ENGLISH);
 
@@ -36,11 +36,28 @@ public class CurrencyConvertor {
 	}
 
 	public static synchronized double loadRate(String cu) {
+		double res = doLoadRate(cu);
+		if (res == 0) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				//
+			}
+			res = doLoadRate(cu);
+		}
+		return res;
+	}
+
+	protected static double doLoadRate(String cu) {
 		try {
 			URL url = getURL(cu);
 			CsvImporter importer = new CsvImporter(WebUtils.openUrl(url), ',');
 			try {
 				List<String> list = importer.readLine();
+				if (list.size() < 4) {
+					MagicLogger.log("Problem reading currency rate: " + cu + "->" + list);
+					return 0;
+				}
 				String srate = list.get(1);
 				double rate = Double.valueOf(srate);
 				rates.put(cu, rate);
