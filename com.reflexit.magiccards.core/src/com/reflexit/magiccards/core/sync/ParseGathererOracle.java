@@ -48,6 +48,7 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 	private Set<ICardField> fieldMapFilter;
 	private ICardStore<IMagicCard> magicDb;
 	protected ICardStore<MagicCard> sets;
+	protected ICardStore<MagicCard> variations;
 	protected MagicCard cardA;
 	protected MagicCard cardB;
 	private String resultTitle;
@@ -112,6 +113,8 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 			.compile("Expansion:</div>.*?set=\\[.*?\\].*?\">(.*?)</a>");
 	private static Pattern otherSetPatternEach = Pattern
 			.compile("multiverseid=(\\d+)\"><img title=\"(.*?) \\((.*?)\\)");
+	private static Pattern variationsPatternEach = Pattern.compile("multiverseid=(\\d+)\"");
+	private static Pattern variationsPattern = Pattern.compile("class=\"variations\"(.*?)</div>");
 	/*-
 
 	<div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_typeRow" class="row">
@@ -195,6 +198,35 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 		}
 	}
 
+	protected void extractVariations(MagicCard card, Set<ICardField> fieldMap, String html) {
+		if (fieldMap == null || fieldMap.contains(MagicCardField.SET) || fieldMap.contains(MagicCardField.COLLNUM)) {
+			Matcher matcher1 = variationsPattern.matcher(html);
+			String setsHtml = "";
+			if (matcher1.find()) {
+				setsHtml = matcher1.group(1).trim();
+			} else
+				return;
+			Matcher matcher = variationsPatternEach.matcher(setsHtml);
+			while (matcher.find()) {
+				String id = matcher.group(1).trim();
+				if (id.length() == 0)
+					continue;
+				// other printings
+				MagicCard card2 = card.cloneCard();
+				if (resultTitle != null)
+					card2.setName(resultTitle);
+				card2.setId(id);
+
+				card2.setLanguage(null);
+				card2.setText(card.getOracleText());
+				card2.setLegalityMap(null);
+				card2.setArtist(null);
+				card2.setCollNumber("x");
+				variations.add(card2);
+			}
+		}
+	}
+
 	protected void extractField(MagicCard card, Set<ICardField> fieldMap, String html, MagicCardField field,
 			Pattern pattern,
 			boolean multiple) {
@@ -242,6 +274,7 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 	public void setCard(IMagicCard card) {
 		this.fromCard = card.getBase();
 		this.sets = new MemoryCardStore<>();
+		this.variations = new MemoryCardStore<>();
 		this.resultTitle = null;
 	}
 
@@ -295,11 +328,15 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 	private boolean addNew(IMagicCard card2) {
 		if (magicDb != null && card2 != null)
 			if (magicDb.getCard(card2.getCardId()) == null) {
-				magicDb.add(card2);
-				MagicLogger.log("Added " + card2);
-				return true;
+				return doAddNew(card2);
 			}
 		return false;
+	}
+
+	protected boolean doAddNew(IMagicCard card) {
+		magicDb.add(card);
+		MagicLogger.log("Added " + card);
+		return true;
 	}
 
 	private boolean someWhatMatches(MagicCard from, MagicCard inet, MagicCard inet2) {
@@ -388,6 +425,7 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 		correctSides();
 		monitor.worked(40);
 		extractOtherSets(cardA, fieldMapFilter, html0);
+		extractVariations(cardA, fieldMapFilter, html0);
 		monitor.done();
 	}
 
@@ -489,5 +527,9 @@ public class ParseGathererOracle extends AbstractParseHtmlPage {
 		if (fieldMapFilter == null)
 			fieldMapFilter = new HashSet<>();
 		fieldMapFilter.add(field);
+	}
+
+	public ICardStore<MagicCard> getVariations() {
+		return variations;
 	}
 }

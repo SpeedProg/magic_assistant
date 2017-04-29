@@ -37,7 +37,7 @@ public class UpdateCardsFromWeb {
 	public void updateStore(IMagicCard card, Set<ICardField> fieldMaps, String lang, ICardStore magicDb,
 			ICoreProgressMonitor monitor)
 			throws IOException {
-		ArrayList<IMagicCard> list = new ArrayList<IMagicCard>(1);
+		ArrayList<IMagicCard> list = new ArrayList<>(1);
 		list.add(card);
 		if (lang == null)
 			lang = card.getLanguage();
@@ -168,7 +168,7 @@ public class UpdateCardsFromWeb {
 		final boolean bother = "true".equals(other);
 		final GatherHelper.ILoadCardHander handler2 = new GatherHelper.OutputHandler(out, bland, bother);
 		GatherHelper.StashLoadHandler handler = new GatherHelper.StashLoadHandler() {
-			LinkedHashMap<Integer, MagicCard> cards = new LinkedHashMap<Integer, MagicCard>();
+			LinkedHashMap<Integer, MagicCard> cards = new LinkedHashMap<>();
 
 			@Override
 			public void handleCard(MagicCard card) {
@@ -215,7 +215,7 @@ public class UpdateCardsFromWeb {
 					SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 			new ParseGathererSearchChecklist().loadSet(set, handler, new SubCoreProgressMonitor(pm, 5000,
 					SubCoreProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
-			Set<ICardField> fieldMap = new HashSet<ICardField>();
+			Set<ICardField> fieldMap = new HashSet<>();
 			fieldMap.add(MagicCardField.COLLNUM);
 			fieldMap.add(MagicCardField.ARTIST);
 			SubCoreProgressMonitor pm2 = new SubCoreProgressMonitor(pm, 5000,
@@ -227,9 +227,20 @@ public class UpdateCardsFromWeb {
 				MagicCard c = iterator.next();
 				if (c.getCollNumber().equals("x")) {
 					pm2.subTask(c.toString() + " (" + i + " of " + n + ")");
-					new ParseGathererOracle().updateCard(c, fieldMap, ICoreProgressMonitor.NONE);
+					ParseGathererOracle parser = new ParseGathererOracle();
+					parser.updateCard(c, fieldMap, ICoreProgressMonitor.NONE);
+					handler2.handleCard(c);
+					ICardStore<MagicCard> variations = parser.getVariations();
+					if (bland) {
+						for (MagicCard landVariation : variations) {
+							ParseGathererOracle parser2 = new ParseGathererOracle();
+							parser2.updateCard(landVariation, fieldMap, ICoreProgressMonitor.NONE);
+							handler2.handleSecondary(c, landVariation);
+						}
+					}
+				} else {
+					handler2.handleCard(c);
 				}
-				handler2.handleCard(c);
 				pm2.worked(1);
 				if (pm2.isCanceled() || pm.isCanceled())
 					break;
