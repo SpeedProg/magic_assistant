@@ -84,6 +84,10 @@ public class CsvImporter implements Closeable {
 		} while (true);
 		return res;
 	}
+	
+	public BufferedReader getReader() {
+		return reader;
+	}
 
 	@Override
 	public void close() throws IOException {

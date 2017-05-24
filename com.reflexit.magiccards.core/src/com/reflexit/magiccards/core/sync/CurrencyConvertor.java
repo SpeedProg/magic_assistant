@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.CharBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,7 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.exports.CsvImporter;
 
@@ -56,6 +60,10 @@ public class CurrencyConvertor {
 				List<String> list = importer.readLine();
 				if (list.size() < 4) {
 					MagicLogger.log("Problem reading currency rate: " + cu + "->" + list);
+					BufferedReader reader = importer.getReader();
+					char cbuf[] = new char[32*1024];
+					reader.read(cbuf);
+					MagicLogger.log(new String(cbuf));
 					return 0;
 				}
 				String srate = list.get(1);
@@ -82,7 +90,7 @@ public class CurrencyConvertor {
 	}
 
 	public static URL getURL(String cu) throws MalformedURLException {
-		URL url = new URL("http://finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s=" + cu + "=X");
+		URL url = new URL("http://download.finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s=" + cu + "=X");
 		return url;
 	}
 
