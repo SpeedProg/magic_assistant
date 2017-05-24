@@ -15,7 +15,7 @@ import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.db.DbActivator;
 
 public class EditionsTest extends TestCase {
-	private static final int EDITIONS_SIZE = 171;
+	private static final int EDITIONS_SIZE = 170;
 	private static final String EDITIONS_FILE = Editions.EDITIONS_FILE;
 	protected Editions editions;
 

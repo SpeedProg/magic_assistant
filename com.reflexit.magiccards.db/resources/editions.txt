@@ -153,7 +153,6 @@ Oath of the Gatewatch|OGW|OTG|January 2016|Expansion|Battle for Zendikar Block|S
 Duel Decks: Blessed vs. Cursed|DDQ||February 2016|Starter|Duel Decks||
 Shadows over Innistrad|SOI||April 2016|Expansion|Shadows over Innistrad Block|Standard|
 Welcome Deck 2016|W16||April 2016|Starter|Welcome Deck 2016||
-Duel Decks Anthology, Elves vs. Dragons|DD3_EVG||February 2015|Starter|Duel Decks||
 Conspiracy: Take the Crown|CN2||August 2016|Expansion|Conspiracy|Modern|
 Eldritch Moon|EMN||July 2016|Expansion|Shadows over Innistrad Block|Standard|
 Eternal Masters|EMA||June 2016|Starter|Eternal Masters||
