@@ -217,6 +217,12 @@ public class DeckImportPreviewPage extends WizardPage {
 					}
 					return super.getForeground(element);
 				}
+
+				@Override
+				protected void setElementValue(Object element, Object value) {
+					super.setElementValue(element, value);
+					validate();
+				};
 			};
 		}
 

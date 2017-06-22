@@ -178,15 +178,10 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				if (element instanceof MagicCardPhysical) {
+				if (canEdit(element)) {
 					MagicCardPhysical card = (MagicCardPhysical) element;
-					MagicCard base = (MagicCard) card.getBase().clone();
-					base.setName((String) value);
-					base.setCardId(0);
-					card.setMagicCard(base);
-					card.setError(null);
-					ImportUtils.updateCardReference(card);
-					Object input = getViewer().getInput();
+					setElementValue(element, value);
+					Object input = viewer.getInput();
 					if (input instanceof IFilteredCardStore) {
 						DataManager.getInstance().update(card, null);
 						// update
@@ -197,6 +192,19 @@ public class GroupColumn extends AbstractImageColumn implements Listener {
 				}
 			}
 		};
+	}
+
+	@Override
+	protected void setElementValue(Object element, Object value) {
+		if (element instanceof MagicCardPhysical) {
+			MagicCardPhysical card = (MagicCardPhysical) element;
+			MagicCard base = (MagicCard) card.getBase().clone();
+			base.setName((String) value);
+			base.setCardId(0);
+			card.setMagicCard(base);
+			card.setError(null);
+			ImportUtils.updateCardReference(card);
+		}
 	}
 
 	@Override
