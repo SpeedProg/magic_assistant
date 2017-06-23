@@ -1,3 +1,7 @@
+== changes in 1.5.1.20170622==
+Bug 587 Importing Decks / Collections with errors
+Bug 586 List in "Instances" window does not update when add card to collection
+
 == changes in 1.5.1.20170523 ==
 Bug #582 currency convertion issues (site changed API)
 Bug #568 MagicDB total cards count increasses on every restart
