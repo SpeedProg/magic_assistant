@@ -45,6 +45,11 @@ public class InstancesViewer extends ExtendedTreeViewer implements IDisposable {
 	}
 
 	@Override
+	public void refresh() {
+		super.refresh();
+	}
+
+	@Override
 	protected ColumnCollection doGetColumnCollection(String viewId) {
 		return new ColumnCollection() {
 			@Override

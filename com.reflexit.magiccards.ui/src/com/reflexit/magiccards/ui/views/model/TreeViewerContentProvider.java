@@ -147,7 +147,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider, ISelecti
 			try {
 				List<Object> subPath = findElement(object, parenPath);
 				if (subPath != null) {
-					return subPath;
+					return new ArrayList<>(subPath);
 				}
 			} finally {
 				parenPath.remove(parenPath.size() - 1);

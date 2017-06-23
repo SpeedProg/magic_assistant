@@ -103,17 +103,20 @@ public class SplitViewer implements IMagicColumnViewer {
 			return;
 		if (viewer == null)
 			return;
-		if (selection.isEmpty()) {
-			treeviewer.setSelection(selection, false);
-			viewer.setSelection(selection, false);
-		} else {
-			viewer.setSelection(selection, true);
-			if (viewer.getSelection().isEmpty()) {
-				// it was not there, so re-select element in the tree
-				treeviewer.setSelection(selection, true);
+		if (selection instanceof StructuredSelection) {
+			if (selection.isEmpty()) {
+				treeviewer.setSelection(selection, false);
+				viewer.setSelection(selection, false);
+			} else {
 				viewer.setSelection(selection, true);
+				if (viewer.getSelection().isEmpty()) {
+					// it was not there, so re-select element in the tree
+					treeviewer.setSelection(selection, true);
+					viewer.setSelection(selection, true);
+				}
 			}
 		}
+
 	}
 
 	public boolean supportsGroupping(boolean groupped) {

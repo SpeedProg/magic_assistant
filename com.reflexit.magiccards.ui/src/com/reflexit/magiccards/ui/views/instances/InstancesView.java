@@ -51,6 +51,7 @@ import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 import com.reflexit.magiccards.ui.MagicUIActivator;
 import com.reflexit.magiccards.ui.utils.CoreMonitorAdapter;
 import com.reflexit.magiccards.ui.views.AbstractCardsView;
+import com.reflexit.magiccards.ui.views.AbstractMagicCardsListControl;
 import com.reflexit.magiccards.ui.views.AbstractSingleControlCardsView;
 import com.reflexit.magiccards.ui.views.IMagicCardListControl;
 import com.reflexit.magiccards.ui.views.printings.PrintingsView;
@@ -165,7 +166,7 @@ public class InstancesView extends AbstractSingleControlCardsView implements ISe
 		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("Loading printings", 100);
 			try {
-				HashSet<ICardField> fieldMap = new HashSet<ICardField>();
+				HashSet<ICardField> fieldMap = new HashSet<>();
 				fieldMap.add(MagicCardField.SET);
 				if (monitor.isCanceled())
 					return Status.CANCEL_STATUS;
@@ -220,8 +221,10 @@ public class InstancesView extends AbstractSingleControlCardsView implements ISe
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		if (part instanceof AbstractCardsView && part != this && !sel.isEmpty())
+		if (part instanceof AbstractCardsView && part != this && !sel.isEmpty()) {
+			((AbstractMagicCardsListControl) this.getMagicControl()).addStoreChangeListener();
 			runLoadJob(sel);
+		}
 	}
 
 	private IMagicCard getCard(ISelection sel) {

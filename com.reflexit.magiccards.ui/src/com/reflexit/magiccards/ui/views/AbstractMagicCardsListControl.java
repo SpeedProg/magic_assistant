@@ -51,6 +51,7 @@ import org.eclipse.ui.progress.UIJob;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.MagicLogger;
+import com.reflexit.magiccards.core.model.CardGroup;
 import com.reflexit.magiccards.core.model.FilterField;
 import com.reflexit.magiccards.core.model.GroupOrder;
 import com.reflexit.magiccards.core.model.Location;
@@ -367,7 +368,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		super.dispose();
 	}
 
-	protected void addStoreChangeListener() {
+	public void addStoreChangeListener() {
 		DM.getLibraryCardStore().addListener(AbstractMagicCardsListControl.this);
 		DM.getMagicDBStore().addListener(AbstractMagicCardsListControl.this);
 	}
@@ -420,11 +421,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 			@Override
 			public void run() {
 				refreshViewer();
-				// select first visible element
-				if (fstore.getSize() == 0)
-					return;
-				Object element = fstore.getElement(0);
-				getSelectionProvider().setSelection(new StructuredSelection(element));
+				selectFirstVisible();
 			}
 		});
 	}
@@ -985,6 +982,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 			switch (type) {
 			case CardEvent.UPDATE:
 				WaitUtils.asyncExec(() -> viewer.refresh());
+				updateStatus();
 				break;
 			case CardEvent.ADD:
 				setNextSelection(new StructuredSelection(data));
@@ -1145,5 +1143,30 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 
 	public Shell getShell() {
 		return getControl().getShell();
+	}
+
+	protected Object getFirstVisible() {
+		if (fstore.getSize() == 0)
+			return null;
+		Object element = fstore.getElement(0);
+
+		if (element instanceof CardGroup) {
+			CardGroup a = (CardGroup) element;
+			if (a.size() > 0) {
+				return a.getChildAtIndex(0);
+
+			}
+		}
+		return element;
+	}
+
+	protected void selectFirstVisible() {
+		// select first visible element
+
+		Object element = getFirstVisible();
+		if (element == null)
+			return;
+
+		getSelectionProvider().setSelection(new StructuredSelection(element));
 	}
 }
