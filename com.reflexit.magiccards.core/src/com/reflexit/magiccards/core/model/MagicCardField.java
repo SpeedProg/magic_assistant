@@ -84,6 +84,8 @@ public enum MagicCardField implements ICardField {
 
 		@Override
 		protected void setStr(MagicCard card, String value) {
+			if (value != null && value.trim().isEmpty())
+				value = "";
 			card.setPower(value);
 		}
 
@@ -100,6 +102,8 @@ public enum MagicCardField implements ICardField {
 
 		@Override
 		protected void setStr(MagicCard card, String value) {
+			if (value != null && value.trim().isEmpty())
+				value = "";
 			card.setToughness(value);
 		}
 

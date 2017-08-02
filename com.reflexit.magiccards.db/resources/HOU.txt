@@ -198,3 +198,13 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 432883|Woodland Stream||Land|||Woodland Stream enters the battlefield tapped.<br>{T}: Add {G} or {U} to your mana pool.|Hour of Devastation|Common|Florian de Gesincourt|204|Woodland Stream enters the battlefield tapped.<br>{T}: Add {G} or {U} to your mana pool.|
 430771|Wretched Camel|{1}{B}|Creature - Zombie Camel|2|1|When Wretched Camel dies, if you control a Desert or there is a Desert card in your graveyard, target player discards a card.|Hour of Devastation|Common|Dan Scott|82|When Wretched Camel dies, if you control a Desert or there is a Desert card in your graveyard, target player discards a card.|
 432886|Zealot of the God-Pharaoh|{3}{R}|Creature - Minotaur Archer|4|3|{4}{R}: Zealot of the God-Pharaoh deals 2 damage to target opponent.|Hour of Devastation|Common|Gabor Szikszai|207|{4}{R}: Zealot of the God-Pharaoh deals 2 damage to target opponent.|
+430887|Forest||Basic Land - Forest|||G|Hour of Devastation|Land|Titus Lunter|198|G|
+430888|Forest||Basic Land - Forest|||G|Hour of Devastation|Land|Mark Poole|199|G|
+430881|Island||Basic Land - Island|||U|Hour of Devastation|Land|Lucas Graciano|192|U|
+430882|Island||Basic Land - Island|||U|Hour of Devastation|Land|Titus Lunter|193|U|
+430885|Mountain||Basic Land - Mountain|||R|Hour of Devastation|Land|Titus Lunter|196|R|
+430886|Mountain||Basic Land - Mountain|||R|Hour of Devastation|Land|Kev Walker|197|R|
+430879|Plains||Basic Land - Plains|||W|Hour of Devastation|Land|Lars Grant-West|190|W|
+430880|Plains||Basic Land - Plains|||W|Hour of Devastation|Land|Titus Lunter|191|W|
+430883|Swamp||Basic Land - Swamp|||B|Hour of Devastation|Land|Titus Lunter|194|B|
+430884|Swamp||Basic Land - Swamp|||B|Hour of Devastation|Land|Mark Zug|195|B|

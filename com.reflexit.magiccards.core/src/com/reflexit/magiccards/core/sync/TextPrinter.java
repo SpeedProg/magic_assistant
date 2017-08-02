@@ -32,7 +32,10 @@ public class TextPrinter {
 	public static Collection<Object> values(IMagicCard card, Collection<ICardField> fields) {
 		Collection<Object> list = new ArrayList<Object>();
 		for (ICardField magicCardField : fields) {
-			list.add(card.get(magicCardField));
+			Object field = card.get(magicCardField);
+			if (field instanceof String && ((String) field).trim().isEmpty())
+				field = "";
+			list.add(field);
 		}
 		return list;
 	};
