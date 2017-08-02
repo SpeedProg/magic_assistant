@@ -500,6 +500,8 @@ public class ExtendedTreeViewer extends TreeViewer implements IMagicColumnViewer
 	}
 
 	protected void syncColumns() {
+		if (getTControl().isDisposed())
+			return;
 		ColumnCollection columnsCollection = getColumnsCollection();
 		columnsCollection.moveColumnOnTop(columnsCollection.getColumn(GroupColumn.COL_NAME));
 		int[] columnsOrder = getColumnsCollection().getColumnsOrder();
