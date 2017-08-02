@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-417835|Forest| |Basic Land - Forest| | |G|Kaladesh|Land|Christine Choi|262|G|
-417826|Island| |Basic Land - Island| | |U|Kaladesh|Land|Yeong-Hao Han|253|U|
-417832|Mountain| |Basic Land - Mountain| | |R|Kaladesh|Land|Richard Wright|259|R|
-417823|Plains| |Basic Land - Plains| | |W|Kaladesh|Land|John Avon|250|W|
-417829|Swamp| |Basic Land - Swamp| | |B|Kaladesh|Land|James Paick|256|B|
+417835|Forest||Basic Land - Forest|||G|Kaladesh|Land|Christine Choi|262|G|
+417826|Island||Basic Land - Island|||U|Kaladesh|Land|Yeong-Hao Han|253|U|
+417832|Mountain||Basic Land - Mountain|||R|Kaladesh|Land|Richard Wright|259|R|
+417823|Plains||Basic Land - Plains|||W|Kaladesh|Land|John Avon|250|W|
+417829|Swamp||Basic Land - Swamp|||B|Kaladesh|Land|James Paick|256|B|
 417764|Accomplished Automaton|{7}|Artifact Creature - Construct|5|7|Fabricate 1 <i>(When this creature enters the battlefield, put a +1/+1 counter on it or create a 1/1 colorless Servo artifact creature token.)</i>|Kaladesh|Common|Daarken|191|Fabricate 1 <i>(When this creature enters the battlefield, put a +1/+1 counter on it or create a 1/1 colorless Servo artifact creature token.)</i>|
 417574|Acrobatic Maneuver|{2}{W}|Instant|||Exile target creature you control, then return that card to the battlefield under its owner's control.<br>Draw a card.|Kaladesh|Common|Winona Nelson|1|Exile target creature you control, then return that card to the battlefield under its owner's control.<br>Draw a card.|
 417575|Aerial Responder|{1}{W}{W}|Creature - Dwarf Soldier|2|3|Flying, vigilance, lifelink|Kaladesh|Uncommon|Raoul Vitale|2|Flying, vigilance, lifelink|

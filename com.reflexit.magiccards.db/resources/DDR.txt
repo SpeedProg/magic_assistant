@@ -1,6 +1,6 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-417455|Forest| |Basic Land - Forest| | |G|Duel Decks: Nissa vs. Ob Nixilis|Land|Sam Burley|32|G|
-417490|Swamp| |Basic Land - Swamp| | |B|Duel Decks: Nissa vs. Ob Nixilis|Land|Sam Burley|67|B|
+417455|Forest||Basic Land - Forest|||G|Duel Decks: Nissa vs. Ob Nixilis|Land|Sam Burley|32|G|
+417490|Swamp||Basic Land - Swamp|||B|Duel Decks: Nissa vs. Ob Nixilis|Land|Sam Burley|67|B|
 417425|Abundance|{2}{G}{G}|Enchantment|||If you would draw a card, you may instead choose land or nonland and reveal cards from the top of your library until you reveal a card of the chosen kind. Put that card into your hand and put all other cards revealed this way on the bottom of your library in any order.|Duel Decks: Nissa vs. Ob Nixilis|Rare|Rebecca Guay|2|If you would draw a card, you may instead choose land or nonland and reveal cards from the top of your library until you reveal a card of the chosen kind. Put that card into your hand and put all other cards revealed this way on the bottom of your library in any order.|
 417460|Altar's Reap|{1}{B}|Instant|||As an additional cost to cast Altar's Reap, sacrifice a creature.<br>Draw two cards.|Duel Decks: Nissa vs. Ob Nixilis|Common|Tyler Jacobson|37|As an additional cost to cast Altar's Reap, sacrifice a creature.<br>Draw two cards.|
 417461|Ambition's Cost|{3}{B}|Sorcery|||You draw three cards and you lose 3 life.|Duel Decks: Nissa vs. Ob Nixilis|Uncommon|Zezhou Chen|38|You draw three cards and you lose 3 life.|

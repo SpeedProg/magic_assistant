@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-420966|Forest| |Basic Land - Forest| | |G|Commander 2016|Land|Rebecca Guay|349|G|
-420957|Island| |Basic Land - Island| | |U|Commander 2016|Land|Rebecca Guay|340|U|
-420963|Mountain| |Basic Land - Mountain| | |R|Commander 2016|Land|Rebecca Guay|346|R|
-420954|Plains| |Basic Land - Plains| | |W|Commander 2016|Land|Rebecca Guay|337|W|
-420960|Swamp| |Basic Land - Swamp| | |B|Commander 2016|Land|Rebecca Guay|343|B|
+420966|Forest||Basic Land - Forest|||G|Commander 2016|Land|Rebecca Guay|349|G|
+420957|Island||Basic Land - Island|||U|Commander 2016|Land|Rebecca Guay|340|U|
+420963|Mountain||Basic Land - Mountain|||R|Commander 2016|Land|Rebecca Guay|346|R|
+420954|Plains||Basic Land - Plains|||W|Commander 2016|Land|Rebecca Guay|337|W|
+420960|Swamp||Basic Land - Swamp|||B|Commander 2016|Land|Rebecca Guay|343|B|
 420794|Abzan Charm|{W}{B}{G}|Instant|||Choose one-<br>• Exile target creature with power 3 or greater.<br>• You draw two cards and you lose 2 life.<br>• Distribute two +1/+1 counters among one or two target creatures.|Commander 2016|Uncommon|Mathias Kollros|177|Choose one-<br>• Exile target creature with power 3 or greater.<br>• You draw two cards and you lose 2 life.<br>• Distribute two +1/+1 counters among one or two target creatures.|
 420674|Abzan Falconer|{2}{W}|Creature - Human Soldier|2|3|Outlast {W} <i>({W}, {T}: Put a +1/+1 counter on this creature. Outlast only as a sorcery.)</i><br>Each creature you control with a +1/+1 counter on it has flying.|Commander 2016|Uncommon|Steven Belledin|57|Outlast {W} <i>({W}, {T}: Put a +1/+1 counter on this creature. Outlast only as a sorcery.)</i><br>Each creature you control with a +1/+1 counter on it has flying.|
 420698|Academy Elite|{3}{U}|Creature - Human Wizard|0|0|Academy Elite enters the battlefield with X +1/+1 counters on it, where X is the number of instant and sorcery cards in all graveyards.<br>{2}{U}, Remove a +1/+1 counter from Academy Elite: Draw a card, then discard a card.|Commander 2016|Rare|Volkan Baga|81|Academy Elite enters the battlefield with X +1/+1 counters on it, where X is the number of instant and sorcery cards in all graveyards.<br>{2}{U}, Remove a +1/+1 counter from Academy Elite: Draw a card, then discard a card.|

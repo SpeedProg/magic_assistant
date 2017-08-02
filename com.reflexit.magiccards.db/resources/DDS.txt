@@ -1,7 +1,7 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-426635|Forest| |Basic Land - Forest| | |G|Duel Decks: Mind vs. Might|Land|John Avon|63|G|
-426600|Island| |Basic Land - Island| | |U|Duel Decks: Mind vs. Might|Land|Rob Alexander|28|U|
-426605|Mountain| |Basic Land - Mountain| | |R|Duel Decks: Mind vs. Might|Land|Craig Mullins|33|R|
+426635|Forest||Basic Land - Forest|||G|Duel Decks: Mind vs. Might|Land|John Avon|63|G|
+426600|Island||Basic Land - Island|||U|Duel Decks: Mind vs. Might|Land|Rob Alexander|28|U|
+426605|Mountain||Basic Land - Mountain|||R|Duel Decks: Mind vs. Might|Land|Craig Mullins|33|R|
 426614|Ambassador Oak|{3}{G}|Creature - Treefolk Warrior|3|3|When Ambassador Oak enters the battlefield, create a 1/1 green Elf Warrior creature token.|Duel Decks: Mind vs. Might|Common|Steve Prescott|42|When Ambassador Oak enters the battlefield, create a 1/1 green Elf Warrior creature token.|
 426607|Beacon of Destruction|{3}{R}{R}|Instant|||Beacon of Destruction deals 5 damage to target creature or player. Shuffle Beacon of Destruction into its owner's library.|Duel Decks: Mind vs. Might|Rare|Greg Hildebrandt|35|Beacon of Destruction deals 5 damage to target creature or player. Shuffle Beacon of Destruction into its owner's library.|
 426574|Beacon of Tomorrows|{6}{U}{U}|Sorcery|||Target player takes an extra turn after this one. Shuffle Beacon of Tomorrows into its owner's library.|Duel Decks: Mind vs. Might|Rare|Jeremy Jarvis|2|Target player takes an extra turn after this one. Shuffle Beacon of Tomorrows into its owner's library.|

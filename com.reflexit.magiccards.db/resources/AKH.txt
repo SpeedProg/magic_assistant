@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-426969|Forest| |Basic Land - Forest| | |G|Amonkhet|Land|Titus Lunter|267|G|
-426960|Island| |Basic Land - Island| | |U|Amonkhet|Land|Jonas De Ro|258|U|
-426966|Mountain| |Basic Land - Mountain| | |R|Amonkhet|Land|Jonas De Ro|264|R|
-426957|Plains| |Basic Land - Plains| | |W|Amonkhet|Land|Volkan Baga|255|W|
-426963|Swamp| |Basic Land - Swamp| | |B|Amonkhet|Land|Steven Belledin|261|B|
+426969|Forest||Basic Land - Forest|||G|Amonkhet|Land|Titus Lunter|267|G|
+426960|Island||Basic Land - Island|||U|Amonkhet|Land|Jonas De Ro|258|U|
+426966|Mountain||Basic Land - Mountain|||R|Amonkhet|Land|Jonas De Ro|264|R|
+426957|Plains||Basic Land - Plains|||W|Amonkhet|Land|Volkan Baga|255|W|
+426963|Swamp||Basic Land - Swamp|||B|Amonkhet|Land|Steven Belledin|261|B|
 426896|Ahn-Crop Champion|{2}{G}{W}|Creature - Human Warrior|4|4|You may exert Ahn-Crop Champion as it attacks. When you do, untap all other creatures you control. <i>(An exerted creature won't untap during your next untap step.)</i>|Amonkhet|Uncommon|Craig J Spearing|194|You may exert Ahn-Crop Champion as it attacks. When you do, untap all other creatures you control. <i>(An exerted creature won't untap during your next untap step.)</i>|
 426819|Ahn-Crop Crasher|{2}{R}|Creature - Minotaur Warrior|3|2|Haste<br>You may exert Ahn-Crop Crasher as it attacks. When you do, target creature can't block this turn. <i>(An exerted creature won't untap during your next untap step.)</i>|Amonkhet|Uncommon|Seb McKinnon|117|Haste<br>You may exert Ahn-Crop Crasher as it attacks. When you do, target creature can't block this turn. <i>(An exerted creature won't untap during your next untap step.)</i>|
 426742|Ancient Crab|{1}{U}{U}|Creature - Crab|1|5||Amonkhet|Common|James Paick|40||
@@ -271,18 +271,18 @@ ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTI
 426741|Winged Shepherd|{5}{W}|Creature - Angel|3|3|Flying, vigilance<br>Cycling {W} <i>({W}, Discard this card: Draw a card.)</i>|Amonkhet|Common|Chris Rahn|39|Flying, vigilance<br>Cycling {W} <i>({W}, Discard this card: Draw a card.)</i>|
 429679|Woodland Stream||Land|||Woodland Stream enters the battlefield tapped.<br>{T}: Add {G} or {U} to your mana pool.|Amonkhet|Common|Efflam Mercier|287|Woodland Stream enters the battlefield tapped.<br>{T}: Add {G} or {U} to your mana pool.|
 426779|Zenith Seeker|{3}{U}|Creature - Bird Wizard|2|2|Flying<br>Whenever you cycle or discard a card, target creature gains flying until end of turn.|Amonkhet|Uncommon|Jason Kang|77|Flying<br>Whenever you cycle or discard a card, target creature gains flying until end of turn.|
-426956|Forest| |Basic Land - Forest| | |G|Amonkhet|Land|Yeong-Hao Han|254|G|
-426970|Forest| |Basic Land - Forest| | |G|Amonkhet|Land|Titus Lunter|268|G|
-426971|Forest| |Basic Land - Forest| | |G|Amonkhet|Land|Matt Stewart|269|G|
-426953|Island| |Basic Land - Island| | |U|Amonkhet|Land|Richard Wright|251|U|
-426961|Island| |Basic Land - Island| | |U|Amonkhet|Land|Titus Lunter|259|U|
-426962|Island| |Basic Land - Island| | |U|Amonkhet|Land|Mark Poole|260|U|
-426955|Mountain| |Basic Land - Mountain| | |R|Amonkhet|Land|Florian de Gesincourt|253|R|
-426967|Mountain| |Basic Land - Mountain| | |R|Amonkhet|Land|Titus Lunter|265|R|
-426968|Mountain| |Basic Land - Mountain| | |R|Amonkhet|Land|Chris Rahn|266|R|
-426952|Plains| |Basic Land - Plains| | |W|Amonkhet|Land|Titus Lunter|250|W|
-426958|Plains| |Basic Land - Plains| | |W|Amonkhet|Land|Jonas De Ro|256|W|
-426959|Plains| |Basic Land - Plains| | |W|Amonkhet|Land|Titus Lunter|257|W|
-426954|Swamp| |Basic Land - Swamp| | |B|Amonkhet|Land|Clint Cearley|252|B|
-426964|Swamp| |Basic Land - Swamp| | |B|Amonkhet|Land|Jonas De Ro|262|B|
-426965|Swamp| |Basic Land - Swamp| | |B|Amonkhet|Land|Titus Lunter|263|B|
+426956|Forest||Basic Land - Forest|||G|Amonkhet|Land|Yeong-Hao Han|254|G|
+426970|Forest||Basic Land - Forest|||G|Amonkhet|Land|Titus Lunter|268|G|
+426971|Forest||Basic Land - Forest|||G|Amonkhet|Land|Matt Stewart|269|G|
+426953|Island||Basic Land - Island|||U|Amonkhet|Land|Richard Wright|251|U|
+426961|Island||Basic Land - Island|||U|Amonkhet|Land|Titus Lunter|259|U|
+426962|Island||Basic Land - Island|||U|Amonkhet|Land|Mark Poole|260|U|
+426955|Mountain||Basic Land - Mountain|||R|Amonkhet|Land|Florian de Gesincourt|253|R|
+426967|Mountain||Basic Land - Mountain|||R|Amonkhet|Land|Titus Lunter|265|R|
+426968|Mountain||Basic Land - Mountain|||R|Amonkhet|Land|Chris Rahn|266|R|
+426952|Plains||Basic Land - Plains|||W|Amonkhet|Land|Titus Lunter|250|W|
+426958|Plains||Basic Land - Plains|||W|Amonkhet|Land|Jonas De Ro|256|W|
+426959|Plains||Basic Land - Plains|||W|Amonkhet|Land|Titus Lunter|257|W|
+426954|Swamp||Basic Land - Swamp|||B|Amonkhet|Land|Clint Cearley|252|B|
+426964|Swamp||Basic Land - Swamp|||B|Amonkhet|Land|Jonas De Ro|262|B|
+426965|Swamp||Basic Land - Swamp|||B|Amonkhet|Land|Titus Lunter|263|B|

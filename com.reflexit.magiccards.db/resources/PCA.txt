@@ -1,9 +1,9 @@
 ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|ARTIST|COLLNUM|TEXT|PROPERTIES
-423580|Forest| |Basic Land - Forest| | |G|Planechase Anthology|Land|Vincent Proce|155|G|
-423565|Island| |Basic Land - Island| | |U|Planechase Anthology|Land|Martina Pilcerova|140|U|
-423574|Mountain| |Basic Land - Mountain| | |R|Planechase Anthology|Land|D. Alexander Gregory|149|R|
-423560|Plains| |Basic Land - Plains| | |W|Planechase Anthology|Land|Jung Park|135|W|
-423570|Swamp| |Basic Land - Swamp| | |B|Planechase Anthology|Land|Jim Nelson|145|B|
+423580|Forest||Basic Land - Forest|||G|Planechase Anthology|Land|Vincent Proce|155|G|
+423565|Island||Basic Land - Island|||U|Planechase Anthology|Land|Martina Pilcerova|140|U|
+423574|Mountain||Basic Land - Mountain|||R|Planechase Anthology|Land|D. Alexander Gregory|149|R|
+423560|Plains||Basic Land - Plains|||W|Planechase Anthology|Land|Jung Park|135|W|
+423570|Swamp||Basic Land - Swamp|||B|Planechase Anthology|Land|Jim Nelson|145|B|
 423590|Academy at Tolaria West||Plane - Dominaria|||At the beginning of your end step, if you have no cards in hand, draw seven cards.<br>Whenever you roll <img src='/Images/Symbols/chaos.png' alt='[chaos]' />, discard your hand.|Planechase Anthology|Common|James Paick|9|At the beginning of your end step, if you have no cards in hand, draw seven cards.<br>Whenever you roll <img src='/Images/Symbols/chaos.png' alt='[chaos]' />, discard your hand.|
 423592|Agyrem||Plane - Ravnica|||Whenever a white creature dies, return it to the battlefield under its owner's control at the beginning of the next end step.<br>Whenever a nonwhite creature dies, return it to its owner's hand at the beginning of the next end step.<br>Whenever you roll <img src='/Images/Symbols/chaos.png' alt='[chaos]' />, creatures can't attack you until a player planeswalks.|Planechase Anthology|Common|Todd Lockwood|11|Whenever a white creature dies, return it to the battlefield under its owner's control at the beginning of the next end step.<br>Whenever a nonwhite creature dies, return it to its owner's hand at the beginning of the next end step.<br>Whenever you roll <img src='/Images/Symbols/chaos.png' alt='[chaos]' />, creatures can't attack you until a player planeswalks.|
 423593|Akoum||Plane - Zendikar|||Players may cast enchantment spells as though they had flash.<br>Whenever you roll <img src='/Images/Symbols/chaos.png' alt='[chaos]' />, destroy target creature that isn't enchanted.|Planechase Anthology|Common|Rob Alexander|12|Players may cast enchantment spells as though they had flash.<br>Whenever you roll <img src='/Images/Symbols/chaos.png' alt='[chaos]' />, destroy target creature that isn't enchanted.|

@@ -109,14 +109,14 @@ Premium Deck Series: Graveborn|PD3||November 2011|Starter|Premium Deck Series||
 Avacyn Restored|AVR||May 2012|Expansion|Innistrad Block|Modern|
 Planechase 2012 Edition|PC2||June 2012|Expansion|Planechase||Planechase 2012
 Magic 2013|M13||July 2012|Core|Magic 2013|Modern|
-Commander's Arsenal|CMA|CM1|November 2012|Expansion|Commander||
+Commander's Arsenal|CM1||November 2012|Expansion|Commander||Commander Anthology
 Duel Decks: Izzet vs. Golgari|DDJ||September 2012|Starter|Duel Decks||
 From the Vault: Realms|V12||August 2012|Starter|From the Vault||
 Return to Ravnica|RTR||October 2012|Expansion|Return to Ravnica Block|Modern|
 Duel Decks: Sorin vs. Tibalt|DDK||March 2013|Starter|Duel Decks||
 Gatecrash|GTC||February 2013|Expansion|Return to Ravnica Block|Modern|
 Dragon's Maze|DGM||May 2013|Expansion|Return to Ravnica Block|Modern|
-Modern Masters|MMA||June 2013|Starter|Modern Masters||
+Modern Masters|MMA||June 2013|Starter|Masters Series||
 Magic 2014 Core Set|M14||July 2013|Core|Magic 2014 Core Set|Modern|Magic 2014
 Duel Decks: Heroes vs. Monsters|DDL||September 2013|Starter|Duel Decks||
 From the Vault: Twenty|V13||August 2013|Starter|From the Vault||
@@ -141,7 +141,7 @@ Duel Decks Anthology, Jace vs. Chandra|DD3_JVC||February 2015|Starter|Duel Decks
 Dragons of Tarkir|DTK||March 2015|Expansion|Khans of Tarkir Block|Modern|
 Duel Decks: Elspeth vs. Kiora|DDO||February 2015|Starter|Duel Decks||Duel Decks: Kiora vs. Elspeth
 Ugin's Fate promos|FRF_UGIN||March 2015|Starter|Ugin's Fate promos||
-Modern Masters 2015 Edition|MM2||May 2015|Starter|Modern Masters||Modern Masters 2015
+Modern Masters 2015 Edition|MM2||May 2015|Starter|Masters Series||Modern Masters 2015
 Tempest Remastered|TPR||May 2015|Online|Masters Editions||
 From the Vault: Angels|V15||August 2015|Starter|From the Vault||
 Magic Origins|ORI||July 2015|Core|Magic Origins|Modern|Magic Origins
@@ -155,7 +155,7 @@ Shadows over Innistrad|SOI||April 2016|Expansion|Shadows over Innistrad Block|St
 Welcome Deck 2016|W16||April 2016|Starter|Welcome Deck 2016||
 Conspiracy: Take the Crown|CN2||August 2016|Expansion|Conspiracy|Modern|
 Eldritch Moon|EMN||July 2016|Expansion|Shadows over Innistrad Block|Standard|
-Eternal Masters|EMA||June 2016|Starter|Eternal Masters||
+Eternal Masters|EMA||June 2016|Starter|Masters Series||
 Commander 2016|C16||November 2016|Expansion|Commander||
 Duel Decks: Nissa vs. Ob Nixilis|DDR||September 2016|Starter|Duel Decks||
 From the Vault: Lore|V16||August 2016|Starter|From the Vault||
@@ -163,8 +163,11 @@ Kaladesh|KLD||September 2016|Expansion|Kaladesh Block|Standard|
 Masterpiece Series: Kaladesh Inventions|MPS_KLD||January 2017|Reprint|Masterpiece Series: Kaladesh Inventions||
 Planechase Anthology|PCA||November 2016|Expansion|Planechase||
 Aether Revolt|AER||January 2017|Expansion|Kaladesh Block|Standard|
-Modern Masters 2017 Edition|MM3||March 2017|Starter|Modern Masters||
+Modern Masters 2017 Edition|MM3||March 2017|Starter|Masters Series||
 Amonkhet|AKH||April 2017|Expansion|Amonkhet Block|Standard|
 Duel Decks: Mind vs. Might|DDS||March 2017|Starter|Duel Decks||
 Masterpiece Series: Amonkhet Invocations|MPS_AKH||April 2017|Reprint|Masterpiece Series: Amonkhet Invocations||
 Welcome Deck 2017|W17||April 2017|Starter|Welcome Deck 2017||
+Archenemy: Nicol Bolas|E01||June 2017|Expansion|Archenemy||
+Commander Anthology|CMA||June 2017|Expansion|Commander||
+Hour of Devastation|HOU||July 2017|Expansion|Amonkhet Block|Standard|
