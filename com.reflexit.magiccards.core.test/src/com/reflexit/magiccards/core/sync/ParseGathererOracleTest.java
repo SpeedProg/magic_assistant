@@ -124,7 +124,13 @@ public class ParseGathererOracleTest extends TestCase {
 		assertTrue("Cannot update rating", rating.toString().length() > 0);
 		assertEquals(164, Integer.parseInt(card.getCollNumber()));
 	}
+	
+	public void testForest() throws IOException {
+		MagicCard card = load(430888);
 
+		assertEquals(199, Integer.parseInt(card.getCollNumber()));
+		assertTrue(card.isBasicLand());
+	}
 	public void testText() throws IOException {
 		MagicCard card = load(230074);
 		assertEquals("86", card.getCollNumber());
