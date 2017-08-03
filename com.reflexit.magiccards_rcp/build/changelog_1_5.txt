@@ -1,3 +1,9 @@
+== changes in 1.5.1.20170802==
+Bug 590 HOU Lands Violate Max Repeats
+Exception in UI when clicking on Own Count field
+Fixed Commander Anthology vs Command's Arcenal abbreviation confusion
+Update to latest set July 2017 up to HOU
+
 == changes in 1.5.1.20170622==
 Bug 587 Importing Decks / Collections with errors
 Bug 586 List in "Instances" window does not update when add card to collection
