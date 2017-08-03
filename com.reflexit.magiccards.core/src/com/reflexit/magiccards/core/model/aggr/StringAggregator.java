@@ -15,8 +15,7 @@ public class StringAggregator extends CollisionAggregator implements ICardVisito
 		if (res == null)
 			return value;
 		if (value == null) {
-			if (((String) res).isEmpty())
-				return res;
+			if (res instanceof String) return res;
 			return MULTI;
 		}
 		if (value.equals(res))
