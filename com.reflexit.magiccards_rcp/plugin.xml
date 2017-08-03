@@ -21,7 +21,7 @@
             name="Magic Assistant">
          <property
                name="windowImages"
-               value="icons/m16.gif,icons/m.gif,icons/m48.gif">
+               value="icons/m16.gif,icons/m.gif,icons/m48.gif,icons/m256.gif">
          </property>
          <property
                name="appName"
