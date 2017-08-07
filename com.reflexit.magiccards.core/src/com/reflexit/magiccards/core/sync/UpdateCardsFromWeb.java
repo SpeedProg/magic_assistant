@@ -51,8 +51,8 @@ public class UpdateCardsFromWeb {
 		IStorage storage = ((IStorageContainer) magicDb).getStorage();
 		ParseGathererOracle oracleParser = new ParseGathererOracle();
 		oracleParser.setMagicDb(magicDb);
-		ParseGathererPrinted linfoParser = new ParseGathererPrinted();
-		ParseGathererPrinted printedParser = new ParseGathererPrinted();
+	
+		
 		ParseGathererCardLanguages langParser = new ParseGathererCardLanguages();
 		ParseGathererLegality legParser = new ParseGathererLegality();
 		langParser.setLanguage(lang);
@@ -61,9 +61,8 @@ public class UpdateCardsFromWeb {
 		boolean loadLang = fieldMaps.contains(MagicCardField.LANG);
 		boolean loadImage = fieldMaps.contains(MagicCardField.ID);
 		boolean loadLegality = fieldMaps.contains(MagicCardField.LEGALITY);
-		if (loadText) {
-			printedParser.addFilter(MagicCardField.TEXT);
-		}
+		
+	
 		if (loadLang) {
 			if (lang == null || lang.isEmpty() || lang.equals("English"))
 				loadLang = false;
@@ -76,6 +75,10 @@ public class UpdateCardsFromWeb {
 			for (int i = 0; iter.hasNext(); i++) {
 				if (monitor.isCanceled())
 					return;
+				ParseGathererPrinted printedParser = new ParseGathererPrinted();
+				if (loadText) {
+					printedParser.addFilter(MagicCardField.TEXT);
+				}
 				IMagicCard card = iter.next();
 				IMagicCard magicCard = card.getBase();
 				if (magicCard == null) continue;
@@ -118,6 +121,7 @@ public class UpdateCardsFromWeb {
 									englishCardId = cardId;
 								newMagicCard.setEnglishCardId(englishCardId);
 								newMagicCard.setLanguage(lang);
+								ParseGathererPrinted linfoParser = new ParseGathererPrinted();
 								linfoParser.setCard(newMagicCard);
 								linfoParser.load(new SubCoreProgressMonitor(monitor, 40));
 								if (magicDb.getCard(newMagicCard.getCardId()) == null) {
