@@ -20,7 +20,7 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 	/*-
 	<td valign="top" width="25%">
 	    <span style="font-size: 1.2em;"><a href="/at/en/4.html">Volcanic Dragon</a></span>
-	    <p><img src="http://magiccards.info/images/en.gif" alt="English" class="flag2" height="11" width="16"> Anthologies, <i>Special</i></p>
+	    <p><img src="https://magiccards.info/images/en.gif" alt="English" class="flag2" height="11" width="16"> Anthologies, <i>Special</i></p>
 
 	      <p>Creature — Dragon 4/4,
 	        4RR (6)</p>
@@ -30,7 +30,7 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 	    <p>Illus. Janine Johnston</p>
 	</td>
 	 */
-	private static String baseSearch = "http://magiccards.info/query?q=";
+	private static String baseSearch = "https://magiccards.info/query?q=";
 	private static final Pattern cardItemPattern = Pattern.compile("<td valign");
 	private static final Pattern cardItemPatternEnd = Pattern.compile("</td>");
 	static final Pattern countPattern = Pattern.compile("(\\d+) cards\\s*");
@@ -104,7 +104,7 @@ public class ParseMagicCardsInfoSpoiler extends ParserHtmlHelper {
 		if (set != null && set.length() > 0) {
 			String abbr = Editions.getInstance().getAbbrByName(set).toLowerCase(Locale.ENGLISH);
 			card.setSet(set);
-			card.set(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/en/" + abbr + "/" + num
+			card.set(MagicCardField.IMAGE_URL, "https://magiccards.info/scans/en/" + abbr + "/" + num
 					+ ".jpg");
 		}
 		String rar = getMatch(setRarityPattern, rows[1], 2);

@@ -18,7 +18,7 @@ public class MagicCardsInfoImportDelegate extends AbstractImportDelegate {
 	@Override
 	public void setReportType(ReportType reportType) {
 		super.setReportType(reportType);
-		reportType.setProperty("url_regex", "http://magiccards.info.*");
+		reportType.setProperty("url_regex", "https://magiccards.info.*");
 	}
 
 	@Override

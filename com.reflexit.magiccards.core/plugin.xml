@@ -165,7 +165,7 @@
             extension="html"
             id="htmlMagicCardInfoList"
             importDelegate="com.reflexit.magiccards.core.exports.MagicCardsInfoImportDelegate"
-            label="http://magiccards.info"
+            label="https://magiccards.info"
             xmlFormat="true">
       </deckFormat>
       <deckFormat

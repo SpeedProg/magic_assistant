@@ -102,7 +102,7 @@ public class PrintProxyHtmlExportDelegate extends AbstractExportDelegate<IMagicC
 
 	protected String getCardImageUrl(IMagicCard card) {
 		/*-
-		<img src="http://magiccards.info/scans/en/m14/102.jpg" alt="Name" />		
+		<img src="https://magiccards.info/scans/en/m14/102.jpg" alt="Name" />		
 		 */
 		String url = "";
 		try {

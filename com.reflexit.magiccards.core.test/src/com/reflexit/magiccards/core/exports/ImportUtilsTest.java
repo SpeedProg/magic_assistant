@@ -168,7 +168,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	@Test
 	public void testPerformPreImportWithDbOverride() {
 		addLine("NAME|SET|ARTIST|COLLNUM|IMAGE_URL");
-		addLine("Nighthowler|Magic Game Day Cards|Seb McKinnon|31|http://magiccards.info/scans/en/mgdc/31.jpg");
+		addLine("Nighthowler|Magic Game Day Cards|Seb McKinnon|31|https://magiccards.info/scans/en/mgdc/31.jpg");
 		resolve = false;
 		preimport();
 		ArrayList<IMagicCard> mdb = new ArrayList<IMagicCard>();
@@ -181,7 +181,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("Seb McKinnon", card.getArtist());
 		assertEquals("Magic Game Day Cards", card.getSet());
 		assertEquals(31, card.getCollectorNumberId());
-		assertEquals("http://magiccards.info/scans/en/mgdc/31.jpg", card.getBase().getImageUrl());
+		assertEquals("https://magiccards.info/scans/en/mgdc/31.jpg", card.getBase().getImageUrl());
 	}
 
 	@Test

@@ -10,7 +10,7 @@ public class PrintProxyHtmlExporMobileDelegate extends PrintProxyHtmlExportDeleg
 	@Override
 	protected String getCardImageUrl(IMagicCard card) {
 		/*-
-		<img src="http://magiccards.info/scans/en/m14/102.jpg" alt="Proxy" />		
+		<img src="https://magiccards.info/scans/en/m14/102.jpg" alt="Proxy" />		
 		 */
 		try {
 			URL url = CardCache.createRemoteImageURL(card);

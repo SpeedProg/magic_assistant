@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.exports;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +23,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.model.Edition;
 import com.reflexit.magiccards.core.model.Editions;
 import com.reflexit.magiccards.core.model.IMagicCard;
@@ -31,6 +35,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardField;
 import com.reflexit.magiccards.core.model.MagicCardList;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.model.Languages.Language;
 import com.reflexit.magiccards.core.model.abs.ICard;
 import com.reflexit.magiccards.core.model.abs.ICardField;
 import com.reflexit.magiccards.core.model.nav.CardCollection;
@@ -39,19 +44,17 @@ import com.reflexit.magiccards.core.model.nav.CollectionsContainer;
 import com.reflexit.magiccards.core.model.nav.LocationPath;
 import com.reflexit.magiccards.core.model.nav.ModelRoot;
 import com.reflexit.magiccards.core.model.storage.ICardStore;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.TextPrinter;
+import com.reflexit.magiccards.core.sync.UpdateCardsFromWeb;
 
 /**
  * Utils to perform import
  */
 public class ImportUtils {
-	public static ImportData performPreImport(
-			IImportDelegate worker,
-			ImportData result,
-			ICoreProgressMonitor monitor)
-			throws InvocationTargetException,
-			InterruptedException {
+	public static ImportData performPreImport(IImportDelegate worker, ImportData result, ICoreProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
 		worker.init(result);
 		worker.run(monitor);
 		return result;
@@ -99,7 +102,7 @@ public class ImportUtils {
 	}
 
 	private static Collection<Location> getLocations(Collection importedCards) {
-		return new MagicCardList(importedCards).<Location> getUnique(MagicCardField.LOCATION);
+		return new MagicCardList(importedCards).<Location>getUnique(MagicCardField.LOCATION);
 	}
 
 	public static String getFixedSet(MagicCard card) {
@@ -159,7 +162,8 @@ public class ImportUtils {
 		cards: for (Iterator iterator = cards.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			String set = card.getSet();
-			if (set == null) continue;
+			if (set == null)
+				continue;
 			Edition eset = resolveSet(set);
 			if (eset == null) {
 				badSets.put(set, null);
@@ -228,7 +232,7 @@ public class ImportUtils {
 	}
 
 	public static MagicCard findRef(MagicCard base, ICardStore lookupStore) {
-		// System.err.println("*** LOOKING FOR  " + base);
+		// System.err.println("*** LOOKING FOR " + base);
 		MagicCard ref = null;
 		// by id
 		if (base.getCardId() != 0) {
@@ -237,25 +241,84 @@ public class ImportUtils {
 		// by name
 		if (ref == null) {
 			String name = base.getName();
-			String set = base.getSet();
-			for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
-				MagicCard a = (MagicCard) iterator.next();
-				String lname = a.getName();
-				if (name != null && name.equalsIgnoreCase(lname)) {
-					// System.err.println("*** name candidate " + a);
-					if (set != null && set.equals(a.getSet())) {
-						ref = a;
-						// System.err.println("*** set match " + a);
-						break;
-					}
-					if (ref == null || ref.getCardId() <= a.getCardId()) {
-						ref = a;
-						// System.err.println("*** set candidate " + a);
+			if (name != null) {
+				String set = base.getSet();
+				for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
+					MagicCard a = (MagicCard) iterator.next();
+					String lname = a.getName();
+					if (name.equalsIgnoreCase(lname)) {
+						// System.err.println("*** name candidate " + a);
+						if (set != null && set.equals(a.getSet())) {
+							ref = a;
+							// System.err.println("*** set match " + a);
+							break;
+						}
+						if (ref == null || ref.getCardId() <= a.getCardId()) {
+							ref = a;
+							// System.err.println("*** set candidate " + a);
+						}
+					} else if (ref == null && lname != null && lname.startsWith(name)) {
+						if (set != null && set.equals(a.getSet())) {
+							ref = a;
+						}
 					}
 				}
 			}
 		}
+
+		if (ref != null) {
+			try {
+				int englishCardId = ref.getEnglishCardId();
+				if (englishCardId == 0) {
+					englishCardId = ref.getCardId();
+					String lang = base.getLanguage();
+
+					if (lang != null && !lang.equals(Language.ENGLISH.getLang())) {
+						// try to pool matching lang
+						MagicCard refLang = findMatchingLunguage(englishCardId, lookupStore, lang);
+
+						if (refLang == null) {
+							// load extra from db?
+
+							// IDbCardStore<IMagicCard> db = DataManager.getInstance().getMagicDBStore();
+							UpdateCardsFromWeb parser = new UpdateCardsFromWeb();
+							// parser.set
+
+							parser.updateStore(Collections.singletonList((IMagicCard) ref).iterator(), 1,
+									Collections.singleton((ICardField) MagicCardField.LANG), lang, lookupStore,
+									ICoreProgressMonitor.NONE);
+							refLang = findMatchingLunguage(englishCardId, lookupStore, lang);
+							System.err.println("Loaded "+refLang);
+
+						}
+						ref = refLang;
+					}
+				}
+			} catch (IOException e) {
+				MagicLogger.log(e);
+			}
+		}
 		return ref;
+	}
+
+	private static MagicCard findMatchingLunguage(int englishCardId, ICardStore lookupStore, String lang) {
+		MagicCard refLang = null;
+		for (Iterator<IMagicCard> iterator = lookupStore.iterator(); iterator.hasNext();) {
+			IMagicCard next = iterator.next();
+			try {
+				int parentId = next.getEnglishCardId();
+				if (parentId == englishCardId && lang.equals(next.getLanguage())) {
+					// found
+					refLang = (MagicCard) next;
+
+					break;
+				}
+			} catch (Exception e) {
+
+				MagicLogger.log(e);
+			}
+		}
+		return refLang;
 	}
 
 	public static class LookupHash {
@@ -282,9 +345,9 @@ public class ImportUtils {
 						String x = decompose(lname);
 						x = x.replaceAll("æ", "ae");
 						// System.err.println(lname + "->" + x);
-				addToLookup(a, x);
-			}
-		}
+						addToLookup(a, x);
+					}
+				}
 		}
 
 		public void addToLookup(MagicCard a, String lname) {
@@ -311,8 +374,8 @@ public class ImportUtils {
 		}
 
 		public static String decompose(String s) {
-			return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replaceAll(
-					"\\p{InCombiningDiacriticalMarks}+", "");
+			return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD)
+					.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 		}
 
 		public List<IMagicCard> getCandidates(String name) {
@@ -331,11 +394,11 @@ public class ImportUtils {
 	}
 
 	/**
-	 * Finds and associates imported cards with magic db cards. If card not found in db creates new db cards
-	 * and adds to newdbrecords
+	 * Finds and associates imported cards with magic db cards. If card not found in
+	 * db creates new db cards and adds to newdbrecords
 	 */
-	public static void performPreImportWithDb(Collection<IMagicCard> result,
-			Collection<IMagicCard> newdbrecords, ICardField[] columns) {
+	public static void performPreImportWithDb(Collection<IMagicCard> result, Collection<IMagicCard> newdbrecords,
+			ICardField[] columns) {
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 			IMagicCard card = (IMagicCard) iterator.next();
 			if (card instanceof MagicCardPhysical) {

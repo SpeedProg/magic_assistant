@@ -37,7 +37,7 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	<td>4</td>
 	<td>Special</td>
 	<td>Mark Tedin</td>
-	<td><img src="http://magiccards.info/images/en.gif" alt="English" class="flag2" height="11" width="16"> Anthologies</td>
+	<td><img src="https://magiccards.info/images/en.gif" alt="English" class="flag2" height="11" width="16"> Anthologies</td>
 	</tr>
 	
 	
@@ -48,10 +48,10 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 	<td>1RR</td>
 	<td>Special</td>
 	<td>Jesper Myrfors</td>
-	<td><img src="http://magiccards.info/images/en.gif" alt="English" class="flag2" height="11" width="16"> Anthologies</td>
+	<td><img src="https://magiccards.info/images/en.gif" alt="English" class="flag2" height="11" width="16"> Anthologies</td>
 	</tr>
 	 */
-	private static String baseSearch = "http://magiccards.info/query?q=";
+	private static String baseSearch = "https://magiccards.info/query?q=";
 	private static final Pattern cardItemPattern = Pattern.compile("<tr class=");
 	private static final Pattern cardItemPatternEnd = Pattern.compile("</tr>");
 	static final Pattern countPattern = Pattern.compile("(\\d+) cards\\s*");
@@ -129,7 +129,7 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		if (regset != null) {
 			card.setSet(regset);
 		}
-		card.set(MagicCardField.IMAGE_URL, "http://magiccards.info/scans/" + lang + "/" + abbr + "/" + num + ".jpg");
+		card.set(MagicCardField.IMAGE_URL, "https://magiccards.info/scans/" + lang + "/" + abbr + "/" + num + ".jpg");
 		card.setCardId(card.syntesizeId());
 		card.setLanguage(lang);
 		// print
@@ -208,13 +208,13 @@ public class ParseMagicCardsInfoChecklist extends ParserHtmlHelper {
 		OutputHandler handler = new OutputHandler(System.out, true, true);
 		// Editions.getInstance().addEdition("Duels of the Planeswalkers",
 		// "dpa");
-		// http://magiccards.info/query?q=Spite&v=list&s=cname
+		// https://magiccards.info/query?q=Spite&v=list&s=cname
 		// URL searchQuery = getSearchQuery("dpa");
 		// new ParseMagicCardsInfoChecklist().loadSingleUrl(searchQuery,
 		// handler);
-		String german = "http://magiccards.info/query?q=e%3Adtk%2Fde&v=list&s=cname";
-		String doubles = "http://magiccards.info/query?q=Spite&v=list&s=cname";
-		String wc = "http://magiccards.info/query?q=e%3Awmcq%2Fen&v=list&s=cname";
+		String german = "https://magiccards.info/query?q=e%3Adtk%2Fde&v=list&s=cname";
+		String doubles = "https://magiccards.info/query?q=Spite&v=list&s=cname";
+		String wc = "https://magiccards.info/query?q=e%3Awmcq%2Fen&v=list&s=cname";
 		String surl = german;
 		new ParseMagicCardsInfoChecklist().loadSingleUrl(new URL(surl),
 				handler);

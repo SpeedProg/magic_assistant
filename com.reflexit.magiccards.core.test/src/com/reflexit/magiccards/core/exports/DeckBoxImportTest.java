@@ -134,4 +134,16 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 			assertEquals(0, ((MagicCardPhysical) card2).getForTrade());
 		}
 	}
+	
+//Count,Tradelist Count,Name,Edition,Card Number,Condition,Language,Foil,Signed,Artist Proof,Altered Art,Misprint,Promo,Textless,My Price,Type,Cost,Rarity
+//1,0,Ashes of the Abhorrent,Ixalan,2,Near Mint,Russian,,,,,,,,0,Enchantment,{1}{W},Rare
+//1,0,Bellowing Aegisaur,Ixalan,4,Near Mint,Russian,,,,,,,,0,Creature  - Dinosaur,{5}{W},Uncommon
+//2,0,Bishop's Soldier,Ixalan,6,Near Mint,Russian,,,,,,,,0,Creature  - Vampire Soldier,{1}{W},Common
+	@Test
+	public void testMoreStuff() {
+		parseCommentAbove();
+		assertEquals(3, resSize);
+		assertEquals("Гнусные Останки", card1.getName());
+		assertEquals("Russian", card1.getLanguage());
+	}
 }
