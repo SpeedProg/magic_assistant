@@ -171,3 +171,5 @@ Welcome Deck 2017|W17||April 2017|Starter|Welcome Deck 2017||
 Archenemy: Nicol Bolas|E01||June 2017|Expansion|Archenemy||
 Commander Anthology|CMA||June 2017|Expansion|Commander||
 Hour of Devastation|HOU||July 2017|Expansion|Amonkhet Block|Standard|
+Commander 2017|C17||August 2017|Expansion|Commander||
+Ixalan|XLN||September 2017|Expansion|Ixalan Block||
