@@ -1,3 +1,9 @@
+== changes in 1.5.1.20171011==
+* DeckBox import
+* Import of non-english cards
+* Db updates: Ixalan, Commander 2017
+* Magiccards.info fixes (change url to https)
+
 == changes in 1.5.1.20170807==
 Bug 584 German Amonkhet card names are English
 
