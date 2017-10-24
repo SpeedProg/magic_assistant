@@ -1,3 +1,6 @@
+== changes in 1.5.1.20171023==
+* Fixed cardmarket url
+* Added redirect support for other urls
 == changes in 1.5.1.20171011==
 * DeckBox import
 * Import of non-english cards
