@@ -25,9 +25,9 @@ import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.sync.WebUtils;
 
 public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
-	private final String setURL = "https://www.magiccardmarket.eu/?mainPage=advancedSearch";
-	private final String baseURL = "https://www.magiccardmarket.eu/?mainPage=advancedSearch&idExpansion=SET&resultsPage=PAGE";
-	private final String singleCardURL = "https://www.magiccardmarket.eu/?mainPage=advancedSearch&idExpansion=SET&cardName=NAME";
+	private final String setURL = "https://www.cardmarket.com/en/Magic/MainPage/advancedSearch";
+	private final String baseURL = "https://www.cardmarket.com/en/Magic/MainPage/advancedSearch?search=1&idExpansion=SET&resultsPage=PAGE";
+	private final String singleCardURL = "https://www.cardmarket.com/en/Magic/MainPage/advancedSearch?search=1&idExpansion=SET&cardName=NAME";
 	private static final Pattern setsPattern = Pattern
 			.compile("<select name=\\\"idExpansion\\\"[^>]*>(.*?)</select>");
 	private static final Pattern setItemPattern = Pattern
@@ -237,7 +237,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	@Override
 	public URL getURL() {
 		try {
-			return new URL("https://www.magiccardmarket.eu");
+			return new URL("https://www.cardmarket.com");
 		} catch (MalformedURLException e) {
 			return null;
 		}

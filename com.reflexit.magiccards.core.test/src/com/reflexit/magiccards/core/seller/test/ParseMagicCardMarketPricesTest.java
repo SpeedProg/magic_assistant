@@ -19,8 +19,5 @@ public class ParseMagicCardMarketPricesTest extends AbstractPriceProviderTest {
 		assertNotEquals(0, centPrice(card));
 	}
 	
-	@Ignore
-	public void testAether() {
-		// not working
-	}
+
 }

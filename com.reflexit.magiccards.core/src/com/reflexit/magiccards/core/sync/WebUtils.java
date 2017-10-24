@@ -90,9 +90,11 @@ public class WebUtils {
 						// Context stuff
 						SSLContext ctx = SSLContext.getInstance("TLS");
 						ctx.init(null, trustedCerts, null);
+						
 						HttpsURLConnection con = (HttpsURLConnection) openConnection;
 						// Additional HTTPS connection configuration
 						con.setSSLSocketFactory(ctx.getSocketFactory());
+						con.setInstanceFollowRedirects(true);
 						con.setRequestMethod("GET");
 						con.connect();						// MAYBE: HTTPS response code handling
 						// System.err.println(con.getResponseCode()+": "+url.toExternalForm());
@@ -106,6 +108,7 @@ public class WebUtils {
 					configureConnectionDefaults(openConnection);
 					// HTTP
 					HttpURLConnection con = (HttpURLConnection) openConnection;
+					con.setInstanceFollowRedirects(true);
 					con.connect();					// MAYBE: HTTP response code handling
 					// System.err.println(con.getResponseCode()+": "+url.toExternalForm());
 				} else {
