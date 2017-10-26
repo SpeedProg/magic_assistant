@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -206,6 +207,37 @@ public class ImportUtils {
 		MagicCard ref = findRef(base, lookupStore);
 		if (ref != null) {
 			if (originalSet == null || ref.getSet().equals(originalSet)) {
+
+				if (base.getCollectorNumberId() != 0 && ref.getCollectorNumberId()!=0) {
+					if (ref.getCollectorNumberId() != base.getCollectorNumberId()) {
+						base.setEmptyFromCard(ref);
+
+						card.setError(ImportError.NO_VARIANT);
+						// if (!hadId) base.setCardId(0);// cannot use same id we should attempt to
+						// resolve it
+						return card.getBase();
+					}
+				}
+				
+				boolean langMatches = false;
+				String lang = base.getLanguage();
+
+				if (lang != null) {
+					if (lang.equals(ref.getLanguage())) {
+						langMatches = true;
+					}
+				} else if (ref.getLanguage() == null) {
+					langMatches = true;
+				}
+
+				if (!langMatches) {
+					base.setEmptyFromCard(ref);
+					card.setError(ImportError.NO_LANG);
+					// if (!hadId) base.setCardId(0);// cannot use same id we should attempt to
+					// resolve it
+					return card.getBase();
+				}
+
 				card.setMagicCard(ref);
 				return null;
 			} else {
@@ -230,6 +262,71 @@ public class ImportUtils {
 		}
 		return card.getBase();
 	}
+	
+	public static void loadLanguageForCard(String lang, List list, ICardStore magicDb, ICoreProgressMonitor monitor) {
+		try {
+			UpdateCardsFromWeb parser = new UpdateCardsFromWeb();
+			// parser.set
+			Set<ICardField> fieldMap = Collections.singleton((ICardField) MagicCardField.LANG);
+			parser.updateStore(list.iterator(), list.size(), fieldMap, lang, magicDb, monitor);
+		} catch (IOException e) {
+			MagicLogger.log(e);
+		}
+	}
+
+	public static long matchRating(IMagicCard base, IMagicCard candidate) {
+		long result = 0;
+		long m = 1000*1000;
+		int gathererId = base.getGathererId();
+		if (gathererId > 0) {
+			if (gathererId == candidate.getGathererId()) {
+				result = 1*100*1000*1000;
+				return result;
+			}
+
+		}
+		result += candidate.getGathererId();
+		int collectorNumberId = base.getCollectorNumberId();
+		String candName = candidate.getName();
+		String name = base.getName();
+		String set = base.getSet();
+
+		int essential = 0;
+		boolean namematched = false;
+		if (name != null) {
+			if (name.equalsIgnoreCase(candName)) {
+				result += 24*m;
+				essential++;
+				namematched = true;
+			} else if (candName != null && candName.startsWith(name)) {
+				result += 20*m;
+				essential++;
+			}
+		}
+		if (set != null && set.equals(candidate.getSet())) {
+			result += 25*m;
+			essential++;
+		}
+		if (collectorNumberId != 0 &&  candidate.getCollectorNumberId() == collectorNumberId) {
+			result += 30*m;
+			essential++;
+		}
+
+		if (essential<2 && !namematched) return 0;
+	
+		String lang = base.getLanguage();
+
+		if (lang != null) {
+			if (lang.equals(candidate.getLanguage())) {
+				result += 25*m;
+			}
+		} else if (candidate.getLanguage()==null) {
+			result += 25*m;
+		}
+
+		if (result>100*m) result=100*m;
+		return result;
+	}
 
 	public static MagicCard findRef(MagicCard base, ICardStore lookupStore) {
 		// System.err.println("*** LOOKING FOR " + base);
@@ -238,88 +335,30 @@ public class ImportUtils {
 		if (base.getCardId() != 0) {
 			ref = (MagicCard) lookupStore.getCard(base.getCardId());
 		}
-		// by name
+		if (ref!=null) return ref;
+		
+		// by rank
 		if (ref == null) {
-			String name = base.getName();
-			if (name != null) {
-				String set = base.getSet();
-				for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
-					MagicCard a = (MagicCard) iterator.next();
-					String lname = a.getName();
-					if (name.equalsIgnoreCase(lname)) {
-						// System.err.println("*** name candidate " + a);
-						if (set != null && set.equals(a.getSet())) {
-							ref = a;
-							// System.err.println("*** set match " + a);
-							break;
-						}
-						if (ref == null || ref.getCardId() <= a.getCardId()) {
-							ref = a;
-							// System.err.println("*** set candidate " + a);
-						}
-					} else if (ref == null && lname != null && lname.startsWith(name)) {
-						if (set != null && set.equals(a.getSet())) {
-							ref = a;
-						}
-					}
+			long maxRank = 0;
+			long threashold = 80*1000*1000;
+			for (Iterator iterator = lookupStore.iterator(); iterator.hasNext();) {
+				MagicCard a = (MagicCard) iterator.next();
+				long rank = matchRating(base, a);
+				if (rank > maxRank && rank != 0) {
+					ref = a;
+					maxRank = rank;
+				
+					if (rank>threashold)
+						break;
 				}
 			}
+			//System.err.println(base+"  ----> "+ref+"  ---> "+maxRank);
+
 		}
 
-		if (ref != null) {
-			try {
-				int englishCardId = ref.getEnglishCardId();
-				if (englishCardId == 0) {
-					englishCardId = ref.getCardId();
-					String lang = base.getLanguage();
-
-					if (lang != null && !lang.equals(Language.ENGLISH.getLang())) {
-						// try to pool matching lang
-						MagicCard refLang = findMatchingLunguage(englishCardId, lookupStore, lang);
-
-						if (refLang == null) {
-							// load extra from db?
-
-							// IDbCardStore<IMagicCard> db = DataManager.getInstance().getMagicDBStore();
-							UpdateCardsFromWeb parser = new UpdateCardsFromWeb();
-							// parser.set
-
-							parser.updateStore(Collections.singletonList((IMagicCard) ref).iterator(), 1,
-									Collections.singleton((ICardField) MagicCardField.LANG), lang, lookupStore,
-									ICoreProgressMonitor.NONE);
-							refLang = findMatchingLunguage(englishCardId, lookupStore, lang);
-							System.err.println("Loaded "+refLang);
-
-						}
-						ref = refLang;
-					}
-				}
-			} catch (IOException e) {
-				MagicLogger.log(e);
-			}
-		}
 		return ref;
 	}
 
-	private static MagicCard findMatchingLunguage(int englishCardId, ICardStore lookupStore, String lang) {
-		MagicCard refLang = null;
-		for (Iterator<IMagicCard> iterator = lookupStore.iterator(); iterator.hasNext();) {
-			IMagicCard next = iterator.next();
-			try {
-				int parentId = next.getEnglishCardId();
-				if (parentId == englishCardId && lang.equals(next.getLanguage())) {
-					// found
-					refLang = (MagicCard) next;
-
-					break;
-				}
-			} catch (Exception e) {
-
-				MagicLogger.log(e);
-			}
-		}
-		return refLang;
-	}
 
 	public static class LookupHash {
 		private static String ALL = "All";
@@ -420,6 +459,7 @@ public class ImportUtils {
 				newdbrecords.add(card);
 			}
 		}
+		return;
 	}
 
 	public static void validateDbRecords(ArrayList<IMagicCard> newdbrecords, ArrayList<String> lerrors) {

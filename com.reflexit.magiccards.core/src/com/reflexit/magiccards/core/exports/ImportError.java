@@ -11,6 +11,8 @@ public class ImportError {
 		NAME_NOT_FOUND_IN_DB("Name not found in db"),
 		NO_DB("No DB"),
 		CANNOT_SET_FIELD("Cannot set field {0} to value {1}"),
+		NO_LANG("Language is not loaded in DB"),
+		NO_VARIANT("Card variant is not loaded in DB"),
 		// end
 		;
 		String msg;
@@ -24,6 +26,8 @@ public class ImportError {
 	public static final ImportError NAME_NOT_FOUND_IN_SET_ERROR = new ImportError(Type.NAME_NOT_FOUND_IN_SET);
 	public static final ImportError NAME_NOT_FOUND_IN_DB_ERROR = new ImportError(Type.NAME_NOT_FOUND_IN_DB);
 	public static final ImportError NO_DB_ERROR = new ImportError(Type.NO_DB);
+	public static final ImportError NO_LANG = new ImportError(Type.NO_LANG);
+	public static final ImportError NO_VARIANT = new ImportError(Type.NO_VARIANT);
 	private String[] arg;
 	private ImportError.Type type;
 

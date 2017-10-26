@@ -14,6 +14,7 @@ import org.junit.runners.MethodSorters;
 import com.reflexit.magiccards.core.DataManager;
 import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.model.IMagicCard;
+import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 import com.reflexit.magiccards.core.test.assist.AbstractMagicTest;
 import com.reflexit.magiccards.core.test.assist.MemCardHandler;
@@ -131,4 +132,9 @@ public class AbstarctImportTest extends AbstractMagicTest {
 			return null;
 		}
 	}
+	
+	public IDbCardStore<IMagicCard> getDB() {
+		return DataManager.getInstance().getMagicDBStore();
+	}
+
 }

@@ -2,11 +2,14 @@ package com.reflexit.magiccards.core.exports;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.reflexit.magiccards.core.model.IMagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
+import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
 
 import static org.junit.Assert.assertNull;
 
@@ -141,6 +144,10 @@ public class DeckBoxImportTest extends AbstarctImportTest {
 //2,0,Bishop's Soldier,Ixalan,6,Near Mint,Russian,,,,,,,,0,Creature  - Vampire Soldier,{1}{W},Common
 	@Test
 	public void testMoreStuff() {
+		IMagicCard candidate = getDB().getCard(435153);// 
+		// Гнусные Останки
+		ImportUtils.loadLanguageForCard("Russian", Collections.singletonList(candidate), getDB(), ICoreProgressMonitor.NONE);
+		
 		parseCommentAbove();
 		assertEquals(3, resSize);
 		assertEquals("Гнусные Останки", card1.getName());

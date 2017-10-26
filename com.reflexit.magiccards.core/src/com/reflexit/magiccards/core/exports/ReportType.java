@@ -214,6 +214,12 @@ public class ReportType {
 		if (file.exists()) {
 			try {
 				String contents = FileUtils.readFileAsString(file);
+				String[] split = contents.split("\n");
+				if (split.length>20) {
+					String[] ar = new String[20];
+					System.arraycopy(split, 0, ar, 0, 20);
+					contents = String.join("\n", ar);
+				}
 				return autoDetectType(contents, candidates);
 			} catch (IOException e) {
 				// fall through

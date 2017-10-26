@@ -5,13 +5,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.window.Window;
@@ -20,14 +24,18 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicException;
 import com.reflexit.magiccards.core.exports.ImportData;
 import com.reflexit.magiccards.core.exports.ImportError;
 import com.reflexit.magiccards.core.exports.ImportSource;
@@ -52,7 +60,7 @@ import com.reflexit.magiccards.ui.views.columns.SetColumn;
 public class DeckImportPreviewPage extends WizardPage {
 	private IMagicColumnViewer viewer;
 	private Text text;
-	protected ImportData previewResult;
+	protected ImportData importData;
 	private Job thread = new Job("Modify") {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
@@ -68,7 +76,7 @@ public class DeckImportPreviewPage extends WizardPage {
 			DeckImportPage startingPage = getMainPage();
 			startingPage.setInputChoice(ImportSource.TEXT);
 			CopySupport.runCopy(text.getText());
-			previewResult.setText(text.getText());
+			importData.setText(text.getText());
 			thread.cancel();
 			thread.schedule(500);
 		}
@@ -91,11 +99,11 @@ public class DeckImportPreviewPage extends WizardPage {
 		setTitle("Importing format " + startingPage.getReportType().getLabel());
 		setErrorMessage(null);
 		setDescription(getFirstDescription());
-		previewResult = startingPage.getImportData();
+		importData = startingPage.getImportData();
 		startingPage.performImport(true);
-		safeSetText(previewResult.getText());
-		updateColumns(previewResult.getFields());
-		viewer.setInput(previewResult.getList());
+		safeSetText(importData.getText());
+		updateColumns(importData.getFields());
+		viewer.setInput(importData.getList());
 		validate();
 	}
 
@@ -108,12 +116,12 @@ public class DeckImportPreviewPage extends WizardPage {
 
 	public void validate() {
 		setErrorMessage(null);
-		int errorCount = previewResult.getErrorCount();
-		Throwable e = previewResult.getError();
+		int errorCount = importData.getErrorCount();
+		Throwable e = importData.getError();
 		if (e != null) {
 			MagicUIActivator.log(e);
 			setErrorMessage("Cannot parse data file: " + e.getMessage());
-		} else if (!previewResult.isOk())
+		} else if (!importData.isOk())
 			setErrorMessage("Cannot parse data file: unknown reason");
 		else if (errorCount == 0) {
 			setDescription(getFirstDescription());
@@ -200,10 +208,53 @@ public class DeckImportPreviewPage extends WizardPage {
 		GridData tld = new GridData(GridData.FILL_BOTH);
 		tld.widthHint = 100 * 5;
 		viewer.getControl().setLayoutData(tld);
+
+		Button button = new Button(comp, SWT.PUSH);
+		button.setText("Attempt to Auto Fix Errors");
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				Collection<IMagicCard> result = (Collection<IMagicCard>) importData.getList();
+				DeckImportPage mainPage = getMainPage();
+				int choice = mainPage.getIntoChoice();
+				final boolean dbImport = choice == 3;
+
+				try {
+					IRunnableWithProgress work = new IRunnableWithProgress() {
+						@Override
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
+
+							mainPage.fixErrors(result, dbImport, monitor);
+						}
+					};
+					getRunnableContext().run(true, true, work);
+				} catch (InvocationTargetException ite) {
+					Throwable e = ite.getCause();
+					if (e instanceof OperationCanceledException) {
+						reload();
+						return;
+					}
+					importData.setError(e);
+
+					if (e instanceof RuntimeException && !(e instanceof MagicException))
+						MagicUIActivator.log(e);
+				} catch (InterruptedException e) {
+					importData.setError(e);
+					reload();
+				}
+
+			}
+		});
+
+	}
+
+	protected IRunnableContext getRunnableContext() {
+		return getContainer();
 	}
 
 	public ImportData getPreviewResult() {
-		return previewResult;
+		return importData;
 	}
 
 	private MagicColumnCollection columns = new MagicColumnCollection(null) {
@@ -213,7 +264,7 @@ public class DeckImportPreviewPage extends WizardPage {
 				@Override
 				public Color getForeground(Object element) {
 					IMagicCard card = (IMagicCard) element;
-					if (card.getCardId() == 0) {
+					if (card != null && card.getCardId() == 0) {
 						if (!card.getEdition().isUnknown())
 							return Display.getDefault().getSystemColor(SWT.COLOR_RED);
 					}

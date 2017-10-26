@@ -3,6 +3,7 @@ package com.reflexit.magiccards.core.exports;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -138,8 +139,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 	public void testPerformPreview() throws InvocationTargetException, InterruptedException {
 		addLine("NAME|SET|COUNT");
 		addLine("Counterspell|Bla|2");
-		ImportData improtData = new ImportData(virtual,
-				Location.createLocation("test"), line);
+		ImportData improtData = new ImportData(virtual, Location.createLocation("test"), line);
 		ImportData performPreview = ImportUtils.performPreImport(tableImport, improtData, monitor);
 		List values = performPreview.getList();
 		if (resolve) {
@@ -201,8 +201,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("Magic Game Day Cards", card.getSet());
 		assertEquals("My Text", card.getText());
 		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=405319&type=card",
-				card
-				.getBase().getImageUrl());
+				card.getBase().getImageUrl());
 	}
 
 	@Test
@@ -260,5 +259,43 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals(2, resSize);
 		assertEquals(false, ((MagicCardPhysical) card1).isOwn());
 		assertEquals(true, ((MagicCardPhysical) card2).isOwn());
+	}
+
+	@Test
+	public void testRank() {
+		IMagicCard candidate = getDB().getCard(205227);// Magic 2011
+		// Удар Молнии
+		ImportUtils.loadLanguageForCard("Russian", Collections.singletonList(candidate), getDB(), monitor);
+		IMagicCard candidate2 = getDB().getCard(225403);
+		// coll num 149
+
+		MagicCard card = new MagicCard();
+		card.setName("Lightning Bolt");
+		card.setSet("Magic 2010");
+
+		long rating1 = ImportUtils.matchRating(card, candidate);
+		System.err.println(rating1);
+		card.setSet("Magic 2011");
+		long rating2 = ImportUtils.matchRating(card, candidate);
+		System.err.println(rating2);
+		assertTrue(rating2 > rating1);
+		
+		card.setCollNumber("149");
+		
+		long rating5 = ImportUtils.matchRating(card, candidate2);
+		System.err.println(rating5);
+		assertTrue(rating5 > rating1);
+		
+		card.setLanguage("Russian");
+		long rating3 = ImportUtils.matchRating(card, candidate);
+		System.err.println(rating3);
+		
+		long rating4 = ImportUtils.matchRating(card, candidate2);
+		System.err.println(rating4);
+		
+		assertTrue(rating4 > rating3);
+		
+
+
 	}
 }
