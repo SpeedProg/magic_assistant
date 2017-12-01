@@ -10,22 +10,16 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.CharBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
-
 import com.reflexit.magiccards.core.DataManager;
-import com.reflexit.magiccards.core.FileUtils;
 import com.reflexit.magiccards.core.MagicLogger;
-import com.reflexit.magiccards.core.exports.CsvImporter;
 
 public class CurrencyConvertor {
 	public static Currency USD = Currency.getInstance("USD");
@@ -36,7 +30,7 @@ public class CurrencyConvertor {
 	private static SimpleDateFormat DATE_PARSER = new SimpleDateFormat("MM/dd/yyyy hh:mmaa", Locale.ENGLISH);
 
 	public static double loadRate(String from, String to) {
-		return loadRate(from + to);
+		return loadRate(from + "_" + to);
 	}
 
 	public static double loadRate(String cu) {
@@ -54,43 +48,25 @@ public class CurrencyConvertor {
 
 	protected static synchronized double doLoadRate(String cu) {
 		try {
-			URL url = getURL(cu);
-			CsvImporter importer = new CsvImporter(WebUtils.openUrl(url), ',');
-			try {
-				List<String> list = importer.readLine();
-				if (list.size() < 4) {
-					MagicLogger.log("Problem reading currency rate: " + cu + "->" + list);
-					BufferedReader reader = importer.getReader();
-					char cbuf[] = new char[32*1024];
-					reader.read(cbuf);
-					MagicLogger.log(new String(cbuf));
-					return 0;
-				}
-				String srate = list.get(1);
-				double rate = Double.valueOf(srate);
-				rates.put(cu, rate);
-				String d = list.get(2);
-				String t = list.get(3);
-				// System.err.println(d + " " + t); // 5/6/2014 8:42pm
-				Date date = Calendar.getInstance().getTime();
-				try {
-					date = DATE_PARSER.parse(d + " " + t);
-				} catch (ParseException e) {
-					// ignore
-				}
-				dates.put(cu, date);
-				// System.err.println(cu + "=" + rate + " on " + date);
-				return rate;
-			} finally {
-				importer.close();
-			}
-		} catch (IOException e) {
+			URL url = getURL(convertCu(cu));
+			// {"USD_PHP":50.310001}
+			String res = WebUtils.openUrlText(url);
+			String[] parts = res.split(":");
+			if (parts.length < 2)
+				throw new IllegalArgumentException("Cannot parse " + res);
+			double rate = Double.parseDouble(parts[1].replace("}", ""));
+			rates.put(cu, rate);
+			Date date = Calendar.getInstance().getTime();
+			MagicLogger.log("Convertion rate " + cu + "=" + rate);
+			dates.put(cu, date);
+			return rate;
+		} catch (Exception e) {
 			return 0;
 		}
 	}
 
 	public static URL getURL(String cu) throws MalformedURLException {
-		URL url = new URL("http://download.finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s=" + cu + "=X");
+		URL url = new URL("https://free.currencyconverterapi.com/api/v5/convert?q=" + cu + "&compact=ultra");
 		return url;
 	}
 
@@ -157,15 +133,17 @@ public class CurrencyConvertor {
 	private static synchronized void initialize() throws IOException, FileNotFoundException {
 		Date date;
 		try {
-			date = DATE_PARSER.parse("5/6/2014 8:42pm");
+			date = DATE_PARSER.parse("01/12/2017 8:42pm");
 		} catch (ParseException e) {
 			date = new Date();
 		}
-		rates.put("USDEUR", 0.72);
-		rates.put("USDCAD", 1.09598);
-		rates.put("USDUSD", 1.0);
-		dates.put("USDEUR", date);
-		dates.put("USDCAD", date);
+		
+	
+		rates.put("USD_EUR", 0.840796);
+		rates.put("USD_CAD", 1.2874);
+		rates.put("USD_USD", 1.0);
+		dates.put("USD_EUR", date);
+		dates.put("USD_CAD", date);
 	}
 
 	private static synchronized void load(InputStream st) throws IOException {
@@ -185,8 +163,10 @@ public class CurrencyConvertor {
 					} catch (ParseException e) {
 						date = new Date();
 					}
-					if (!cu.isEmpty()) {
-						if (rate != 0) {
+
+					if (rate != 0) {
+						cu = convertCu(cu);
+						if (!cu.isEmpty()) {
 							rates.put(cu, rate);
 							dates.put(cu, date);
 						}
@@ -199,6 +179,17 @@ public class CurrencyConvertor {
 		} finally {
 			r.close();
 		}
+	}
+
+	private static String convertCu(String cu) {
+		if (cu == null || cu.isEmpty())
+			return "";
+		if (cu.length() == 6) {
+			return cu.substring(0, 3) + "_" + cu.substring(3);
+		}
+		if (cu.contains("_"))
+			return cu;
+		return "";
 	}
 
 	public static void setCurrency(String string) {
