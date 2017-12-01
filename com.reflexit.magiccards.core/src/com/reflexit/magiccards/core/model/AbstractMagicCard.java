@@ -295,7 +295,7 @@ public abstract class AbstractMagicCard implements ICard, ICardModifiable, IMagi
 	@Override
 	public int getCollectorNumberId() {
 		String num = getString(MagicCardField.COLLNUM);
-		if (num == null)
+		if (num == null || num.isEmpty())
 			return 0;
 		try {
 			return Integer.parseInt(num);

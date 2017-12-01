@@ -20,6 +20,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.reflexit.magicassistant.p2.UpdateHandlerP2;
 import com.reflexit.magiccards.core.DataManager;
+import com.reflexit.magiccards.core.MagicLogger;
 import com.reflexit.magiccards.core.seller.IPriceProvider;
 import com.reflexit.magiccards.core.seller.IPriceProviderStore;
 import com.reflexit.magiccards.core.sync.CurrencyConvertor;
@@ -32,8 +33,9 @@ import com.reflexit.magiccards.ui.MagicUIActivator;
  * can use the field support built into JFace that allows us to create a page
  * that is small and knows how to save, restore and apply itself.
  * <p>
- * This page is used to modify preferences only. They are stored in the preference store that belongs to the
- * main plug-in class. That way, preferences can be accessed directly via the preference store.
+ * This page is used to modify preferences only. They are stored in the
+ * preference store that belongs to the main plug-in class. That way,
+ * preferences can be accessed directly via the preference store.
  */
 public class MagicPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public MagicPreferencePage() {
@@ -53,13 +55,11 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 		createInternetOptionsGroup();
 		// presentation
 		BooleanFieldEditor grid = new BooleanFieldEditor(PreferenceConstants.SHOW_GRID,
-				"Show grid lines in card tables",
-				getFieldEditorParent());
+				"Show grid lines in card tables", getFieldEditorParent());
 		addField(grid);
 		// protection
 		BooleanFieldEditor owncopy = new BooleanFieldEditor(PreferenceConstants.OWNED_COPY,
-				"Allow to copy non-virtual cards",
-				getFieldEditorParent()) {
+				"Allow to copy non-virtual cards", getFieldEditorParent()) {
 			@Override
 			protected void fireStateChanged(String property, boolean oldValue, boolean newValue) {
 				super.fireStateChanged(property, oldValue, newValue);
@@ -74,8 +74,13 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 				super.fireValueChanged(property, oldValue, newValue);
 				String val = (String) newValue;
 				if (val.length() == 3) {
-					CurrencyConvertor.setCurrency(val);
-					CurrencyConvertor.loadRate("USD", val);
+					try {
+						CurrencyConvertor.setCurrency(val);
+						CurrencyConvertor.loadRate("USD", val);
+					} catch (IllegalArgumentException e) {
+						MagicLogger.log("Invalid currency " + val);
+						MagicLogger.log(e);
+					}
 				}
 			}
 		};
@@ -95,13 +100,13 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 				WebUtils.setWorkOffline(newValue);
 			}
 		});
-		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS,
-				"Check for new cards on startup", inetOptions));
-		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES,
-				"Check for software updates on startup", inetOptions));
+		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_CARDS, "Check for new cards on startup",
+				inetOptions));
+		addField(new BooleanFieldEditor(PreferenceConstants.CHECK_FOR_UPDATES, "Check for software updates on startup",
+				inetOptions));
 		String[][] values = getPriceProviders();
-		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER,
-				"Card Prices Provider", values, inetOptions);
+		ComboFieldEditor combo = new ComboFieldEditor(PreferenceConstants.PRICE_PROVIDER, "Card Prices Provider",
+				values, inetOptions);
 		addField(combo);
 		createButtons(inetOptions);
 		// selection
@@ -162,8 +167,7 @@ public class MagicPreferencePage extends FieldEditorPreferencePage implements IW
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	@Override
 	public void init(IWorkbench workbench) {
