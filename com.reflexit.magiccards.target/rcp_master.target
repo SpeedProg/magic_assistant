@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?><target includeMode="feature" name="rcp_master" sequenceNumber="76">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
+<repository location="http://download.eclipse.org/nebula/releases/latest"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.generator.feature.feature.group" version="0.0.0"/>
