@@ -1,44 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="rcp_master" sequenceNumber="76">
+<?pde version="3.8"?><target includeMode="feature" name="rcp_master" sequenceNumber="81">
 <locations>
-<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/nebula/releases/latest"/>
-</location>
+
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.swtbot.generator.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.forms.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="0.0.0"/>
-<unit id="org.hamcrest.core" version="0.0.0"/>
-<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
 <unit id="org.apache.log4j" version="0.0.0"/>
-<unit id="org.hamcrest.library" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.forms.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.swtbot.generator.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.swtbot.ide.feature.group" version="0.0.0"/>
+<unit id="org.hamcrest.core" version="0.0.0"/>
+<unit id="org.hamcrest.library" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/swtbot/snapshots/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.core.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/neon"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.swt.tools.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.pde.api.tools.ee.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
-<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
-<unit id="org.eclipse.releng.tools.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.platform.ide" version="0.0.0"/>
 <unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.platform.ide" version="0.0.0"/>
+<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
 <unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.releng.tools.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.swt.tools.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.6"/>
+</location>
+
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/nebula/releases/latest"/>
 </location>
 </locations>
 </target>
