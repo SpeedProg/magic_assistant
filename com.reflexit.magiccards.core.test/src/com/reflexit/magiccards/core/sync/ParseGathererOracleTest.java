@@ -136,7 +136,7 @@ public class ParseGathererOracleTest extends TestCase {
 		assertEquals("86", card.getCollNumber());
 		assertEquals("Gut Shot", card.getName());
 		assertEquals(
-				"<i>({RP} can be paid with either {R} or 2 life.)</i><br>Gut Shot deals 1 damage to target creature or player.",
+				"<i>({RP} can be paid with either {R} or 2 life.)</i><br>Gut Shot deals 1 damage to any target.",
 				card.getText());
 	}
 
