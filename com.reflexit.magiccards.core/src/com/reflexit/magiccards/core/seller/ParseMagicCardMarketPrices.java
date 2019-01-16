@@ -29,11 +29,16 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	private final String baseURL = "https://www.cardmarket.com/en/Magic/MainPage/advancedSearch?search=1&idExpansion=SET&resultsPage=PAGE";
 	private final String singleCardURL = "https://www.cardmarket.com/en/Magic/MainPage/advancedSearch?search=1&idExpansion=SET&cardName=NAME";
 	private static final Pattern setsPattern = Pattern
-			.compile("<select name=\\\"idExpansion\\\"[^>]*>(.*?)</select>");
+			.compile("<select name=\"idExpansion\"[^>]*>(.*?)</select>");
 	private static final Pattern setItemPattern = Pattern
-			.compile("<option[ ]*value=\\\"(\\d*?)\\\">(.*?)</option>");
+			.compile("<option[ ]*value=\"(\\d*?)\">(.*?)</option>");
 	private static final Pattern paginationPattern = Pattern
 			.compile("resultsPage=(\\d+)\"[^<>]*rel=\"last\"");
+	private static final Pattern priceRowPAttern = Pattern.compile("<tr class=\"row_(Odd|Even){1} row_\\d*\">(.*?)</tr>");
+	private static final Pattern linkPattern = Pattern.compile("<a href=\"([^\"]*)\"[^>]*>(.*?)</a>.*>(.*?) &#x20AC;");
+	private static final Pattern priceTrendPattern = Pattern.compile("<dt class=\"col-6 col-xl-5\">Price Trend</dt><dd class=\"col-6 col-xl-7\"><span>(\\d+,\\d+) &#x20AC;</span>");
+	private static final Pattern cardNamePattern = Pattern.compile("<h1>([^<]*)");
+	private static final NumberFormat cardPriceFormat = NumberFormat.getInstance(Locale.GERMANY);
 	/* Mapping between MCM and MA set name.
 	 * Key: MCN set name
 	 * Value: MA set name
@@ -43,6 +48,9 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	private static final List<String> setName1ToNMappingDDAnthology = new ArrayList<>();
 	static {
 		/* Known name mappings (relation 1:1) */
+		/* key: used on site in advanced search expansion box
+		 * value: offical set name
+		 */
 		setNameMapping.put("Alpha", "Limited Edition Alpha");
 		setNameMapping.put("Battle Royale", "Battle Royale Box Set");
 		setNameMapping.put("Beatdown", "Beatdown Box Set");
@@ -100,6 +108,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 			final ICoreProgressMonitor monitor) throws IOException {
 		final Map<String, List<IMagicCard>> offlineSets = new HashMap<>();
 		for (IMagicCard magicCard : iterable) {
+			MagicLogger.trace("Card: " + magicCard.getEnglishName() + " Set: " + magicCard.getSet());
 			if (offlineSets.containsKey(magicCard.getSet())) {
 				offlineSets.get(magicCard.getSet()).add(magicCard);
 			} else {
@@ -323,6 +332,8 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 				} catch (Exception e) {
 					MagicLogger.log(e);
 				}
+			} else {
+				MagicLogger.log("No online set for: " + offlineSetName);
 			}
 			monitor.worked(1);
 			return prices;
@@ -512,31 +523,92 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		 * Parse for prices.
 		 *
 		 * @param line
+		 * @throws IOException 
 		 */
-		private void getPrices(String line) {
-			Pattern priceRowPAttern = Pattern.compile("<tr class=\"row_(Odd|Even){1} row_\\d*\">(.*?)</tr>");
+		private void getPrices(String line) throws IOException {
 			Matcher priceRowMatcher = priceRowPAttern.matcher(line);
 			while (priceRowMatcher.find()) {
-				Pattern pricePattern = Pattern.compile("<a[^>]*>(.*?)</a>.*>(.*?) &#x20AC;");
-				Matcher priceMatcher = pricePattern.matcher(priceRowMatcher.group(2));
-				while (priceMatcher.find()) {
-					String sPrice = priceMatcher.group(2);
-					sPrice = sPrice.replace("&#x20AC;", ""); // Euro sign character
-					sPrice = sPrice.trim();
-					NumberFormat format = NumberFormat.getInstance(Locale.GERMANY);
+				Matcher linkMatcher = linkPattern.matcher(priceRowMatcher.group(2));
+				while (linkMatcher.find()) {
+					String cardUrl = linkMatcher.group(1).trim();
+					String cardName = linkMatcher.group(2).trim();
+					
+					CardData cardInfo = getCardDataFromCardUrl(cardUrl);
+					if (!cardInfo.name.isEmpty() && cardInfo.priceTrend > 0.001f) {
+						prices.put(cardInfo.getName(), cardInfo.getPriceTrend());
+					} else {
+						MagicLogger.log("Could not get price trend for " + cardName + " from " + cardUrl);
+					}
+					/*
 					try {
-						Number number = format.parse(sPrice);
-						String name = priceMatcher.group(1);
+						Number number = format.parse(cheapestPrice);
+						String name = linkMatcher.group(1);
 						name = name.replaceAll("\\(Version \\d\\)", "").trim();
-						prices.put(name, number.floatValue());
+						prices.put(name, 100.0f);
 					} catch (ParseException e) {
+						MagicLogger.info("Error getting data for card");
 						//						prices.put(priceMatcher.group(1), new Float(0));
 					}
 					// Test output
 					// System.err.println("Online card price found. Name [" + priceMatcher.group(1) + "], price [" + sPrice + "]");
-					MagicLogger.trace("Online card price found. Name [" + priceMatcher.group(1)
-							+ "], price [" + sPrice + "]");
+					MagicLogger.trace("Online card price found. Name [" + cardName
+							+ "], cheapestPrice [" + cheapestPrice + "]");
+					*/
 				}
+				
+			}
+		}
+		
+		/**
+		 * 
+		 * @param cardUrl
+		 */
+		private CardData getCardDataFromCardUrl(String cardUrl) throws IOException {
+			MagicLogger.trace("Getting CardData from " + cardUrl);
+			URL fullUrl = new URL("https://www.cardmarket.com" + cardUrl);
+			String cardSiteCode = WebUtils.openUrlText(fullUrl);
+			Matcher priceTrendMatcher = priceTrendPattern.matcher(cardSiteCode);
+			Matcher cardNameMatcher = cardNamePattern.matcher(cardSiteCode);
+			if (priceTrendMatcher.find() && cardNameMatcher.find()) {
+				String priceTrend = priceTrendMatcher.group(1);
+				String cardName = cardNameMatcher.group(1);
+				MagicLogger.info("Got price trend: " + priceTrend + " for "+ cardName);
+				return new CardData(cardName, priceTrend);
+			}
+			
+			MagicLogger.log("Could not get price trend from " + cardSiteCode);
+			return new CardData("", "0,0");
+		}
+		
+		private class CardData {
+			private String name;
+			private float priceTrend;
+			private CardData(String name, String price) {
+				this.setName(name);
+				this.setPriceTrend(price);
+			}
+
+			public float getPriceTrend() {
+				return priceTrend;
+			}
+
+			private void setPriceTrend(String priceTrend) {
+				try {
+					Number number = cardPriceFormat.parse(priceTrend);
+					this.priceTrend = number.floatValue();
+				} catch (ParseException e) {
+					MagicLogger.log("Error parsing price of " + priceTrend);
+					//						prices.put(priceMatcher.group(1), new Float(0));
+					this.priceTrend = 0.0f;
+				}
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			private void setName(String name) {
+				this.name = name;
 			}
 		}
 	}
