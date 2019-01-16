@@ -63,6 +63,9 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		setNameMapping
 				.put("Premium Deck Series: Fire & Lightning", "Premium Deck Series: Fire and Lightning");
 		setNameMapping.put("Prerelease Promos", "Promo set for Gatherer"); // split also into online set Harper Prism Promos
+		setNameMapping.put("Core 2019", "Core Set 2019");
+		// some seem to be in  Core 2019: Promos
+		//setNameMapping.put("Core 2019: Promo", "Core Set 2019");
 		// Seems to be unknown to MKM because they are from Magic Online Game only
 		//setNameMapping.put("", "Masters Edition");
 		//setNameMapping.put("", "Masters Edition III");
