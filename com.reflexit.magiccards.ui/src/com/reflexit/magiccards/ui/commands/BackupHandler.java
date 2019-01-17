@@ -33,6 +33,9 @@ public class BackupHandler extends AbstractHandler {
 		SimpleDateFormat format = new SimpleDateFormat("YYYY_MMdd_HHmmss");
 		File backupDir = FileUtils.getBackupDir();
 		final File backup = new File(backupDir, format.format(new Date())+".zip");
+		// we can't be sure the directory is actually there
+		if (!backupDir.exists())
+			backupDir.mkdirs();
 		Job job = new Job("Backing up...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
