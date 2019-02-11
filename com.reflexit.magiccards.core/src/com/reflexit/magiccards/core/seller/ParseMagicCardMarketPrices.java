@@ -67,6 +67,8 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		setNameMapping.put("Modern Masters 2015", "Modern Masters 2015 Edition");
 		// some seem to be in  Core 2019: Promos
 		//setNameMapping.put("Core 2019: Promo", "Core Set 2019");
+		setNameMapping.put("Commander Anthology II", "Commander Anthology 2018");
+		
 		// Seems to be unknown to MKM because they are from Magic Online Game only
 		//setNameMapping.put("", "Masters Edition");
 		//setNameMapping.put("", "Masters Edition III");
