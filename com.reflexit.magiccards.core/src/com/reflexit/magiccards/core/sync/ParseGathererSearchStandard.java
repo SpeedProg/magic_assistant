@@ -152,6 +152,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		fixGathererBugs(card);
 		String[] sets = rows[3].split("<a onclick");
 		for (String setHtml : sets) {
+			// this returns null some times so there is a problem with the pattern probably
 			String edition = getMatch(setPattern, setHtml, 1);
 			String rarity = getMatch(setPattern, setHtml, 2);
 			String abbr = getMatch(setPattern, setHtml, 3);
