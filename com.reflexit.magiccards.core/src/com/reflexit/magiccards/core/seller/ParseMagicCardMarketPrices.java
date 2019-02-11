@@ -220,8 +220,11 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 						String id = m.group(1);
 						if (id != null && id.length() > 0) {
 							String name = m.group(2).trim();
+							MagicLogger.debug("Found Set Name: "+name);
 							if (setNameMapping.containsKey(name)) {
 								name = setNameMapping.get(name);
+							} else {
+								MagicLogger.debug("No Mapping for SetName: "+name);
 							}
 							result.put(name, id);
 						}
