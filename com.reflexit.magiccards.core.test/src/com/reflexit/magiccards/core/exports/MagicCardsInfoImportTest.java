@@ -40,19 +40,19 @@ public class MagicCardsInfoImportTest extends AbstarctImportTest {
 
 	@Test
 	public void testVlist() {
-		previewUrl("https://magiccards.info/query?q=e%3Awmcq%2Fen&v=list&s=cname");
+		previewUrl("https://magiccards.info/query?q=e%3Apwcq&v=list&s=cname");
 		assertEquals(5, resSize);
 	}
 
 	@Test
 	public void testVlist2() {
-		previewUrl("https://magiccards.info/query?q=e:wmcq/en&v=list&s=cname");
+		previewUrl("https://magiccards.info/query?q=e:pwcq&v=list&s=cname");
 		assertEquals(5, resSize);
 	}
 
 	@Test
 	public void testVspoiler() {
-		previewUrl("https://magiccards.info/query?q=e:wmcq/en&v=spoiler&s=cname");
+		previewUrl("https://magiccards.info/query?q=e:pwcq&v=spoiler&s=cname");
 		assertEquals(5, resSize);
 	}
 }

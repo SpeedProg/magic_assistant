@@ -32,7 +32,7 @@ public class ParseGathererSearchStandardTest extends TestCase {
 		file = File.createTempFile("magic", "txt");
 		file.deleteOnExit();
 		magicSet = "Magic 2013";
-		wall = "http://gatherer.wizards.com/pages/search/default.aspx?name=+[%22Bloodfire%22]";
+		wall = "https://gatherer.wizards.com/pages/search/default.aspx?name=+[%22Bloodfire%22]";
 		wallUrl = new URL(wall);
 		handler = new GatherHelper.StashLoadHandler();
 	}

@@ -20,7 +20,7 @@ public abstract class GatherHelper extends ParserHtmlHelper {
 			.compile("<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay\"[^>]*><i>[^<]*</i>\\s*\\((\\d+)\\)\\s*</span>");
 	protected static Pattern lastPagePattern = Pattern
 			.compile("\\Q<span style=\"visibility:hidden;\">&nbsp;&gt;</span></div>");
-	static String baseSearch = "http://gatherer.wizards.com/Pages/Search/Default.aspx?action=advanced&";
+	static String baseSearch = "https://gatherer.wizards.com/Pages/Search/Default.aspx?action=advanced&";
 	static Map manaMap = new LinkedHashMap();
 	static {
 		manaMap.put("\\Q{500}", "{0.5}");
@@ -30,7 +30,7 @@ public abstract class GatherHelper extends ParserHtmlHelper {
 		manaMap.put("\\Q{untap}", "{Q}");
 	}
 
-	public static final String GATHERER_URL_BASE = "http://gatherer.wizards.com/";
+	public static final String GATHERER_URL_BASE = "https://gatherer.wizards.com/";
 
 	public GatherHelper() {
 		super();
@@ -75,7 +75,7 @@ public abstract class GatherHelper extends ParserHtmlHelper {
 	}
 
 	public static void saveManaSymbol(File dir, String name) throws MalformedURLException {
-		URL url = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&type=symbol&name="
+		URL url = new URL(GATHERER_URL_BASE+"Handlers/Image.ashx?size=small&type=symbol&name="
 				+ name);
 		try {
 			InputStream st = WebUtils.openUrl(url);
@@ -96,7 +96,7 @@ public abstract class GatherHelper extends ParserHtmlHelper {
 	@NotNull
 	public static URL createImageURL(int cardId) {
 		try {
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId
+			return new URL(GATHERER_URL_BASE+"Handlers/Image.ashx?multiverseid=" + cardId
 					+ "&type=card");
 		} catch (MalformedURLException e) {
 			throw new MagicException(e);
@@ -124,7 +124,7 @@ public abstract class GatherHelper extends ParserHtmlHelper {
 	public static URL createSetImageURL(String editionAbbr, String rarity) {
 		try {
 			String rarLetter = rarity == null ? "C" : rarity.substring(0, 1).toUpperCase();
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=" + editionAbbr
+			return new URL(GATHERER_URL_BASE+"Handlers/Image.ashx?type=symbol&set=" + editionAbbr
 					+ "&size=small&rarity="
 					+ rarLetter);
 		} catch (MalformedURLException e) {
@@ -135,7 +135,7 @@ public abstract class GatherHelper extends ParserHtmlHelper {
 	public static URL createManaImageURL(String symbol) {
 		String manaName = symbol.replaceAll("[{}/]", "");
 		try {
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?size=small&name=" + manaName
+			return new URL(GATHERER_URL_BASE+"Handlers/Image.ashx?size=small&name=" + manaName
 					+ "&type=symbol");
 		} catch (MalformedURLException e) {
 			return null;

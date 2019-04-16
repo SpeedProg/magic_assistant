@@ -66,7 +66,7 @@ public class CurrencyConvertor {
 	}
 
 	public static URL getURL(String cu) throws MalformedURLException {
-		URL url = new URL("https://free.currencyconverterapi.com/api/v5/convert?q=" + cu + "&compact=ultra");
+		URL url = new URL("https://free.currencyconverterapi.com/api/v5/convert?q=" + cu + "&compact=ultra&apiKey=8280553d986bdbde5834");
 		return url;
 	}
 
