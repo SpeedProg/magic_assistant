@@ -65,7 +65,7 @@ public class ParseGathererLegalityTest extends TestCase {
 	public void testLegalitiesInet() {
 		ParseSetLegality.loadAllFormats(ICoreProgressMonitor.NONE);
 		Editions editions = Editions.getInstance();
-		Edition ed = editions.getEditionByName("Oath of the Gatewatch");
+		Edition ed = editions.getEditionByName("Core Set 2019");
 		LegalityMap map = ed.getLegalityMap();
 		assertEquals(Legality.LEGAL, map.get(Format.STANDARD));
 	}
