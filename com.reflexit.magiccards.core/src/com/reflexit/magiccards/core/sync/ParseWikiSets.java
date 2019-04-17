@@ -84,7 +84,7 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 		loadTable(tables[i++], "Expansion", 2);
 		int j = 2;
 		for (; i < tables.length; i++) {
-			if (loadTable(tables[i], "Starter", j + 1)) {
+			if (loadTable(tables[i], "", j + 1)) {
 				j++;
 			}
 		}
@@ -98,12 +98,6 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 	}
 
 	protected boolean loadTable(String string, String type, int j) {
-		if (j == 4)
-			type = "Expansion";
-		else if (j == 6)
-			type = "Un_set";
-		else if (j == 7)
-			type = "Online";
 		List<String> lines = splitArray("tr", string);
 		List<String> headers = null;
 		int setIndex = 0;
@@ -180,9 +174,11 @@ public class ParseWikiSets extends AbstractParseHtmlPage {
 						}
 					}
 					if (!edition.getType().equals(type)) {
-						System.err
-								.println("Error: Type mismatch " + type + " " + edition + " was " + edition.getType());
-						edition.setType(type);
+						if (type != null && !type.isEmpty()) {
+							System.err.println(
+									"Error: Type mismatch " + type + " " + edition + " was " + edition.getType());
+							edition.setType(type);
+						}
 					}
 					if (block != null && !edition.getBlock().equals(block)) {
 						System.err.println("Error: Block mismatch '" + block + "' " + edition + " was '"
