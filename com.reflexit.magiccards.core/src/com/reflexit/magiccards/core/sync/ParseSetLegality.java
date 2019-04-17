@@ -69,7 +69,7 @@ public class ParseSetLegality extends AbstractParseHtmlPage {
 
 	@Override
 	protected String getUrl() {
-		return "http://magic.wizards.com/en/content/standard-formats-magic-gathering";
+		return "https://magic.wizards.com/en/content/standard-formats-magic-gathering";
 	}
 
 	public static void loadAllFormats(ICoreProgressMonitor monitor) {
