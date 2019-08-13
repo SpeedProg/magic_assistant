@@ -6,8 +6,16 @@
  *******************************************************************************/
 package com.reflexit.magiccards.core.xml;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
+import org.junit.Assert;
 
 import junit.framework.TestCase;
 
@@ -205,8 +213,18 @@ public class MagicXmlHandlerTest extends TestCase {
 		phi.setOwn(true);
 		phi.setPrice(2.1f);
 		phi.setDate("Sun Jan 11 22:37:54 EST 2015");
+		SimpleDateFormat DATE_PARSER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+		Date shouldBe = null;
+		try {
+			shouldBe = DATE_PARSER.parse("Sun Jan 11 22:37:54 EST 2015");
+		} catch (ParseException e) {
+			Assert.fail();
+		}
+		assertNotNull(shouldBe);
+
 		String xml = handler.toXML(phi);
 		//System.err.println(xml);
+		xml1 = xml1.replaceFirst("Sun Jan 11 22:37:54 EST 2015", shouldBe.toString());
 		assertEquals(xml1, xml);
 	}
 

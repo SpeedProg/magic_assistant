@@ -1,5 +1,13 @@
 package com.reflexit.magiccards.core.exports;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.reflexit.magiccards.core.model.MagicCardField;
@@ -50,6 +58,15 @@ public class PipedTableExportText extends AbstarctExportTest {
 		card1.setOwn(true);
 		card1.setPrice(2.1f);
 		card1.setDate("Sun Jan 11 22:37:54 EST 2015");
+		SimpleDateFormat DATE_PARSER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+		Date shouldBe = null;
+		try {
+			shouldBe = DATE_PARSER.parse("Sun Jan 11 22:37:54 EST 2015");
+		} catch (ParseException e) {
+			Assert.fail();
+		}
+		assertNotNull(shouldBe);
+		String dateText = shouldBe.toString();
 		run(exporter);
 		assertEquals(4, lines.length);
 		System.err.println(lines[0]);
@@ -58,7 +75,7 @@ public class PipedTableExportText extends AbstarctExportTest {
 				"ID|NAME|COST|TYPE|POWER|TOUGHNESS|ORACLE|SET|RARITY|DBPRICE|LANG|RATING|ARTIST|COLLNUM|RULINGS|TEXT|ENID|PROPERTIES|COUNT|PRICE|COMMENT|LOCATION|CUSTOM|OWNERSHIP|SPECIAL|DATE",
 				lines[0]);
 		assertEquals(
-				"-39|name 39|{4}|type 39|4|*|bla 39|set 19|Common|1.2256411|Russian|2.39|Elena 39|39a||bla <br> bla 39|0||5|2.1|comment 40|mem||true|foil,c=mint|Sun Jan 11 22:37:54 EST 2015",
+				"-39|name 39|{4}|type 39|4|*|bla 39|set 19|Common|1.2256411|Russian|2.39|Elena 39|39a||bla <br> bla 39|0||5|2.1|comment 40|mem||true|foil,c=mint|"+dateText,
 				lines[1]);
 	}
 }
