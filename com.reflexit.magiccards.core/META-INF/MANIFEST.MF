@@ -43,4 +43,4 @@ Export-Package: com.reflexit.magiccards.core;
 Bundle-ClassPath: .,
  lib/trove-3.0.3.jar,
  lib/json-simple-1.1.1.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
