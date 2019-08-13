@@ -47,6 +47,7 @@ import com.reflexit.magiccards.ui.dialogs.MyCardsFilterDialog;
 import com.reflexit.magiccards.ui.dialogs.SplitDialog;
 import com.reflexit.magiccards.ui.exportWizards.ExportAction;
 import com.reflexit.magiccards.ui.views.AbstractGroupPageCardsView;
+import com.reflexit.magiccards.ui.views.IViewPage;
 import com.reflexit.magiccards.ui.views.ViewPageGroup;
 
 /**
@@ -325,5 +326,15 @@ public abstract class AbstractMyCardsView extends AbstractGroupPageCardsView imp
 	@Override
 	public CardFilterDialog getCardFilterDialog() {
 		return new MyCardsFilterDialog(getShell(), getFilterPreferenceStore());
+	}
+
+	@Override
+	/**
+	 * We need to disponse the MenuManager so they can be used in the new menu
+	 */
+	protected void preActivate(IViewPage activePage) {
+		this.moveToDeckMenu.dispose();
+		this.addToDeck.dispose();
+		super.preActivate(activePage);
 	}
 }
