@@ -176,6 +176,7 @@ public abstract class AbstractMagicCardsListControl extends AbstractViewPage
 		}
 		mainControl.layout(true, true);
 		refreshViewer();
+		hookContextMenu();
 	}
 
 	public void createMainControl(Composite area) {
