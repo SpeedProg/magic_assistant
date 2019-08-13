@@ -46,6 +46,7 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 	private static final Map<String, String> setNameMapping = new HashMap<>();
 	private static final List<String> harperPrismPromosSingleCards = new ArrayList<>();
 	private static final List<String> setName1ToNMappingDDAnthology = new ArrayList<>();
+	private static final Map<String, Map<String, String>> specialSetMap = new HashMap<>();
 	static {
 		/* Known name mappings (relation 1:1) */
 		/* key: used on site in advanced search expansion box
@@ -73,10 +74,13 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		setNameMapping.put("Prerelease Promos", "Promo set for Gatherer"); // split also into online set Harper Prism Promos
 		setNameMapping.put("Core 2019", "Core Set 2019");
 		setNameMapping.put("Core 2020", "Core Set 2020");
+		setNameMapping.put("Core 2020: Extras", "Core Set 2020 Extras");
 		setNameMapping.put("Modern Masters 2015", "Modern Masters 2015 Edition");
 		// some seem to be in  Core 2019: Promos
 		//setNameMapping.put("Core 2019: Promo", "Core Set 2019");
 		setNameMapping.put("Commander Anthology II", "Commander Anthology 2018");
+		setNameMapping.put("War of the Spark", "War of the Spark");
+		setNameMapping.put("Guilds of Ravnica", "Guilds of Ravnica");
 		
 		// Seems to be unknown to MKM because they are from Magic Online Game only
 		//setNameMapping.put("", "Masters Edition");
@@ -98,6 +102,49 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 		harperPrismPromosSingleCards.add("Mana Crypt");
 		harperPrismPromosSingleCards.add("Sewers of Estark");
 		harperPrismPromosSingleCards.add("Windseeker Centaur");
+
+		// Core 2020 special mappings
+		Map<String, String> core2020Map = new HashMap<>();
+		core2020Map.put("Serra's Guardian", "Core Set 2020 Extras");
+		core2020Map.put("Savannah Sage", "Core Set 2020 Extras");
+		core2020Map.put("Celestial Messenger", "Core Set 2020 Extras");
+		core2020Map.put("Goldmane Griffin", "Core Set 2020 Extras");
+		core2020Map.put("Impassioned Orator", "Core Set 2020 Extras");
+		core2020Map.put("Ajani, Inspiring Leader", "Core Set 2020 Extras");
+		core2020Map.put("Vivien's Crocodile", "Core Set 2020 Extras");
+		core2020Map.put("Aggressive Mammoth", "Core Set 2020 Extras");
+		core2020Map.put("Ethereal Elk", "Core Set 2020 Extras");
+		core2020Map.put("Gnarlback Rhino", "Core Set 2020 Extras");
+		core2020Map.put("Vivien, Nature's Avenger", "Core Set 2020 Extras");
+		core2020Map.put("Titanic Growth", "Core Set 2020 Extras");
+		core2020Map.put("Savage Georg", "Core Set 2020 Extras");
+		core2020Map.put("Gravewaker", "Core Set 2020 Extras");
+		core2020Map.put("Sorin's Guide", "Core Set 2020 Extras");
+		core2020Map.put("Thirsting Bloodlord", "Core Set 2020 Extras");
+		core2020Map.put("Vampire Opportunist", "Core Set 2020 Extras");
+		core2020Map.put("Dark Remedy", "Core Set 2020 Extras");
+		core2020Map.put("Sorin's Thirst", "Core Set 2020 Extras");
+		core2020Map.put("Sorin, Vampire Lord", "Core Set 2020 Extras");
+		core2020Map.put("Yanling's Harbinger", "Core Set 2020 Extras");
+		core2020Map.put("Waterkin Shaman", "Core Set 2020 Extras");
+		core2020Map.put("Riddlemaster Sphinx", "Core Set 2020 Extras");
+		core2020Map.put("Mu Yanling, Celestial Wind", "Core Set 2020 Extras");
+		core2020Map.put("Shivan Dragon", "Core Set 2020 Extras");
+		core2020Map.put("Pyroclastic Elemental", "Core Set 2020 Extras");
+		core2020Map.put("Wildfire Elemental", "Core Set 2020 Extras");
+		core2020Map.put("Chandra's Flame Wave", "Core Set 2020 Extras");
+		core2020Map.put("Chandra, Flame's Fury", "Core Set 2020 Extras");
+		core2020Map.put("Glacial Fortress", "Core Set 2020 Extras");
+		core2020Map.put("Goblin Assailant", "Core Set 2020 Extras");
+		core2020Map.put("Goblin Chainwhirler", "Core Set 2020 Extras");
+		core2020Map.put("Goblin Trashmaster", "Core Set 2020 Extras");
+		core2020Map.put("Goreclaw, Terror of Qal Sisma", "Core Set 2020 Extras");
+		core2020Map.put("Gutterbones", "Core Set 2020 Extras");
+		core2020Map.put("Haazda Officer", "Core Set 2020 Extras");
+		core2020Map.put("Hostile Minotaur", "Core Set 2020 Extras");
+		core2020Map.put("Immortal Phoenix", "Core Set 2020 Extras");
+		core2020Map.put("Twinblade Paladin", "Core Set 2020 Extras");
+		specialSetMap.put("Core Set 2020", core2020Map);
 	}
 	private static final String onlineSetNameDDAnthology = "Duel Decks: Anthology";
 	private static ParseMagicCardMarketPrices instance = new ParseMagicCardMarketPrices();
@@ -170,6 +217,34 @@ public class ParseMagicCardMarketPrices extends AbstractPriceProvider {
 				addL.addAll(l);
 			}
 		}
+
+
+		for (Entry<String, Map<String, String>> entry : specialSetMap.entrySet()) {
+			if (!offlineSets.containsKey(entry.getKey())) {
+				continue;
+			}
+			List<IMagicCard> cards = offlineSets.get(entry.getKey());
+			List<IMagicCard> cardsToRemove = new ArrayList<>();
+			Map<String, String> specialCardMap = entry.getValue();
+			for(IMagicCard card : cards) {
+				if (specialCardMap.containsKey(card.getEnglishName())) {
+					String targetSet = specialCardMap.get(card.getEnglishName());
+					List<IMagicCard> cardList;
+					if(!offlineSets.containsKey(targetSet)) {
+						cardList = new ArrayList<IMagicCard>();
+						offlineSets.put(targetSet, cardList);
+					} else {
+						cardList = offlineSets.get(targetSet);
+					}
+					cardList.add(card);
+					cardsToRemove.add(card);
+				}
+			}
+			for(IMagicCard card : cardsToRemove) {
+				cards.remove(card);
+			}
+		}
+
 		monitor.beginTask("Loading " + getName() + " prices...", offlineSets.size() + 10);
 		Map<String, String> onlineSets = getOnlineSets();
 		Iterator<String> offlineSetNames = offlineSets.keySet().iterator();
