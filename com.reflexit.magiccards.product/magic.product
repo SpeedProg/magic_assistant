@@ -86,8 +86,7 @@
    </configurations>
 
    <repositories>
-      <repository location="http://mtgbrowser.sourceforge.net/update/1.5-beta" enabled="false" />
-      <repository location="http://mtgbrowser.sourceforge.net/update/1.5" enabled="true" />
+      <repository location="http://p2.speedprog.de/magic_assistant/1.5" enabled="true" />
    </repositories>
 
 </product>
