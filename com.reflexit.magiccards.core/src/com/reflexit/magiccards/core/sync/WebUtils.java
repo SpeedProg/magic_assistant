@@ -110,7 +110,12 @@ public class WebUtils {
 					HttpURLConnection con = (HttpURLConnection) openConnection;
 					con.setInstanceFollowRedirects(true);
 					con.connect();					// MAYBE: HTTP response code handling
-					// System.err.println(con.getResponseCode()+": "+url.toExternalForm());
+					int code = con.getResponseCode();
+					String message = con.getResponseMessage();
+					if (code<200 || code>=300)
+						throw new IOException("Connection error "+code+": "+message);
+				
+					//System.err.println(code+": "+message+": "+url.toExternalForm());
 				} else {
 					// Not HTTP nor HTTPS connection, it can be local file i.e. file://
 					i = maxAttempts; // we will try to open it only once

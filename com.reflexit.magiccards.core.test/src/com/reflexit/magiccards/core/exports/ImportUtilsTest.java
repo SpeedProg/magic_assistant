@@ -18,6 +18,7 @@ import com.reflexit.magiccards.core.model.MagicCard;
 import com.reflexit.magiccards.core.model.MagicCardPhysical;
 import com.reflexit.magiccards.core.model.storage.IDbCardStore;
 import com.reflexit.magiccards.core.monitor.ICoreProgressMonitor;
+import com.reflexit.magiccards.core.sync.GatherHelper;
 import com.reflexit.unittesting.CardGenerator;
 
 import static org.junit.Assert.*;
@@ -200,7 +201,7 @@ public class ImportUtilsTest extends AbstarctImportTest {
 		assertEquals("Seb McKinnon", card.getArtist());
 		assertEquals("Magic Game Day Cards", card.getSet());
 		assertEquals("My Text", card.getText());
-		assertEquals("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=405319&type=card",
+		assertEquals(GatherHelper.GATHERER_URL_BASE+ "Handlers/Image.ashx?multiverseid=405319&type=card",
 				card.getBase().getImageUrl());
 	}
 

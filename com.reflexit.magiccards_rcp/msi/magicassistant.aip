@@ -5,7 +5,7 @@
     <ROW Property="ALLUSERS" Value="1" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPHELPLINK" Value="https://sourceforge.net/p/mtgbrowser/discussion/837435/"/>
-    <ROW Property="ARPURLINFOABOUT" Value="http://magicassistant.ca"/>
+    <ROW Property="ARPURLINFOABOUT" Value="http://mtgbrowser.sourceforge.net/wiki/index.php/Main_Page"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="Manufacturer" Value="Reflex IT"/>

@@ -7,8 +7,8 @@ Bundle-Activator: com.reflexit.magiccards.core.Activator
 Bundle-Vendor: Alena Laskavaia
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
-Require-Bundle: com.reflexit.magiccards.db,
- org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ com.reflexit.magiccards.db
 Export-Package: com.reflexit.magiccards.core;
   uses:="org.eclipse.core.runtime,
    org.eclipse.core.resources,

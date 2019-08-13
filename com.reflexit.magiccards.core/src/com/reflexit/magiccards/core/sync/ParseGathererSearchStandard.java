@@ -71,7 +71,7 @@ public class ParseGathererSearchStandard extends AbstractParseGathererSearch {
 		TextPrinter.printHeader(out);
 		GatherHelper.OutputHandler handler = createOutputHandler(out, options);
 		try {
-			if (from.startsWith("http:")) {
+			if (from.startsWith("http")) {
 				loadMultiPageUrl(new URL(from), handler, "unknown", pm);
 			} else {
 				File input = new File(from);

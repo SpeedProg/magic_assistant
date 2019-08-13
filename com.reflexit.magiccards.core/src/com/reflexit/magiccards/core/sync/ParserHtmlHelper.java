@@ -156,7 +156,7 @@ public abstract class ParserHtmlHelper {
 	@NotNull
 	public static URL createImageURL(int cardId) {
 		try {
-			return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + cardId
+			return new URL(GatherHelper.GATHERER_URL_BASE+"Handlers/Image.ashx?multiverseid=" + cardId
 					+ "&type=card");
 		} catch (MalformedURLException e) {
 			throw new MagicException(e);

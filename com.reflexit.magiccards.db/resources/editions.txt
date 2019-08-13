@@ -22,17 +22,17 @@ Tempest|TMP|TE|October 1997|Expansion|Tempest Block||
 Stronghold|STH|ST,SH|March 1998|Expansion|Tempest Block||
 Anthologies|ATH|AT|November 1998|Starter|Anthologies||
 Exodus|EXO|EX|June 1998|Expansion|Tempest Block||
-Portal Second Age|PO2|P2,P02|June 1998|Starter|Portal||
+Portal Second Age|P02|P2,PO2|June 1998|Starter|Portal||
 Unglued|UGL|UG|August 1998|Un_set|Un-sets||
 Urza's Saga|USG|UZ,US|October 1998|Expansion|Urza Block||
 Battle Royale Box Set|BRB|BR|November 1999|Starter|Battle Royale Box Set||
 Urza's Legacy|ULG|GU,UL|February 1999|Expansion|Urza Block||
 Classic Sixth Edition|6ED|6E|April 1999|Core|Classic Sixth Edition||6th Edition,Sixth Edition
-Portal Three Kingdoms|PTK|PK|May 1999|Starter|Portal||
+Portal Three Kingdoms|P3K|PTK,PK|May 1999|Starter|Portal||
 Urza's Destiny|UDS|CG,UD|June 1999|Expansion|Urza Block||
 Starter 1999|S99|P3,ST,S1|July 1999|Starter|Starter||
 Mercadian Masques|MMQ|MM|October 1999|Expansion|Masques Block||
-Nemesis|NMS|NE,NEM|February 2000|Expansion|Masques Block||
+Nemesis|NEM|NE,NMS|February 2000|Expansion|Masques Block||
 Prophecy|PCY|PR,PY|June 2000|Expansion|Masques Block||
 Starter 2000|S00|P4,S2|July 2000|Starter|Starter||
 Invasion|INV|IN|October 2000|Expansion|Invasion Block||
@@ -145,31 +145,64 @@ Modern Masters 2015 Edition|MM2||May 2015|Starter|Masters Series||Modern Masters
 Tempest Remastered|TPR||May 2015|Online|Masters Editions||
 From the Vault: Angels|V15||August 2015|Starter|From the Vault||
 Magic Origins|ORI||July 2015|Core|Magic Origins|Modern|Magic Origins
-Battle for Zendikar|BFZ||October 2015|Expansion|Battle for Zendikar Block|Standard|
+Battle for Zendikar|BFZ||October 2015|Expansion|Battle for Zendikar Block||
 Commander 2015|C15||November 2015|Expansion|Commander||
 Duel Decks: Zendikar vs. Eldrazi|DDP||August 2015|Starter|Duel Decks||
 Zendikar Expeditions|EXP||November 2015|Expansion|Zendikar Expeditions||
-Oath of the Gatewatch|OGW|OTG|January 2016|Expansion|Battle for Zendikar Block|Standard|
+Oath of the Gatewatch|OGW|OTG|January 2016|Expansion|Battle for Zendikar Block||
 Duel Decks: Blessed vs. Cursed|DDQ||February 2016|Starter|Duel Decks||
-Shadows over Innistrad|SOI||April 2016|Expansion|Shadows over Innistrad Block|Standard|
+Shadows over Innistrad|SOI||April 2016|Expansion|Shadows over Innistrad Block||
 Welcome Deck 2016|W16||April 2016|Starter|Welcome Deck 2016||
 Conspiracy: Take the Crown|CN2||August 2016|Expansion|Conspiracy|Modern|
-Eldritch Moon|EMN||July 2016|Expansion|Shadows over Innistrad Block|Standard|
+Eldritch Moon|EMN||July 2016|Expansion|Shadows over Innistrad Block||
 Eternal Masters|EMA||June 2016|Starter|Masters Series||
 Commander 2016|C16||November 2016|Expansion|Commander||
 Duel Decks: Nissa vs. Ob Nixilis|DDR||September 2016|Starter|Duel Decks||
 From the Vault: Lore|V16||August 2016|Starter|From the Vault||
-Kaladesh|KLD||September 2016|Expansion|Kaladesh Block|Standard|
+Kaladesh|KLD||September 2016|Expansion|Kaladesh Block||
 Masterpiece Series: Kaladesh Inventions|MPS_KLD||January 2017|Reprint|Masterpiece Series: Kaladesh Inventions||
 Planechase Anthology|PCA||November 2016|Expansion|Planechase||
-Aether Revolt|AER||January 2017|Expansion|Kaladesh Block|Standard|
+Aether Revolt|AER||January 2017|Expansion|Kaladesh Block||
 Modern Masters 2017 Edition|MM3||March 2017|Starter|Masters Series||
-Amonkhet|AKH||April 2017|Expansion|Amonkhet Block|Standard|
+Amonkhet|AKH||April 2017|Expansion|Amonkhet Block||
 Duel Decks: Mind vs. Might|DDS||March 2017|Starter|Duel Decks||
 Masterpiece Series: Amonkhet Invocations|MPS_AKH||April 2017|Reprint|Masterpiece Series: Amonkhet Invocations||
 Welcome Deck 2017|W17||April 2017|Starter|Welcome Deck 2017||
 Archenemy: Nicol Bolas|E01||June 2017|Expansion|Archenemy||
 Commander Anthology|CMA||June 2017|Expansion|Commander||
-Hour of Devastation|HOU||July 2017|Expansion|Amonkhet Block|Standard|
+Hour of Devastation|HOU||July 2017|Expansion|Amonkhet Block||
 Commander 2017|C17||August 2017|Expansion|Commander||
-Ixalan|XLN||September 2017|Expansion|Ixalan Block||
+Ixalan|XLN||September 2017|Expansion|Ixalan Block|Standard|
+Battlebond|BBD||June 2018|Starter|Other sets||
+Commander 2018|C18||August 2018|Starter|Commander||
+Commander Anthology 2018|CM2||April 2019|Starter|Commander Anthology 2018||
+Core Set 2019|M19||July 2018|Core|Core Set 2019|Standard|
+Dominaria|DOM||April 2018|Expansion|Post-Block sets|Standard|
+Duel Decks: Elves vs. Inventors|DDU||April 2018|Starter|Duel Decks||
+Duel Decks: Merfolk vs. Goblins|DDT||November 2017|Starter|Duel Decks||
+Explorers of Ixalan|E02||November 2017|Starter|Other sets||
+From the Vault: Transform|V17||November 2017|Starter|From the Vault||
+Game Night|GNT||April 2019|Starter|Game Night||
+Gift Pack|G18||April 2019|Starter|Gift Pack||
+Global Series: Jiang Yanggu and Mu Yanling|GS1||April 2019|Starter|Global Series: Jiang Yanggu and Mu Yanling||
+Guild Kit: Azorius|GK2_AZORIU||April 2019|Starter|Guild Kit: Azorius||
+Guild Kit: Boros|GK1_BOROS||April 2019|Starter|Guild Kit: Boros||
+Guild Kit: Dimir|GK1_DIMIR||April 2019|Starter|Guild Kit: Dimir||
+Guild Kit: Golgari|GK1_GOLGAR||April 2019|Starter|Guild Kit: Golgari||
+Guild Kit: Gruul|GK2_GRUUL||April 2019|Starter|Guild Kit: Gruul||
+Guild Kit: Izzet|GK1_IZZET||April 2019|Starter|Guild Kit: Izzet||
+Guild Kit: Orzhov|GK2_ORZHOV||April 2019|Starter|Guild Kit: Orzhov||
+Guild Kit: Rakdos|GK2_RAKDOS||April 2019|Starter|Guild Kit: Rakdos||
+Guild Kit: Selesnya|GK1_SELESN||April 2019|Starter|Guild Kit: Selesnya||
+Guild Kit: Simic|GK2_SIMIC||April 2019|Starter|Guild Kit: Simic||
+Guilds of Ravnica|GRN||October 2018|Expansion|Post-Block sets|Standard|
+Guilds of Ravnica Mythic Edition|MPS_GRN||April 2019|Starter|Guilds of Ravnica Mythic Edition||
+Iconic Masters|IMA||November 2017|Online|Masters Series||
+Masters 25|A25||March 2018|Online|Masters Series||
+Ravnica Allegiance|RNA||January 2019|Expansion|Post-Block sets|Standard|
+Ravnica Allegiance Mythic Edition|MPS_RNA||April 2019|Starter|Ravnica Allegiance Mythic Edition||
+Rivals of Ixalan|RIX||January 2018|Expansion|Ixalan Block|Standard|
+Signature Spellbook: Jace|SS1||June 2018|Starter|Signature Spellbook||
+Ultimate Box Toppers|UMA_BOX||April 2019|Starter|Ultimate Box Toppers||
+Ultimate Masters|UMA||December 2018|Online|Masters Series||
+Unstable|UST||December 2017|Un_set|Un-sets||
